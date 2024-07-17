@@ -2,9 +2,19 @@ import { $authHost, $host } from "./index";
 import {jwtDecode} from "jwt-decode";
 
 export const registration = async (email, password, name) => {
-    const { data } = await $host.post('api/user/registration', { email, password, name, role: 'public' });
+    const { data } = await $host.post('api/user/registration', { email, password, name, role: 'USER' });
     localStorage.setItem('token', data.token);
     return jwtDecode(data.token);
+};
+
+export const fetchUserData = async () => {
+    try {
+        const response = await $host.get('/api/auth/me');
+        return response.data;
+    } catch (error) {
+        console.error('Error fetching user data:', error);
+        throw error;
+    }
 };
 
 export const login = async (email, password) => {
@@ -14,7 +24,7 @@ export const login = async (email, password) => {
 };
 
 export const check = async () => {
-    const { data } = await $authHost.get('api/user/auth');
+    const { data } = await $authHost.get(('api/user/auth'));
     localStorage.setItem('token', data.token);
     return jwtDecode(data.token);
 };

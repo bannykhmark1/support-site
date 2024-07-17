@@ -8,12 +8,14 @@ import { useContext, useEffect, useState } from 'react';
 import { Context } from "./index";
 import React from "react";
 import { check } from "./http/userAPI";
+import ListAmmouncement from './components/ListAnnouncement'
+import CreateAnnouncement from './components/CreateAnnouncement';
+import EditAnnouncement from './components/EditAnnouncement';
 
 function App() {
 
   const { user } = useContext(Context);
   const [loading, setLoading] = useState(true);
-
   useEffect(() => {
     user.restoreAuth(); // Восстанавливаем авторизацию при загрузке
     console.log('Restored Auth State:', user.isAuth);
@@ -40,10 +42,11 @@ function App() {
   return (
     <div className="bg-gray-100 min-h-screen p-4">
       <div className="max-w-4xl mx-auto bg-white p-6 rounded-lg shadow-lg">
-        <Header />
+      <Header />
+        <ListAmmouncement />
         <ContactForm />
         <ContactInfo />
-        <Auth />
+
       </div>
     </div>
   );

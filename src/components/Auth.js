@@ -45,7 +45,7 @@ const Auth = observer(() => {
     };
 
     return (
-        <div className='flex flex-col justify-between h-screen'>
+        <div className='flex flex-col justify-between '>
 
             <div className="flex items-center justify-center h-full">
                 <div className="w-full max-w-md p-8 bg-white rounded shadow-lg">
