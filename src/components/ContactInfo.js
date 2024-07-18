@@ -18,7 +18,7 @@ const subject = encodeURIComponent("Support Request");
       </div>
       <div className="text-center mb-4 md:mb-0 md:mr-4">
         <a
-          href={yandexMailUrl} target="_blank" rel="noopener noreferrer">
+          href={yandexMailUrl} target="_blank" rel="noopener noreferrer"
           className="text-blue-500 hover:underline"
         >
           Написать нам на почту
