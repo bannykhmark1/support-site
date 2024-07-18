@@ -14,10 +14,10 @@ const ContactInfo = () => {
       </div>
       <div className="text-center mb-4 md:mb-0 md:mr-4">
         <a
-          href="mailto:ваша_почта@example.com"
+          href="do_support@kurganmk.ru"
           className="text-blue-500 hover:underline"
         >
-          Написать нам на почту
+          Написать нам на почту - do_support@kurganmk.ru
         </a>
       </div>
       <div>
