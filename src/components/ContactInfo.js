@@ -17,7 +17,7 @@ const ContactInfo = () => {
           href="mailto:do_support@kurganmk.ru?subject=Support%20Request"
           className="text-blue-500 hover:underline"
         >
-          Написать нам на почту - do_support@kurganmk.ru
+          Написать нам на почту
         </a>
       </div>
       <div>
