@@ -14,7 +14,7 @@ const ContactInfo = () => {
       </div>
       <div className="text-center mb-4 md:mb-0 md:mr-4">
         <a
-          href="do_support@kurganmk.ru"
+          mailto="do_support@kurganmk.ru"
           className="text-blue-500 hover:underline"
         >
           Написать нам на почту - do_support@kurganmk.ru
