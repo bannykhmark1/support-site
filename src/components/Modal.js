@@ -26,10 +26,10 @@ const Modal = ({ isOpen, onClose, children }) => {
 
     return (
         <div className="fixed inset-0 flex items-center justify-center bg-gray-500 bg-opacity-50" onClick={handleClickOutside}>
-            <div className="p-6 rounded-lg shadow-lg bg-white w-full max-w-lg relative">
+            <div className="rounded-lg w-full max-w-lg relative">
                 <button
                     onClick={onClose}
-                    className="absolute top-0 right-0 m-4 text-gray-600 hover:text-gray-900"
+                    className="absolute top-0 right-10 m-4 text-gray-600 hover:text-gray-900"
                 >
                     ×
                 </button>

@@ -35,30 +35,30 @@ const ListAnnouncement = () => {
     const mostRecentAnnouncement = announcements.length ? announcements[0] : null;
 
     return (
-        <div className="max-w-4xl mx-auto mt-10">
-            <div className="flex justify-between items-center mb-4">
-                <h2 className="text-2xl font-bold">Объявления</h2>
+        <div className="max-w-4xl mx-auto mt-10 p-4">
+            <div className="flex justify-between items-center mb-6">
+                <h2 className="text-4xl font-bold text-gray-800">Объявления</h2>
                 {user.isAuth && user.user.role === 'ADMIN' && (
                     <button
                         onClick={() => setIsModalOpen(true)}
-                        className="bg-blue-500 text-white font-bold py-2 px-4 rounded hover:bg-blue-600"
+                        className="bg-gradient-to-r from-green-400 to-blue-500 text-white font-bold py-2 px-6 rounded-full shadow-md hover:shadow-lg transition duration-300"
                     >
                         Создать объявление
                     </button>
                 )}
             </div>
 
-            <div className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
+            <div className="bg-white shadow-lg rounded-lg p-6 mb-6">
                 {mostRecentAnnouncement && (
-                    <div key={mostRecentAnnouncement.id} className="mb-4 border-b pb-4">
-                        <div className="text-gray-500">Команда поддержки УАГ</div>
-                        <h3 className="text-xl font-semibold mb-2">{mostRecentAnnouncement.title}</h3>
-                        <p className="mb-4">{mostRecentAnnouncement.description}</p>
+                    <div key={mostRecentAnnouncement.id} className="mb-6 pb-6 border-b border-gray-200">
+                        <div className="text-gray-600 mb-2">Команда поддержки УАГ</div>
+                        <h3 className="text-2xl font-semibold text-gray-900 mb-4">{mostRecentAnnouncement.title}</h3>
+                        <p className="text-gray-700 mb-4">{mostRecentAnnouncement.description}</p>
                         {user.isAuth && user.user.role === 'ADMIN' && (
-                            <div className="flex justify-between">
+                            <div className="flex justify-end">
                                 <button
                                     onClick={() => handleDelete(mostRecentAnnouncement.id)}
-                                    className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+                                    className="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded-full shadow-md transition duration-300"
                                 >
                                     Удалить
                                 </button>
@@ -69,7 +69,7 @@ const ListAnnouncement = () => {
                 {announcements.length > 1 && (
                     <button
                         onClick={() => setIsAllAnnouncementsModalOpen(true)}
-                        className="text-blue-500 font-bold hover:underline focus:outline-none"
+                        className="text-indigo-600 font-bold hover:underline focus:outline-none"
                     >
                         Показать всё
                     </button>
@@ -81,17 +81,17 @@ const ListAnnouncement = () => {
             </Modal>
 
             <Modal isOpen={isAllAnnouncementsModalOpen} onClose={() => setIsAllAnnouncementsModalOpen(false)}>
-                <div className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4 max-h-screen overflow-y-auto">
+                <div className="bg-white shadow-lg rounded-lg p-6 mb-4 max-h-screen overflow-y-auto">
                     {announcements.map((announcement) => (
-                        <div key={announcement.id} className="mb-4 border-b pb-4">
-                            <div className="text-gray-500">Команда поддержки УАГ</div>
-                            <h3 className="text-xl font-semibold mb-2">{announcement.title}</h3>
-                            <p className="mb-4">{announcement.description}</p>
+                        <div key={announcement.id} className="mb-6 pb-6 border-b border-gray-200">
+                            <div className="text-gray-600 mb-2">Команда поддержки УАГ</div>
+                            <h3 className="text-2xl font-semibold text-gray-900 mb-4">{announcement.title}</h3>
+                            <p className="text-gray-700 mb-4">{announcement.description}</p>
                             {user.isAuth && user.user.role === 'ADMIN' && (
-                                <div className="flex justify-between">
+                                <div className="flex justify-end">
                                     <button
                                         onClick={() => handleDelete(announcement.id)}
-                                        className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+                                        className="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded-full shadow-md transition duration-300"
                                     >
                                         Удалить
                                     </button>

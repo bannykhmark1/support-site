@@ -1,18 +1,51 @@
-import React from 'react';
+import React from "react";
+import { FaTelegramPlane } from "react-icons/fa";
+import { MdEmail } from "react-icons/md";
+
 
 const ContactForm = () => {
   return (
-    <section className="mb-8">
-      <h2 className="text-xl font-semibold mb-4">Обратная связь</h2>
-      <p>Вы можете заполнить Яндекс Форму напрямую в Трекер для заведения задачи по вашему вопросу</p>
-      <iframe
-        src="https://forms.yandex.ru/cloud/666c170884227c1e4fa77f95"
-        width="100%"
-        height="660px"
-        frameBorder="0"
-        className="mt-4 rounded-lg"
-      ></iframe>
-    </section>
+    
+    <div className="max-w-4xl mx-auto mt-10 p-4">
+<div className="flex justify-between items-center mb-6">
+<h2 className="text-4xl font-bold text-gray-800">Обратная связь</h2>
+       
+      </div>
+      <div className="bg-white shadow-lg rounded-lg p-6 mb-6">
+      <p className="text-lg mb-4">Выберите удобный способ для связи с нами:</p>
+      <div className="space-y-6">
+        <a
+          href="https://forms.yandex.ru/cloud/666c170884227c1e4fa77f95/"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="flex items-center bg-yellow-500 text-white font-bold py-2 px-4 rounded-full shadow-md hover:bg-yellow-600 transition duration-300"
+        >
+          <img src="ya-logo.png" alt="Логотип" className="mr-3 w-6" />
+          Подать обращение через Яндекс Форму
+      
+        
+        </a>
+        <a
+          href="mailto:do_support@kurganmk.ru"
+          className="flex items-center bg-red-500 text-white font-bold py-2 px-4 rounded-full shadow-md hover:bg-red-600 transition duration-300"
+        >
+          <MdEmail className="w-6 h-6 mr-3" />
+          Подать обращение по почте
+        </a>
+
+        <a
+          href="https://t.me/uagtrackertestbot"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="flex items-center bg-blue-500 text-white font-bold py-2 px-4 rounded-full shadow-md hover:bg-blue-600 transition duration-300"
+        >
+          <FaTelegramPlane className="w-6 h-6 mr-3" />
+          Подать обращение через Телеграм
+        </a>
+      </div>
+      </div>
+    </div>
+   
   );
 };
 

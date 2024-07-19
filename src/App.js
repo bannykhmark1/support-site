@@ -6,6 +6,7 @@ import ContactInfo from './components/ContactInfo';
 import './App.css';
 import { useContext, useEffect, useState } from 'react';
 import { Context } from "./index";
+import MessengerWidget from './components/MessengerWidget';
 import React from "react";
 import { check } from "./http/userAPI";
 import ListAmmouncement from './components/ListAnnouncement'
@@ -13,6 +14,7 @@ import CreateAnnouncement from './components/CreateAnnouncement';
 import EditAnnouncement from './components/EditAnnouncement';
 
 function App() {
+
 
   const { user } = useContext(Context);
   const [loading, setLoading] = useState(true);
@@ -43,10 +45,11 @@ function App() {
     <div className="bg-gray-100 min-h-screen p-4">
       <div className="max-w-4xl mx-auto bg-white p-6 rounded-lg shadow-lg">
       <Header />
+      <MessengerWidget />
         <ListAmmouncement />
         <ContactForm />
         <ContactInfo />
-
+     
       </div>
     </div>
   );

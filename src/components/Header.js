@@ -34,12 +34,11 @@ const Header = () => {
   console.log(user.user.role);
 
   return (
-    <div className="text-center mb-8 mx-auto max-w-4xl">
+    <div className="relative text-center mb-8 mx-auto max-w-4xl">
       <img src="hobbs-logo.png" alt="Логотип" className="mx-auto w-64" />
-      <h1 className="text-2xl font-bold mt-4">Сайт заявок</h1>
       {user.isAuth ? (
         <button
-          className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline mt-4"
+          className="absolute top-0 right-0 bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
           onClick={handleLogout}
         >
           Выйти
@@ -47,7 +46,7 @@ const Header = () => {
       ) : (
         <button
           onClick={() => setIsModalOpen(true)}
-          className="bg-blue-500 mt-2 text-white font-bold py-2 px-4 rounded hover:bg-blue-600"
+          className="absolute top-0 right-0 bg-blue-500 mt-2 text-white font-bold py-2 px-4 rounded hover:bg-blue-600"
         >
           Авторизация
         </button>
