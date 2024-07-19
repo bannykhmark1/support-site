@@ -4,6 +4,10 @@ import { MdEmail } from "react-icons/md";
 
 
 const ContactForm = () => {
+  const subject = encodeURIComponent("Support Request");
+  const body = encodeURIComponent("");
+  const yandexMailUrl = `https://mail.yandex.com/compose?mailto=do_support@kurganmk.ru&subject=${subject}&body=${body}`;
+
   return (
     
     <div className="max-w-4xl mx-auto mt-10 p-4">
@@ -26,7 +30,7 @@ const ContactForm = () => {
         
         </a>
         <a
-          href="mailto:do_support@kurganmk.ru"
+          href={yandexMailUrl} target="_blank" rel="noopener noreferrer"
           className="flex items-center bg-red-500 text-white font-bold py-2 px-4 rounded-full shadow-md hover:bg-red-600 transition duration-300"
         >
           <MdEmail className="w-6 h-6 mr-3" />

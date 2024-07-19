@@ -1,10 +1,10 @@
 import React, { useContext, useState } from 'react';
-import { NavLink, useLocation, useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { LOGIN_ROUTE, REGISTRATION_ROUTE, APP_ROUTE, FORGOT_PASSWORD_ROUTE, RESET_PASSWORD_ROUTE } from "../utils/consts";
 import { login, registration } from "../http/userAPI";
 import { observer } from "mobx-react-lite";
 import { Context } from "../index";
-
+import { NavLink } from 'react-router-dom';
 import ForgotPassword from '../components/ForgotPassword';
 import ResetPassword from '../components/ResetPassword';
 
@@ -12,12 +12,12 @@ const Auth = observer(() => {
     const { user } = useContext(Context);
     const location = useLocation();
     const navigate = useNavigate();
-    const isLogin = location.pathname === LOGIN_ROUTE;
     const isForgotPassword = location.pathname === FORGOT_PASSWORD_ROUTE;
     const isResetPassword = location.pathname === RESET_PASSWORD_ROUTE;
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [name, setName] = useState('');
+    const [isLogin, setIsLogin] = useState(true);
 
     const click = async () => {
         try {
@@ -46,7 +46,6 @@ const Auth = observer(() => {
 
     return (
         <div className='flex flex-col justify-between '>
-
             <div className="flex items-center justify-center h-full">
                 <div className="w-full max-w-md p-8 bg-white rounded shadow-lg">
                     {isForgotPassword ? (
@@ -82,12 +81,22 @@ const Auth = observer(() => {
                                     {isLogin ? (
                                         <div className="flex items-center space-x-2">
                                             <span>Нет аккаунта?</span>
-                                            <NavLink to={REGISTRATION_ROUTE} className="text-blue-600 hover:underline">Зарегистрируйся!</NavLink>
+                                            <button
+                                                className="text-blue-600 hover:underline"
+                                                onClick={() => setIsLogin(false)}
+                                            >
+                                                Зарегистрируйся!
+                                            </button>
                                         </div>
                                     ) : (
                                         <div className="flex items-center space-x-2">
                                             <span>Есть аккаунт?</span>
-                                            <NavLink to={LOGIN_ROUTE} className="text-blue-600 hover:underline">Войдите!</NavLink>
+                                            <button
+                                                className="text-blue-600 hover:underline"
+                                                onClick={() => setIsLogin(true)}
+                                            >
+                                                Войдите!
+                                            </button>
                                         </div>
                                     )}
                                     <button
@@ -107,7 +116,6 @@ const Auth = observer(() => {
                     )}
                 </div>
             </div>
-    
         </div>
     );
 });
