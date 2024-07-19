@@ -2,6 +2,10 @@ import React from "react";
 import { FaTelegramPlane } from "react-icons/fa";
 
 const ContactInfo = () => {
+const subject = encodeURIComponent("Support Request");
+  const body = encodeURIComponent("");
+  const yandexMailUrl = `https://mail.yandex.com/compose?mailto=do_support@kurganmk.ru&subject=${subject}&body=${body}`;
+  
   return (
     <section className="flex flex-col md:flex-row justify-between items-center mt-8">
       <div className="text-center mb-4 md:mb-0 md:mr-4">
@@ -14,7 +18,7 @@ const ContactInfo = () => {
       </div>
       <div className="text-center mb-4 md:mb-0 md:mr-4">
         <a
-          href="mailto:ваша_почта@example.com"
+          href={yandexMailUrl} target="_blank" rel="noopener noreferrer"
           className="text-blue-500 hover:underline"
         >
           Написать нам на почту
