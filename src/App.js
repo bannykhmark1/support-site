@@ -12,6 +12,7 @@ import { check } from "./http/userAPI";
 import ListAmmouncement from './components/ListAnnouncement'
 import CreateAnnouncement from './components/CreateAnnouncement';
 import EditAnnouncement from './components/EditAnnouncement';
+import WebSocketClient from './components/WebSocketRename';
 
 function App() {
 
@@ -48,6 +49,7 @@ function App() {
         <MessengerWidget />
         <ListAmmouncement />
         <ContactForm />
+        <WebSocketClient />
       </div>
     </div>
   );
