@@ -13,7 +13,7 @@ import ListAmmouncement from './components/ListAnnouncement'
 import CreateAnnouncement from './components/CreateAnnouncement';
 import EditAnnouncement from './components/EditAnnouncement';
 import WebSocketClient from './components/WebSocketRename';
-
+import LoginYaID from './components/LoginYaID'
 function App() {
 
 
@@ -49,7 +49,7 @@ function App() {
         <MessengerWidget />
         <ListAmmouncement />
         <ContactForm />
-        <WebSocketClient />
+        <LoginYaID />
       </div>
     </div>
   );
