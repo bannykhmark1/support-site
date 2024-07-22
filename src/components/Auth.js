@@ -35,6 +35,7 @@ const Auth = observer(() => {
             localStorage.setItem('isAuth', 'true');
 
             navigate(APP_ROUTE);
+            window.location.reload(); // Обновление страницы
         } catch (e) {
             if (e.response && e.response.data && e.response.data.message) {
                 alert(e.response.data.message);
