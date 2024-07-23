@@ -2,7 +2,7 @@ import React from 'react';
 
 const LoginYaID = () => {
   const handleLogin = () => {
-    window.location.href = 'https://support.hobbs-it.ru/auth/yandex';
+    window.location.href = 'https://support.hobbs-it.ru/api/auth/yandex';
   };
 
   return (
