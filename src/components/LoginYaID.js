@@ -1,14 +1,16 @@
 import React from 'react';
 
 const LoginYaID = () => {
-  const handleLogin = () => {
-    window.location.href = 'https://support.hobbs-it.ru/api/auth/yandex';
+  const redirectToYandex = () => {
+    const redirectUri = encodeURIComponent('https://support.hobbs-it.ru/auth/yandex/callback');
+    const yandexAuthUrl = `https://oauth.yandex.ru/authorize?response_type=code&client_id=${process.env.REACT_APP_YANDEX_CLIENT_ID}&redirect_uri=${redirectUri}`;
+    window.location.href = yandexAuthUrl;
   };
 
   return (
     <div className="flex items-center justify-center min-h-screen bg-gray-100">
       <button
-        onClick={handleLogin}
+        onClick={redirectToYandex}
         className="flex items-center px-4 py-2 bg-yellow-400 hover:bg-yellow-500 text-black font-semibold rounded-lg shadow-md transition-colors duration-300"
       >
         <img
