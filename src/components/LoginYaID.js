@@ -2,7 +2,7 @@ import React from 'react';
 
 const LoginYaID = () => {
   const redirectToYandex = () => {
-    const redirectUri = encodeURIComponent('https://support.hobbs-it.ru/auth/yandex/callback');
+    const redirectUri = encodeURIComponent('https://support.hobbs-it.ru/');
     const yandexAuthUrl = `https://oauth.yandex.ru/authorize?response_type=code&client_id=${process.env.REACT_APP_YANDEX_CLIENT_ID}&redirect_uri=${redirectUri}`;
     window.location.href = yandexAuthUrl;
   };
