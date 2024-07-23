@@ -15,16 +15,33 @@ function App() {
 
   useEffect(() => {
     const queryParams = new URLSearchParams(window.location.search);
-    const userData = queryParams.get('data');
-    if (userData) {
-      user.setUser(JSON.parse(userData));
-      user.setIsAuth(true);
-      setIsYandexAuth(true);
+    const code = queryParams.get('code');
+
+    if (code) {
+      // Отправляем запрос на сервер для получения данных пользователя по коду
+      fetch(`https://support.hobbs-it.ru/auth/yandex/callback?code=${code}`, {
+        method: 'GET',
+        credentials: 'include' // Включаем куки
+      })
+      .then(response => response.json())
+      .then(data => {
+        if (data && data.user) {
+          user.setUser(data.user);
+          user.setIsAuth(true);
+          setIsYandexAuth(true);
+        } else {
+          setIsYandexAuth(false);
+        }
+        setLoading(false);
+      })
+      .catch(error => {
+        console.error('Ошибка при авторизации через Яндекс', error);
+        setLoading(false);
+      });
     } else {
-      setIsYandexAuth(false);
+      setLoading(false);
     }
-    setLoading(false);
-  }, []);
+  }, [user]);
 
   useEffect(() => {
     if (isYandexAuth) {
