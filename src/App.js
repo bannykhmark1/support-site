@@ -17,14 +17,20 @@ function App() {
     const queryParams = new URLSearchParams(window.location.search);
     const userData = queryParams.get('data');
     if (userData) {
-      user.setUser(JSON.parse(userData));
-      user.setIsAuth(true);
-      setIsYandexAuth(true);
+      try {
+        const parsedData = JSON.parse(userData);
+        user.setUser(parsedData);
+        user.setIsAuth(true);
+        setIsYandexAuth(true);
+      } catch (error) {
+        console.error('Ошибка парсинга данных пользователя:', error);
+      }
     } else {
       setIsYandexAuth(false);
     }
     setLoading(false);
   }, [user]);
+  
 
   useEffect(() => {
     if (isYandexAuth) {
