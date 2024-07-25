@@ -1,19 +1,20 @@
+// src/App.js
+
 import React, { useContext, useEffect, useState } from 'react';
-import { Context } from "./index";
-import { check } from "./http/userAPI";
+import { Context } from './index';
+import { check } from './http/userAPI';
 import Header from './components/Header';
 import ContactForm from './components/ContactForm';
 import ListAnnouncement from './components/ListAnnouncement';
 import MessengerWidget from './components/MessengerWidget';
 import LoginYaID from './components/LoginYaID';
 import './App.css';
-import axios from 'axios'; // Для проверки авторизации через Яндекс
 
 function App() {
   const { user } = useContext(Context);
   const [loading, setLoading] = useState(true);
   const [isYandexAuth, setIsYandexAuth] = useState(false);
-  const [isAuth, setIsAuth] = useState(false)
+  const [isAuth, setIsAuth] = useState(false);
 
   useEffect(() => {
     // Проверка существующей авторизации
@@ -30,13 +31,6 @@ function App() {
         .finally(() => setLoading(false));
     }
   }, [isAuth, user]);
-
-  YaSendSuggestToken(
-    'https://support.hobbs-it.ru/', 
-    {
-       flag: true
-    }
- )
 
   if (loading) {
     return (
