@@ -1,4 +1,5 @@
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
+import { Context } from "./index";
 import { check } from "./http/userAPI";
 import Header from './components/Header';
 import ContactForm from './components/ContactForm';
@@ -6,42 +7,21 @@ import ListAnnouncement from './components/ListAnnouncement';
 import MessengerWidget from './components/MessengerWidget';
 import LoginYaID from './components/LoginYaID';
 import './App.css';
+import axios from 'axios'; // Для проверки авторизации через Яндекс
 
 function App() {
+  const { user } = useContext(Context);
   const [loading, setLoading] = useState(true);
   const [isYandexAuth, setIsYandexAuth] = useState(false);
+  const [isAuth, setIsAuth] = useState(false)
 
   useEffect(() => {
-    // Проверяем localStorage на наличие данных о Яндекс ID
-    const yandexAuthData = localStorage.getItem('yandex_auth');
-    if (yandexAuthData) {
-      setIsYandexAuth(true);
-    } else {
-      // Проверяем параметры URL на наличие данных о Яндекс ID
-      const queryParams = new URLSearchParams(window.location.search);
-      const userData = queryParams.get('data');
-      if (userData) {
-        try {
-          const parsedData = JSON.parse(userData);
-          localStorage.setItem('yandex_auth', JSON.stringify(parsedData)); // Сохраняем данные в localStorage
-          setIsYandexAuth(true);
-        } catch (error) {
-          console.error('Ошибка парсинга данных пользователя:', error);
-        }
-      } else {
-        setIsYandexAuth(false);
-      }
-    }
-    setLoading(false);
-  }, []);
-
-  useEffect(() => {
-    if (isYandexAuth) {
-      // Допустим, функция check() делает запрос для получения данных о пользователе
+    // Проверка существующей авторизации
+    if (isAuth) {
       check()
         .then(userData => {
           if (userData) {
-            localStorage.setItem('yandex_auth', JSON.stringify(userData)); // Обновляем localStorage
+            user.setUser(userData);
           }
         })
         .catch(err => {
@@ -49,20 +29,24 @@ function App() {
         })
         .finally(() => setLoading(false));
     }
-  }, [isYandexAuth]);
+  }, [isAuth, user]);
 
-  // Функция для выхода из Яндекс ID
-  const handleLogout = () => {
-    // Удаляем данные из localStorage
-    localStorage.removeItem('yandex_auth');
-    setIsYandexAuth(false);
-
-    // Выполняем выход из Яндекс ID
-    const clientId = process.env.REACT_APP_YANDEX_CLIENT_ID;
-    const redirectUri = 'https://your-app-url.com'; // URL для редиректа после выхода
-
-    window.location.href = `https://oauth.yandex.ru/logout?client_id=${clientId}&redirect_uri=${redirectUri}`;
-  };
+  useEffect(() => {
+    // Проверка авторизации через Яндекс ID
+    axios.get('/auth/yandex/user')
+      .then(response => {
+        if (response.data) {
+          setIsYandexAuth(true);
+        } else {
+          setIsYandexAuth(false);
+        }
+      })
+      .catch(err => {
+        console.error('Ошибка при проверке авторизации через Яндекс', err);
+        setIsYandexAuth(false);
+      })
+      .finally(() => setLoading(false));
+  }, []);
 
   if (loading) {
     return (
@@ -75,7 +59,7 @@ function App() {
   return (
     <div className="bg-gray-100 min-h-screen p-4">
       <div className="max-w-4xl mx-auto bg-white p-6 rounded-lg shadow-lg">
-        <Header onLogout={handleLogout} /> {/* Передаем функцию для выхода из системы в Header */}
+        <Header />
         {isYandexAuth ? (
           <>
             <MessengerWidget />
