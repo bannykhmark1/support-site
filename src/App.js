@@ -29,8 +29,7 @@ function App() {
       setIsYandexAuth(false);
     }
     setLoading(false);
-  }, [user]);
-  
+  }, []);
 
   useEffect(() => {
     if (isYandexAuth) {
@@ -58,7 +57,6 @@ function App() {
   return (
     <div className="bg-gray-100 min-h-screen p-4">
       <div className="max-w-4xl mx-auto bg-white p-6 rounded-lg shadow-lg">
-        {console.log(isYandexAuth)}
         <Header />
         {isYandexAuth ? (
           <>
