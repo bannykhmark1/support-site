@@ -2,7 +2,7 @@
 
 import React, { useEffect } from 'react';
 
-const LoginYaID = ({ setIsYandexAuth }) => {
+const LoginYaID = ({ setIsYandexAuth, setIsValidUser }) => {
   useEffect(() => {
     const loadYaAuthScript = () => {
       const script = document.createElement('script');
@@ -16,15 +16,14 @@ const LoginYaID = ({ setIsYandexAuth }) => {
     const initializeYaAuth = () => {
       if (window.YaAuthSuggest) {
         const oauthQueryParams = {
-          client_id: process.env.REACT_APP_YANDEX_CLIENT_ID, // Используем переменные окружения
-          redirect_uri: `${process.env.REACT_APP_API_URL}/auth/callback`, // Замените на ваш URI, если он другой
+          client_id: process.env.REACT_APP_YANDEX_CLIENT_ID,
+          redirect_uri: process.env.REACT_APP_AUTH_REDIRECT_URI,
           response_type: 'token',
         };
-        const tokenPageOrigin = `${process.env.REACT_APP_API_URL}/auth/callback`; // Замените на ваш URI, если он другой
 
         window.YaAuthSuggest.init(
           oauthQueryParams,
-          tokenPageOrigin,
+          process.env.REACT_APP_AUTH_REDIRECT_URI,
           {
             view: 'button',
             parentId: 'buttonContainer',
@@ -37,8 +36,10 @@ const LoginYaID = ({ setIsYandexAuth }) => {
         )
         .then(({ handler }) => handler())
         .then(data => {
-          console.log('Сообщение с токеном', data);
-          setIsYandexAuth(true); // Обновляем состояние после успешной авторизации
+          // Устанавливаем состояние авторизации
+          setIsYandexAuth(true);
+          // Сохраняем токен и проверяем пользователя
+          fetchUserProfile(data.access_token);
         })
         .catch(error => console.error('Обработка ошибки', error));
       } else {
@@ -46,8 +47,28 @@ const LoginYaID = ({ setIsYandexAuth }) => {
       }
     };
 
+    const fetchUserProfile = (token) => {
+      fetch('https://login.yandex.ru/info?format=json', {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
+      .then(response => response.json())
+      .then(data => {
+        const emailDomain = data.default_email.split('@')[1];
+        const allowedDomains = ['kurganmk', 'reftp', 'hobbs-it'];
+
+        if (allowedDomains.includes(emailDomain)) {
+          setIsValidUser(true);
+        } else {
+          setIsValidUser(false);
+        }
+      })
+      .catch(error => console.error('Ошибка при получении данных пользователя', error));
+    };
+
     loadYaAuthScript();
-  }, [setIsYandexAuth]);
+  }, [setIsYandexAuth, setIsValidUser]);
 
   return (
     <div className="flex justify-center items-center h-screen">
