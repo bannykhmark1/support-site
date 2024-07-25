@@ -33,7 +33,7 @@ function App() {
 
   useEffect(() => {
     // Проверка авторизации через Яндекс ID
-    axios.get('/auth/yandex/user')
+    axios.get('api/auth/yandex/user')
       .then(response => {
         if (response.data) {
           setIsYandexAuth(true);
