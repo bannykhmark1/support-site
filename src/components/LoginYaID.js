@@ -1,8 +1,7 @@
 import React, { useEffect } from 'react';
 
-function App() {
+function LoginYaID({ onAuthSuccess }) {
   useEffect(() => {
-    // Ensure the Yandex Authentication script is available
     if (window.YaAuthSuggest) {
       window.YaAuthSuggest.init(
         {
@@ -21,14 +20,17 @@ function App() {
         }
       )
       .then(({ handler }) => handler())
-      .then(data => console.log('Сообщение с токеном', data))
+      .then(data => {
+        console.log('Сообщение с токеном', data);
+        onAuthSuccess(data); // Передаем данные в App
+      })
       .catch(error => console.log('Обработка ошибки', error));
     }
-  }, []); // Empty dependency array means this effect runs once after initial render
+  }, [onAuthSuccess]);
 
   return (
     <div id="container"></div>
   );
 }
 
-export default App;
+export default LoginYaID;
