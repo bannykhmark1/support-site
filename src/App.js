@@ -12,6 +12,7 @@ function App() {
   useEffect(() => {
     // Проверка токена из localStorage или другого источника
     const token = localStorage.getItem('yandexToken');
+    console.log(token)
     if (token) {
       // Если токен есть, проверяем его валидность, например, через API запрос
       checkTokenValidity(token)
