@@ -37,7 +37,7 @@ function App() {
         ) : (
           <>
             <LoginYaID onAuthSuccess={handleAuthSuccess} />
-            <RedirectToken />
+            <RedirectToken onAuthSuccess={handleAuthSuccess} /> {/* Передаем onAuthSuccess */}
           </>
         )}
       </div>
