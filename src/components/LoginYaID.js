@@ -5,7 +5,7 @@ function App() {
   const [user, setUser] = useState(null);
 
   useEffect(() => {
-    axios.get('/auth/yandex/user')
+    axios.get('api/auth/yandex/user')
       .then(response => {
         setUser(response.data);
       })
@@ -15,11 +15,11 @@ function App() {
   }, []);
 
   const handleYandexLogin = () => {
-    window.location.href = '/auth/yandex/login';
+    window.location.href = 'api/auth/yandex/login';
   };
 
   const handleYandexLogout = () => {
-    axios.get('/auth/yandex/logout')
+    axios.get('api/auth/yandex/logout')
       .then(() => {
         setUser(null);
       });
