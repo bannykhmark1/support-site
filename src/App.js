@@ -4,8 +4,9 @@ import ContactForm from './components/ContactForm';
 import ListAnnouncement from './components/ListAnnouncement';
 import MessengerWidget from './components/MessengerWidget';
 import LoginYaID from './components/LoginYaID';
-import RedirectToken from './components/RedirectToken'; // Убедитесь, что этот компонент используется
+import RedirectToken from './components/RedirectToken';
 import './App.css';
+import checkTokenValidity from './checkTokenValidity'; // Импорт функции проверки токена
 
 function App() {
   const [isYandexAuth, setIsYandexAuth] = useState(false);
@@ -37,7 +38,7 @@ function App() {
         ) : (
           <>
             <LoginYaID onAuthSuccess={handleAuthSuccess} />
-            <RedirectToken onAuthSuccess={handleAuthSuccess} /> {/* Передаем onAuthSuccess */}
+            <RedirectToken onAuthSuccess={handleAuthSuccess} />
           </>
         )}
       </div>
