@@ -1,40 +1,63 @@
-import React, { useEffect, useState } from 'react';
-import axios from 'axios';
+import React, { useEffect } from 'react';
 
-function App() {
-  const [user, setUser] = useState(null);
-
+const App = () => {
   useEffect(() => {
-    axios.get('api/auth/yandex/user')
-      .then(response => {
-        setUser(response.data);
-      })
-      .catch(() => {
-        setUser(null);
-      });
+    const loadScript = () => {
+      const script = document.createElement('script');
+      script.src = 'https://yastatic.net/s3/passport-sdk/autoload.js';
+      script.onload = () => {
+        console.log('YaAuthSuggest скрипт загружен');
+        initializeYaAuth();
+      };
+      script.onerror = () => {
+        console.error('Не удалось загрузить скрипт YaAuthSuggest');
+      };
+      document.body.appendChild(script);
+    };
+
+    const initializeYaAuth = () => {
+      if (window.YaAuthSuggest) {
+        console.log('YaAuthSuggest доступен');
+        
+        const oauthQueryParams = {
+          client_id: process.env.REACT_APP_YANDEX_CLIENT_ID,
+          response_type: 'token',
+          redirect_uri: 'https://support.hobbs-it.ru/auth/yandex/callback' // Убедитесь, что это правильный URI
+        };
+        const tokenPageOrigin = 'https://support.hobbs-it.ru/auth/yandex/callback'; // Убедитесь, что это правильный URI
+
+        window.YaAuthSuggest.init(
+          oauthQueryParams,
+          tokenPageOrigin,
+          {
+            view: "button",
+            parentId: "buttonContainer", // Убедитесь, что ID совпадает с вашим элементом
+            buttonSize: 'm',
+            buttonView: 'main',
+            buttonTheme: 'light',
+            buttonBorderRadius: "0",
+            buttonIcon: 'ya',
+          }
+        )
+        .then(({ handler }) => {
+          console.log('Кнопка инициализирована');
+          handler();
+        })
+        .then(data => console.log('Сообщение с токеном', data))
+        .catch(error => console.error('Обработка ошибки', error));
+      } else {
+        console.error('YaAuthSuggest не доступен');
+      }
+    };
+
+    loadScript();
   }, []);
-
-  const handleYandexLogin = () => {
-    window.location.href = 'api/auth/yandex/login';
-  };
-
-  const handleYandexLogout = () => {
-    axios.get('api/auth/yandex/logout')
-      .then(() => {
-        setUser(null);
-      });
-  };
 
   return (
     <div>
-      {user ? (
-        <div>
-          <h1>Welcome, {user.displayName}</h1>
-          <button onClick={handleYandexLogout}>Logout from Yandex</button>
-        </div>
-      ) : (
-        <button onClick={handleYandexLogin}>Login with Yandex</button>
-      )}
+      <div id="buttonContainer" style={{ margin: '20px', textAlign: 'center' }}>
+        {/* Кнопка авторизации будет добавлена здесь */}
+      </div>
     </div>
   );
 }
