@@ -19,6 +19,7 @@ function App() {
     if (userData) {
       try {
         const parsedData = JSON.parse(userData);
+        console.log('Parsed user data:', parsedData);
         user.setUser(parsedData);
         user.setIsAuth(true);
         setIsYandexAuth(true);
