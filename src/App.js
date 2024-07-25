@@ -64,10 +64,17 @@ function App() {
 
   // Функция для выхода из системы
   const handleLogout = () => {
+    // Удаляем данные о пользователе из localStorage
+    localStorage.removeItem('user');
     user.setUser(null);
     user.setIsAuth(false);
-    localStorage.removeItem('user'); // Удаляем данные из localStorage
     setIsYandexAuth(false);
+
+    // Выполняем выход из Яндекс ID
+    const clientId = process.env.REACT_APP_YANDEX_CLIENT_ID;
+    const redirectUri = 'https://your-app-url.com'; // URL для редиректа после выхода
+
+    window.location.href = `https://oauth.yandex.ru/logout?client_id=${clientId}&redirect_uri=${redirectUri}`;
   };
 
   if (loading) {
