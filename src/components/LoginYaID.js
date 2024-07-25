@@ -2,13 +2,23 @@
 
 import React, { useEffect } from 'react';
 
-const LoginYaID = ({ setIsYandexAuth, setIsValidUser }) => {
+const LoginYaID = ({ setIsYandexAuth }) => {
   useEffect(() => {
     const loadYaAuthScript = () => {
+      // Проверка, загружен ли уже скрипт
+      if (document.getElementById('ya-auth-script')) {
+        initializeYaAuth();
+        return;
+      }
+
       const script = document.createElement('script');
+      script.id = 'ya-auth-script'; // Устанавливаем id для проверки
       script.src = 'https://yastatic.net/s3/passport-sdk/autoload.js';
       script.onload = () => {
         initializeYaAuth();
+      };
+      script.onerror = () => {
+        console.error('Ошибка при загрузке скрипта Яндекс Auth');
       };
       document.body.appendChild(script);
     };
@@ -17,13 +27,14 @@ const LoginYaID = ({ setIsYandexAuth, setIsValidUser }) => {
       if (window.YaAuthSuggest) {
         const oauthQueryParams = {
           client_id: process.env.REACT_APP_YANDEX_CLIENT_ID,
-          redirect_uri: process.env.REACT_APP_AUTH_REDIRECT_URI,
+          redirect_uri: `${process.env.REACT_APP_API_URL}`,
           response_type: 'token',
         };
+        const tokenPageOrigin = `${process.env.REACT_APP_API_URL}`;
 
         window.YaAuthSuggest.init(
           oauthQueryParams,
-          process.env.REACT_APP_AUTH_REDIRECT_URI,
+          tokenPageOrigin,
           {
             view: 'button',
             parentId: 'buttonContainer',
@@ -36,39 +47,17 @@ const LoginYaID = ({ setIsYandexAuth, setIsValidUser }) => {
         )
         .then(({ handler }) => handler())
         .then(data => {
-          // Устанавливаем состояние авторизации
+          console.log('Сообщение с токеном', data);
           setIsYandexAuth(true);
-          // Сохраняем токен и проверяем пользователя
-          fetchUserProfile(data.access_token);
         })
-        .catch(error => console.error('Обработка ошибки', error));
+        .catch(error => console.error('Ошибка при инициализации Яндекс Auth', error));
       } else {
         console.error('YaAuthSuggest не загружен');
       }
     };
 
-    const fetchUserProfile = (token) => {
-      fetch('https://login.yandex.ru/info?format=json', {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      })
-      .then(response => response.json())
-      .then(data => {
-        const emailDomain = data.default_email.split('@')[1];
-        const allowedDomains = ['kurganmk', 'reftp', 'hobbs-it'];
-
-        if (allowedDomains.includes(emailDomain)) {
-          setIsValidUser(true);
-        } else {
-          setIsValidUser(false);
-        }
-      })
-      .catch(error => console.error('Ошибка при получении данных пользователя', error));
-    };
-
     loadYaAuthScript();
-  }, [setIsYandexAuth, setIsValidUser]);
+  }, [setIsYandexAuth]);
 
   return (
     <div className="flex justify-center items-center h-screen">
