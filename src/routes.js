@@ -1,7 +1,8 @@
 import { createBrowserRouter } from "react-router-dom";
-import { LOGIN_ROUTE, REGISTRATION_ROUTE, APP_ROUTE, ANNOUNCEMENTS_ROUTE, CREATE_ANNOUNCEMENT_ROUTE, EDIT_ANNOUNCEMENT_ROUTE } from "./utils/consts";
+import { LOGIN_ROUTE, REGISTRATION_ROUTE, APP_ROUTE, ANNOUNCEMENTS_ROUTE, CREATE_ANNOUNCEMENT_ROUTE, EDIT_ANNOUNCEMENT_ROUTE, REDIRECT_TOKEN } from "./utils/consts";
 import Auth from "./components/Auth";
 import App from "./App";
+import RedirectToken from "./components/RedirectToken";
 
 import CreateAnnouncement from "./components/CreateAnnouncement";
 import ListAnnouncement from "./components/ListAnnouncement";
@@ -20,6 +21,10 @@ export const authRoutes = [
 ];
 
 export const publicRoutes = [
+  {
+    path: REDIRECT_TOKEN,
+    element: <RedirectToken />
+  },
   {
     path: APP_ROUTE,
     element: <App />
