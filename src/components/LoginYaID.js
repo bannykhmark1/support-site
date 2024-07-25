@@ -2,7 +2,7 @@ import React from 'react';
 
 function LoginYaID({ setIsYandexAuth }) {
   const handleYandexLogin = () => {
-    window.location.href = '/auth/yandex/login';
+    window.location.href = 'api/auth/yandex/login';
   };
 
   return (
