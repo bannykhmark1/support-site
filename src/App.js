@@ -31,22 +31,12 @@ function App() {
     }
   }, [isAuth, user]);
 
-  useEffect(() => {
-    // Проверка авторизации через Яндекс ID
-    axios.get('api/auth/yandex/user')
-      .then(response => {
-        if (response.data) {
-          setIsYandexAuth(true);
-        } else {
-          setIsYandexAuth(false);
-        }
-      })
-      .catch(err => {
-        console.error('Ошибка при проверке авторизации через Яндекс', err);
-        setIsYandexAuth(false);
-      })
-      .finally(() => setLoading(false));
-  }, []);
+  YaSendSuggestToken(
+    'https://support.hobbs-it.ru/', 
+    {
+       flag: true
+    }
+ )
 
   if (loading) {
     return (
