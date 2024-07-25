@@ -13,6 +13,7 @@ function App() {
 
   useEffect(() => {
     const token = localStorage.getItem('yandexToken');
+    console.log(token)
     if (token) {
       checkTokenValidity(token)
         .then(isValid => setIsYandexAuth(isValid))
