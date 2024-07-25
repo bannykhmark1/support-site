@@ -1,16 +1,16 @@
 import React, { useEffect } from "react";
 
-const RedirectToken = ({  }) => {
-    YaSendSuggestToken(
-        'https://support.hobbs-it.ru/', 
-        {
-           flag: true
-        }
-     )
+const RedirectToken = ({ onAuthSuccess }) => {
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.hash.slice(1));
+    const token = params.get('access_token');
 
-  return <div>
+    if (token) {
+      onAuthSuccess({ token });
+    }
+  }, [onAuthSuccess]);
 
-  </div>;
+  return <div>Авторизация завершена...</div>;
 };
 
 export default RedirectToken;
