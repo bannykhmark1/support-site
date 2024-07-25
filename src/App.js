@@ -4,16 +4,15 @@ import ContactForm from './components/ContactForm';
 import ListAnnouncement from './components/ListAnnouncement';
 import MessengerWidget from './components/MessengerWidget';
 import LoginYaID from './components/LoginYaID';
+import RedirectToken from './components/RedirectToken'; // Убедитесь, что этот компонент используется
 import './App.css';
 
 function App() {
   const [isYandexAuth, setIsYandexAuth] = useState(false);
 
   useEffect(() => {
-    // Проверка токена из localStorage или другого источника
     const token = localStorage.getItem('yandexToken');
     if (token) {
-      // Если токен есть, проверяем его валидность, например, через API запрос
       checkTokenValidity(token)
         .then(isValid => setIsYandexAuth(isValid))
         .catch(() => setIsYandexAuth(false));
@@ -21,7 +20,6 @@ function App() {
   }, []);
 
   const handleAuthSuccess = (data) => {
-    // Сохранение токена и обновление состояния
     localStorage.setItem('yandexToken', data.token);
     setIsYandexAuth(true);
   };
@@ -37,7 +35,10 @@ function App() {
             <ContactForm />
           </>
         ) : (
-          <LoginYaID onAuthSuccess={handleAuthSuccess} />
+          <>
+            <LoginYaID onAuthSuccess={handleAuthSuccess} />
+            <RedirectToken />
+          </>
         )}
       </div>
     </div>
