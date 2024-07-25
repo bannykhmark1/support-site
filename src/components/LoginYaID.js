@@ -1,64 +1,33 @@
 import React, { useEffect } from 'react';
 
-const App = () => {
+function App() {
   useEffect(() => {
-    const loadScript = () => {
-      const script = document.createElement('script');
-      script.src = 'https://yastatic.net/s3/passport-sdk/autoload.js';
-      script.onload = () => {
-        console.log('YaAuthSuggest скрипт загружен');
-        initializeYaAuth();
-      };
-      script.onerror = () => {
-        console.error('Не удалось загрузить скрипт YaAuthSuggest');
-      };
-      document.body.appendChild(script);
-    };
-
-    const initializeYaAuth = () => {
-      if (window.YaAuthSuggest) {
-        console.log('YaAuthSuggest доступен');
-        
-        const oauthQueryParams = {
+    // Ensure the Yandex Authentication script is available
+    if (window.YaAuthSuggest) {
+      window.YaAuthSuggest.init(
+        {
           client_id: process.env.REACT_APP_YANDEX_CLIENT_ID,
           response_type: 'token',
-          redirect_uri: 'https://support.hobbs-it.ru/auth/yandex/callback' // Убедитесь, что это правильный URI
-        };
-        const tokenPageOrigin = 'https://support.hobbs-it.ru/auth/yandex/callback'; // Убедитесь, что это правильный URI
-
-        window.YaAuthSuggest.init(
-          oauthQueryParams,
-          tokenPageOrigin,
-          {
-            view: "button",
-            parentId: "buttonContainer", // Убедитесь, что ID совпадает с вашим элементом
-            buttonSize: 'm',
-            buttonView: 'main',
-            buttonTheme: 'light',
-            buttonBorderRadius: "0",
-            buttonIcon: 'ya',
-          }
-        )
-        .then(({ handler }) => {
-          console.log('Кнопка инициализирована');
-          handler();
-        })
-        .then(data => console.log('Сообщение с токеном', data))
-        .catch(error => console.error('Обработка ошибки', error));
-      } else {
-        console.error('YaAuthSuggest не доступен');
-      }
-    };
-
-    loadScript();
-  }, []);
+          redirect_uri: 'https://support.hobbs-it.ru/'
+        },
+        'https://support.hobbs-it.ru/redirect',
+        {
+          view: 'button',
+          parentId: 'container',
+          buttonView: 'main',
+          buttonTheme: 'light',
+          buttonSize: 'm',
+          buttonBorderRadius: 0
+        }
+      )
+      .then(({ handler }) => handler())
+      .then(data => console.log('Сообщение с токеном', data))
+      .catch(error => console.log('Обработка ошибки', error));
+    }
+  }, []); // Empty dependency array means this effect runs once after initial render
 
   return (
-    <div>
-      <div id="buttonContainer" style={{ margin: '20px', textAlign: 'center' }}>
-        {/* Кнопка авторизации будет добавлена здесь */}
-      </div>
-    </div>
+    <div id="container"></div>
   );
 }
 
