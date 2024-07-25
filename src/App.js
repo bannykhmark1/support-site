@@ -1,5 +1,4 @@
-import React, { useContext, useEffect, useState } from 'react';
-import { Context } from "./index";
+import React, { useEffect, useState } from 'react';
 import { check } from "./http/userAPI";
 import Header from './components/Header';
 import ContactForm from './components/ContactForm';
@@ -9,32 +8,22 @@ import LoginYaID from './components/LoginYaID';
 import './App.css';
 
 function App() {
-  const { user } = useContext(Context);
   const [loading, setLoading] = useState(true);
   const [isYandexAuth, setIsYandexAuth] = useState(false);
 
   useEffect(() => {
-    // Проверяем localStorage на наличие данных о пользователе
-    const storedUserData = localStorage.getItem('user');
-    if (storedUserData) {
-      try {
-        const parsedData = JSON.parse(storedUserData);
-        user.setUser(parsedData);
-        user.setIsAuth(true);
-        setIsYandexAuth(true);
-      } catch (error) {
-        console.error('Ошибка парсинга данных пользователя:', error);
-      }
+    // Проверяем localStorage на наличие данных о Яндекс ID
+    const yandexAuthData = localStorage.getItem('yandex_auth');
+    if (yandexAuthData) {
+      setIsYandexAuth(true);
     } else {
-      // Если нет данных, проверяем параметры URL
+      // Проверяем параметры URL на наличие данных о Яндекс ID
       const queryParams = new URLSearchParams(window.location.search);
       const userData = queryParams.get('data');
       if (userData) {
         try {
           const parsedData = JSON.parse(userData);
-          user.setUser(parsedData);
-          user.setIsAuth(true);
-          localStorage.setItem('user', JSON.stringify(parsedData)); // Сохраняем в localStorage
+          localStorage.setItem('yandex_auth', JSON.stringify(parsedData)); // Сохраняем данные в localStorage
           setIsYandexAuth(true);
         } catch (error) {
           console.error('Ошибка парсинга данных пользователя:', error);
@@ -48,11 +37,11 @@ function App() {
 
   useEffect(() => {
     if (isYandexAuth) {
+      // Допустим, функция check() делает запрос для получения данных о пользователе
       check()
         .then(userData => {
           if (userData) {
-            user.setUser(userData);
-            localStorage.setItem('user', JSON.stringify(userData)); // Обновляем localStorage
+            localStorage.setItem('yandex_auth', JSON.stringify(userData)); // Обновляем localStorage
           }
         })
         .catch(err => {
@@ -60,14 +49,12 @@ function App() {
         })
         .finally(() => setLoading(false));
     }
-  }, [isYandexAuth, user]);
+  }, [isYandexAuth]);
 
-  // Функция для выхода из системы
+  // Функция для выхода из Яндекс ID
   const handleLogout = () => {
-    // Удаляем данные о пользователе из localStorage
-    localStorage.removeItem('user');
-    user.setUser(null);
-    user.setIsAuth(false);
+    // Удаляем данные из localStorage
+    localStorage.removeItem('yandex_auth');
     setIsYandexAuth(false);
 
     // Выполняем выход из Яндекс ID
