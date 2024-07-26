@@ -1,7 +1,8 @@
 import React, { useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
 
-const RedirectToken = ({ onAuthSuccess }) => {
+const RedirectToken = (props) => {
+  console.log(props)
   const location = useLocation();
 
   useEffect(() => {
@@ -9,14 +10,14 @@ const RedirectToken = ({ onAuthSuccess }) => {
     const token = params.get('access_token');
 
     if (token) {
-      // Убедитесь, что onAuthSuccess определена и является функцией
-      if (typeof onAuthSuccess === 'function') {
-        onAuthSuccess({ token });
+      // Убедитесь, что props.onAuthSucces определена и является функцией
+      if (typeof props.onAuthSucces === 'function') {
+        props.onAuthSucces({ token });
       } else {
-        console.error('onAuthSuccess is not defined or not a function');
+        console.error('props.onAuthSucces is not defined or not a function');
       }
     }
-  }, [location, onAuthSuccess]);
+  }, [location, props.onAuthSucces]);
 
   return <div>Авторизация завершена...</div>;
 };
