@@ -21,6 +21,8 @@ function App() {
 
   const handleAuthSuccess = (data) => {
     const token = data.token; // Получаем токен из данных
+    console.log(token)
+    console.log(data)
     if (token) {
       // Используем токен для запроса информации о пользователе
       fetch('https://login.yandex.ru/info?format=json', {
