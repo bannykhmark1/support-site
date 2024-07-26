@@ -9,7 +9,7 @@ function LoginYaID({ onAuthSuccess }) {
           response_type: 'token',
           redirect_uri: 'https://support.hobbs-it.ru/'
         },
-        'https://support.hobbs-it.ru/redirect',
+        'https://support.hobbs-it.ru/',
         {
           view: 'button',
           parentId: 'container',
