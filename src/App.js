@@ -1,19 +1,8 @@
-import React, { useState, useEffect } from 'react';
-import Header from './components/Header';
-import ContactForm from './components/ContactForm';
-import ListAnnouncement from './components/ListAnnouncement';
-import MessengerWidget from './components/MessengerWidget';
-import LoginYaID from './components/LoginYaID';
-import RedirectToken from './components/RedirectToken';
-import './App.css';
-import checkTokenValidity from './checkTokenValidity';
-
 function App() {
   const [isYandexAuth, setIsYandexAuth] = useState(false);
 
   useEffect(() => {
     const token = localStorage.getItem('yandexToken');
-    console.log(token)
     if (token) {
       checkTokenValidity(token)
         .then(isValid => setIsYandexAuth(isValid))
@@ -22,8 +11,8 @@ function App() {
   }, []);
 
   const handleAuthSuccess = (data) => {
-    const token = localStorage.getItem('yandexToken');
-    
+    const token = data.token; // Используем токен из данных, переданных в handleAuthSuccess
+
     fetch('https://login.yandex.ru/info?format=json', {
       method: 'GET',
       headers: {
@@ -34,13 +23,13 @@ function App() {
     .then(userInfo => {
       const allowedDomains = ['kurganmk.ru', 'reftp.ru', 'hobbs-it.ru'];
       const userEmail = userInfo.default_email || '';
-  
+
       console.log('Полученный email:', userEmail);
-  
+
       if (typeof userEmail === 'string' && userEmail.includes('@')) {
         const userDomain = userEmail.split('@')[1]; // Извлечение домена из email
         if (allowedDomains.includes(userDomain)) {
-          localStorage.setItem('yandexToken', token);
+          localStorage.setItem('yandexToken', token); // Сохраняем токен
           setIsYandexAuth(true);
         } else {
           console.log('Недопустимый домен:', userDomain);
@@ -55,20 +44,6 @@ function App() {
       console.error('Ошибка при получении информации о пользователе:', error);
     });
   };
-  
-  
-  
-  
-  useEffect(() => {
-    const token = localStorage.getItem('yandexToken');
-    console.log(token)
-    if (token) {
-      checkTokenValidity(token)
-        .then(isValid => setIsYandexAuth(isValid))
-        .catch(() => setIsYandexAuth(false));
-    }
-  }, []);
-  
 
   return (
     <div className="bg-gray-100 min-h-screen p-4">
