@@ -65,7 +65,9 @@ function App() {
         <Header />
         {isYandexAuth ? (
           <>
-            <button onClick={handleLogout} className="bg-red-500 text-white px-4 py-2 rounded mb-4">Выйти из Яндекс ID</button>
+            <button onClick={handleLogout} className="bg-red-500 text-white px-4 py-2 rounded mb-4">
+              Выйти из Яндекс ID
+            </button>
             <MessengerWidget />
             <ListAnnouncement />
             <ContactForm />

@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import RedirectToken from './RedirectToken';
+
 function LoginYaID({ onAuthSuccess }) {
   useEffect(() => {
     if (window.YaAuthSuggest) {
@@ -35,12 +35,7 @@ function LoginYaID({ onAuthSuccess }) {
     }
   }, [onAuthSuccess]);
 
-  return (
-    <div id="container">
-      <RedirectToken onAuthSuccess={handleAuthSuccess} />
-    </div>
-    
-  );
+  return <div id="container"></div>;
 }
 
 export default LoginYaID;
