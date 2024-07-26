@@ -23,14 +23,13 @@ function App() {
 
   const handleAuthSuccess = (data) => {
     const allowedDomains = ['kurganmk', 'reftp', 'hobbs-it'];
-    const originDomain = data.originDomain; // Assuming you get this in your data
-
-    // Extract the domain and compare
-    if (allowedDomains.some(domain => originDomain.includes(domain))) {
+    const originDomain = data.originDomain || ''; // Default to empty string if undefined
+  
+    if (typeof originDomain === 'string' && allowedDomains.some(domain => originDomain.includes(domain))) {
       localStorage.setItem('yandexToken', data.token);
       setIsYandexAuth(true);
     } else {
-      console.log('Unauthorized domain:', originDomain);
+      console.log('Unauthorized domain or domain not provided:', originDomain);
     }
   };
 
