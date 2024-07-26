@@ -1,16 +1,24 @@
-import React, { useEffect } from "react";
+import React, { useEffect } from 'react';
+import { useLocation } from 'react-router-dom';
 
-const RedirectToken = ({ onAuthSuccess }) => {
+function RedirectToken({ onAuthSuccess }) {
+  const location = useLocation();
+
   useEffect(() => {
-    const params = new URLSearchParams(window.location.hash.slice(1));
-    const token = params.get('access_token');
-
-    if (token) {
-      onAuthSuccess({ token });
+    const hash = location.hash;
+    if (hash) {
+      const params = new URLSearchParams(hash.substring(1));
+      const token = params.get('access_token');
+      if (token) {
+        localStorage.setItem('yandexToken', token);
+        localStorage.setItem('isYandexAuth', 'true');
+        window.opener.postMessage({ token }, window.location.origin);
+        window.close();
+      }
     }
-  }, [onAuthSuccess]);
+  }, [location, onAuthSuccess]);
 
-  return <div>Авторизация завершена...</div>;
-};
+  return null;
+}
 
 export default RedirectToken;

@@ -20,14 +20,16 @@ function LoginYaID({ onAuthSuccess }) {
         }
       )
       .then(({ handler }) => {
-        document.getElementById('container').addEventListener('click', () => {
-          const authUrl = handler();
-          window.open(authUrl, '_blank');
+        const authWindow = window.open(
+          '',
+          'YandexAuth',
+          'width=500,height=600'
+        );
+        handler(() => {
+          authWindow.location.href = 'https://oauth.yandex.ru/authorize?response_type=token&client_id=' + process.env.REACT_APP_YANDEX_CLIENT_ID + '&redirect_uri=https://support.hobbs-it.ru/redirect';
         });
       })
-      .catch(error => {
-        console.error('Ошибка при инициализации виджета авторизации:', error);
-      });
+      .catch(error => console.log('Обработка ошибки', error));
     }
   }, [onAuthSuccess]);
 
