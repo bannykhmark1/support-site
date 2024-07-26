@@ -43,6 +43,7 @@ function App() {
           if (allowedDomains.includes(userDomain)) {
             setIsYandexAuth(true);
           } else {
+            setIsYandexAuth(false);
             console.log('Недопустимый домен:', userDomain);
             alert('Авторизация с этого домена недопустима.');
           }
