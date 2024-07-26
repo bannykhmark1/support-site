@@ -25,12 +25,16 @@ function LoginYaID({ onAuthSuccess }) {
         onAuthSuccess(data); // Передаем данные в App
         console.log(data)
       })
-      .catch(error => console.log('Обработка ошибки', error));
+      .catch(error => {
+        console.error('Ошибка авторизации:', error);
+      });
     }
   }, [onAuthSuccess]);
 
   return (
-    <div id="container"></div>
+    <div id="container">
+      {/* Здесь будет кнопка авторизации Яндекс */}
+    </div>
   );
 }
 
