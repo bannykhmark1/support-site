@@ -19,6 +19,39 @@ function App() {
         .then(isValid => setIsYandexAuth(isValid))
         .catch(() => setIsYandexAuth(false));
     }
+    if (token) {
+      // Используем токен для запроса информации о пользователе
+      fetch('https://login.yandex.ru/info?format=json', {
+        method: 'GET',
+        headers: {
+          'Authorization': `OAuth ${token}`,
+        },
+      })
+        .then(response => response.json())
+        .then(userInfo => {
+          const allowedDomains = ['kurganmk.ru', 'reftp.ru', 'hobbs-it.ru'];
+          const userEmail = userInfo.default_email || '';
+
+          if (typeof userEmail === 'string' && userEmail.includes('@')) {
+            const userDomain = userEmail.split('@')[1];
+            if (allowedDomains.includes(userDomain)) {
+              localStorage.setItem('yandexToken', token);
+              setIsYandexAuth(true);
+            } else {
+              console.log('Недопустимый домен:', userDomain);
+              alert('Авторизация с этого домена недопустима.');
+            }
+          } else {
+            console.log('Email пользователя не предоставлен или невалиден:', userEmail);
+            alert('Не удалось получить данные пользователя для авторизации.');
+          }
+        })
+        .catch(error => {
+          console.error('Ошибка при получении информации о пользователе:', error);
+        });
+
+    };
+
   }, []);
 
   const handleAuthSuccess = (data) => {
