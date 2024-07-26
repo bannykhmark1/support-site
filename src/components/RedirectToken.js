@@ -1,18 +1,22 @@
-import React, { useEffect } from "react";
+import React, { useEffect } from 'react';
+import { useLocation } from 'react-router-dom';
 
 const RedirectToken = ({ onAuthSuccess }) => {
+  const location = useLocation();
+
   useEffect(() => {
-    const params = new URLSearchParams(window.location.hash.slice(1));
+    const params = new URLSearchParams(location.hash.slice(1));
     const token = params.get('access_token');
 
     if (token) {
-      if (onAuthSuccess) {
+      // Убедитесь, что onAuthSuccess определена и является функцией
+      if (typeof onAuthSuccess === 'function') {
         onAuthSuccess({ token });
       } else {
-        console.error('onAuthSuccess is not defined');
+        console.error('onAuthSuccess is not defined or not a function');
       }
     }
-  }, [onAuthSuccess]);
+  }, [location, onAuthSuccess]);
 
   return <div>Авторизация завершена...</div>;
 };
