@@ -25,10 +25,10 @@ function App() {
   }, []);
 
   const handleAuthSuccess = (data) => {
-    console.log('Auth Success Data:', data); // Отладочное сообщение
-
+    console.log('Auth Success Data:', data);
+  
     const token = data.token;
-
+  
     if (token) {
       fetch('https://login.yandex.ru/info?format=json', {
         method: 'GET',
@@ -36,33 +36,36 @@ function App() {
           'Authorization': `OAuth ${token}`,
         },
       })
-        .then(response => response.json())
-        .then(userInfo => {
-          console.log('User Info:', userInfo); // Отладочное сообщение
-          const allowedDomains = ['kurganmk.ru', 'reftp.ru', 'hobbs-it.ru'];
-          const userEmail = userInfo.default_email || '';
-
-          if (typeof userEmail === 'string' && userEmail.includes('@')) {
-            const userDomain = userEmail.split('@')[1];
-            if (allowedDomains.includes(userDomain)) {
-              localStorage.setItem('yandexToken', token);
-              setIsYandexAuth(true);
-            } else {
-              console.log('Недопустимый домен:', userDomain);
-              alert('Авторизация с этого домена недопустима.');
-            }
+      .then(response => response.json())
+      .then(userInfo => {
+        console.log('User Info:', userInfo);
+        const allowedDomains = ['kurganmk.ru', 'reftp.ru', 'hobbs-it.ru'];
+        const userEmail = userInfo.default_email || '';
+  
+        if (typeof userEmail === 'string' && userEmail.includes('@')) {
+          const userDomain = userEmail.split('@')[1];
+          if (allowedDomains.includes(userDomain)) {
+            localStorage.setItem('yandexToken', token);
+            setIsYandexAuth(true);
           } else {
-            console.log('Email пользователя не предоставлен или невалиден:', userEmail);
-            alert('Не удалось получить данные пользователя для авторизации.');
+            console.log('Недопустимый домен:', userDomain);
+            alert('Авторизация с этого домена недопустима.');
+            localStorage.removeItem('yandexToken');
           }
-        })
-        .catch(error => {
-          console.error('Ошибка при получении информации о пользователе:', error);
-        });
+        } else {
+          console.log('Email пользователя не предоставлен или невалиден:', userEmail);
+          alert('Не удалось получить данные пользователя для авторизации.');
+          localStorage.removeItem('yandexToken');
+        }
+      })
+      .catch(error => {
+        console.error('Ошибка при получении информации о пользователе:', error);
+      });
     } else {
       console.log('Token is not available in handleAuthSuccess');
     }
   };
+  
 
   return (
     <div className="bg-gray-100 min-h-screen p-4">
