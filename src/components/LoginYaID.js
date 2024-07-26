@@ -19,7 +19,7 @@ function LoginYaID({ onAuthSuccess }) {
           buttonBorderRadius: 0
         }
       )
-      .then(({ handler }) => handler())
+
       .then(data => {
         onAuthSuccess(data); // Передаем данные в App
       })
