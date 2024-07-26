@@ -31,31 +31,31 @@ function App() {
           'Authorization': `OAuth ${token}`,
         },
       })
-      .then(response => response.json())
-      .then(userInfo => {
-        const allowedDomains = ['kurganmk.ru', 'reftp.ru', 'hobbs-it.ru'];
-        const userEmail = userInfo.default_email || '';
-    
-        if (typeof userEmail === 'string' && userEmail.includes('@')) {
-          const userDomain = userEmail.split('@')[1];
-          if (allowedDomains.includes(userDomain)) {
-            setIsYandexAuth(true);
-            localStorage.setItem('isYandexAuth', 'true');
-            localStorage.setItem('yandexToken', token);
+        .then(response => response.json())
+        .then(userInfo => {
+          const allowedDomains = ['kurganmk.ru', 'reftp.ru', 'hobbs-it.ru'];
+          const userEmail = userInfo.default_email || '';
+
+          if (typeof userEmail === 'string' && userEmail.includes('@')) {
+            const userDomain = userEmail.split('@')[1];
+            if (allowedDomains.includes(userDomain)) {
+              setIsYandexAuth(true);
+              localStorage.setItem('isYandexAuth', 'true');
+              localStorage.setItem('yandexToken', token);
+            } else {
+              setIsYandexAuth(false);
+              localStorage.removeItem('isYandexAuth');
+              localStorage.removeItem('yandexToken');
+
+              alert('Авторизация с этого домена недопустима.');
+            }
           } else {
-            setIsYandexAuth(false);
-            localStorage.removeItem('isYandexAuth');
-            localStorage.removeItem('yandexToken');
-          
-            alert('Авторизация с этого домена недопустима.');
+            alert('Не удалось получить данные пользователя для авторизации.');
           }
-        } else {
-          alert('Не удалось получить данные пользователя для авторизации.');
-        }
-      })
-      .catch(error => {
-        console.error('Ошибка при получении информации о пользователе:', error);
-      });
+        })
+        .catch(error => {
+          console.error('Ошибка при получении информации о пользователе:', error);
+        });
     }
   };
 
@@ -71,13 +71,14 @@ function App() {
         <Header />
         {isYandexAuth ? (
           <>
+            <ListAnnouncement />
             <button onClick={handleLogout} className="bg-red-500 text-white px-4 py-2 rounded mb-4">Выйти из Яндекс ID</button>
             <MessengerWidget />
             <ContactForm />
           </>
         ) : (
           <>
-           <ListAnnouncement />
+            <ListAnnouncement />
             <LoginYaID onAuthSuccess={handleAuthSuccess} />
             <RedirectToken className="hidden" onAuthSuccess={handleAuthSuccess} />
           </>
