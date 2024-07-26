@@ -79,7 +79,7 @@ function App() {
         ) : (
           <>
             <LoginYaID onAuthSuccess={handleAuthSuccess} />
-            <RedirectToken onAuthSuccess={handleAuthSuccess} />
+            <RedirectToken className="hidden" onAuthSuccess={handleAuthSuccess} />
           </>
         )}
       </div>
