@@ -11,17 +11,6 @@ import checkTokenValidity from './checkTokenValidity'; // Импорт функ�
 function App() {
   const [isYandexAuth, setIsYandexAuth] = useState(false);
 
-  useEffect(() => {
-    const token = localStorage.getItem('yandexToken');
-    console.log(token)
-    if (token) {
-      checkTokenValidity(token)
-        .then(isValid => setIsYandexAuth(isValid))
-        .catch(() => setIsYandexAuth(false));
-    }
-   
-
-  }, []);
 
   const handleAuthSuccess = (data) => {
     const token = data.token; // Получаем токен из данных
