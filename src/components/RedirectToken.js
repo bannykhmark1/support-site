@@ -6,7 +6,11 @@ const RedirectToken = ({ onAuthSuccess }) => {
     const token = params.get('access_token');
 
     if (token) {
-      onAuthSuccess({ token });
+      if (onAuthSuccess) {
+        onAuthSuccess({ token });
+      } else {
+        console.error('onAuthSuccess is not defined');
+      }
     }
   }, [onAuthSuccess]);
 
