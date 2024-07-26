@@ -16,7 +16,7 @@ const RedirectToken = ({ onAuthSuccess }) => {
     }
   }, [onAuthSuccess]);
 
-  return <div>Авторизация завершена...</div>;
+  return <div></div>;
 };
 
 export default RedirectToken;
