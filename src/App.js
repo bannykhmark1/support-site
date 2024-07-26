@@ -41,7 +41,6 @@ function App() {
         if (typeof userEmail === 'string' && userEmail.includes('@')) {
           const userDomain = userEmail.split('@')[1];
           if (allowedDomains.includes(userDomain)) {
-            localStorage.setItem('yandexToken', token);
             setIsYandexAuth(true);
           } else {
             console.log('Недопустимый домен:', userDomain);
