@@ -6,13 +6,14 @@ import MessengerWidget from './components/MessengerWidget';
 import LoginYaID from './components/LoginYaID';
 import RedirectToken from './components/RedirectToken';
 import './App.css';
-import checkTokenValidity from './checkTokenValidity';
+import checkTokenValidity from './checkTokenValidity'; // Импорт функции проверки токена
 
 function App() {
   const [isYandexAuth, setIsYandexAuth] = useState(false);
 
   useEffect(() => {
     const token = localStorage.getItem('yandexToken');
+    console.log(token)
     if (token) {
       checkTokenValidity(token)
         .then(isValid => setIsYandexAuth(isValid))
@@ -21,38 +22,8 @@ function App() {
   }, []);
 
   const handleAuthSuccess = (data) => {
-    const token = data.access_token; // Получаем токен из данных
-    if (token) {
-      // Используем токен для запроса информации о пользователе
-      fetch('https://login.yandex.ru/info?format=json', {
-        method: 'GET',
-        headers: {
-          'Authorization': `OAuth ${token}`,
-        },
-      })
-      .then(response => response.json())
-      .then(userInfo => {
-        const allowedDomains = ['kurganmk.ru', 'reftp.ru', 'hobbs-it.ru'];
-        const userEmail = userInfo.default_email || '';
-  
-        if (typeof userEmail === 'string' && userEmail.includes('@')) {
-          const userDomain = userEmail.split('@')[1];
-          if (allowedDomains.includes(userDomain)) {
-            localStorage.setItem('yandexToken', token);
-            setIsYandexAuth(true);
-          } else {
-            console.log('Недопустимый домен:', userDomain);
-            alert('Авторизация с этого домена недопустима.');
-          }
-        } else {
-          console.log('Email пользователя не предоставлен или невалиден:', userEmail);
-          alert('Не удалось получить данные пользователя для авторизации.');
-        }
-      })
-      .catch(error => {
-        console.error('Ошибка при получении информации о пользователе:', error);
-      });
-    }
+    localStorage.setItem('yandexToken', data.token);
+    setIsYandexAuth(true);
   };
 
   return (
