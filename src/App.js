@@ -19,12 +19,20 @@ function App() {
         .then(isValid => setIsYandexAuth(isValid))
         .catch(() => setIsYandexAuth(false));
     }
-    if (token) {
+   
+
+  }, []);
+
+  const handleAuthSuccess = (data) => {
+
+    localStorage.setItem('yandexToken', data.token);
+
+    if (data.token) {
       // Используем токен для запроса информации о пользователе
       fetch('https://login.yandex.ru/info?format=json', {
         method: 'GET',
         headers: {
-          'Authorization': `OAuth ${token}`,
+          'Authorization': `OAuth ${data.token}`,
         },
       })
         .then(response => response.json())
@@ -35,7 +43,7 @@ function App() {
           if (typeof userEmail === 'string' && userEmail.includes('@')) {
             const userDomain = userEmail.split('@')[1];
             if (allowedDomains.includes(userDomain)) {
-              localStorage.setItem('yandexToken', token);
+              localStorage.setItem('yandexToken', data.token);
               setIsYandexAuth(true);
             } else {
               console.log('Недопустимый домен:', userDomain);
@@ -51,9 +59,7 @@ function App() {
         });
 
     };
-
-  }, []);
-
+  };
 
   return (
     <div className="bg-gray-100 min-h-screen p-4">
