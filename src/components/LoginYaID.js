@@ -7,9 +7,9 @@ function LoginYaID({ onAuthSuccess }) {
         {
           client_id: process.env.REACT_APP_YANDEX_CLIENT_ID,
           response_type: 'token',
-          redirect_uri: 'https://support.hobbs-it.ru/redirect'
+          redirect_uri: 'https://support.hobbs-it.ru/redirect/'
         },
-        'https://support.hobbs-it.ru',
+        'https://support.hobbs-it.ru/',
         {
           view: 'button',
           parentId: 'container',
