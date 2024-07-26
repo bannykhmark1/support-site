@@ -19,22 +19,20 @@ function LoginYaID({ onAuthSuccess }) {
           buttonBorderRadius: 0
         }
       )
-      .then(({ handler }) => handler())
-      .then(data => {
-        console.log('Сообщение с токеном', data);
-        onAuthSuccess(data); // Передаем данные в App
-        console.log(data)
+      .then(({ handler }) => {
+        document.getElementById('container').addEventListener('click', () => {
+          const authUrl = handler();
+          window.open(authUrl, '_blank');
+        });
       })
       .catch(error => {
-        console.error('Ошибка авторизации:', error);
+        console.error('Ошибка при инициализации виджета авторизации:', error);
       });
     }
   }, [onAuthSuccess]);
 
   return (
-    <div id="container">
-      {/* Здесь будет кнопка авторизации Яндекс */}
-    </div>
+    <div id="container"></div>
   );
 }
 
