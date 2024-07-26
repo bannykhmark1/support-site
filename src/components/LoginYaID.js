@@ -7,7 +7,7 @@ function LoginYaID({ onAuthSuccess }) {
         {
           client_id: process.env.REACT_APP_YANDEX_CLIENT_ID,
           response_type: 'token',
-          redirect_uri: 'https://support.hobbs-it.ru/'
+          redirect_uri: 'https://support.hobbs-it.ru/',
         },
         'https://support.hobbs-it.ru/redirect',
         {
@@ -16,13 +16,18 @@ function LoginYaID({ onAuthSuccess }) {
           buttonView: 'main',
           buttonTheme: 'light',
           buttonSize: 'm',
-          buttonBorderRadius: 0
+          buttonBorderRadius: 0,
         }
       )
       .then(({ handler }) => handler())
       .then(data => {
         onAuthSuccess(data); // Передаем данные в App
       })
+      .catch(error => {
+        if (error.code !== 'in_progress') {
+          console.error('Ошибка при инициализации Яндекс авторизации:', error);
+        }
+      });
     }
   }, [onAuthSuccess]);
 
