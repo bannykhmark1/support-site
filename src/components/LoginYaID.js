@@ -21,10 +21,8 @@ function LoginYaID({ onAuthSuccess }) {
       )
       .then(({ handler }) => handler())
       .then(data => {
-        console.log('Сообщение с токеном', data);
         onAuthSuccess(data); // Передаем данные в App
       })
-      .catch(error => console.log('Обработка ошибки', error));
     }
   }, [onAuthSuccess]);
 
