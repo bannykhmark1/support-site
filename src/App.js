@@ -73,11 +73,11 @@ function App() {
           <>
             <button onClick={handleLogout} className="bg-red-500 text-white px-4 py-2 rounded mb-4">Выйти из Яндекс ID</button>
             <MessengerWidget />
-            <ListAnnouncement />
             <ContactForm />
           </>
         ) : (
           <>
+           <ListAnnouncement />
             <LoginYaID onAuthSuccess={handleAuthSuccess} />
             <RedirectToken className="hidden" onAuthSuccess={handleAuthSuccess} />
           </>
