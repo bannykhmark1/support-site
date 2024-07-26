@@ -25,6 +25,8 @@ function App() {
     const allowedDomains = ['kurganmk', 'reftp', 'hobbs-it'];
     const originDomain = data.originDomain || ''; // Убедимся, что значение существует
   
+    console.log('Полученный домен:', originDomain);
+  
     if (typeof originDomain === 'string' && allowedDomains.some(domain => originDomain.includes(domain))) {
       localStorage.setItem('yandexToken', data.token);
       setIsYandexAuth(true);
@@ -33,6 +35,7 @@ function App() {
       alert('Авторизация с этого домена недопустима.');
     }
   };
+  
   
   useEffect(() => {
     const token = localStorage.getItem('yandexToken');
