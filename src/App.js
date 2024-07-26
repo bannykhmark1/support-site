@@ -20,7 +20,7 @@ function App() {
   }, []);
 
   const handleAuthSuccess = (data) => {
-    const token = data.token; // Получаем токен из данных
+    const token = data.access_token; // Получаем токен из данных
     console.log(token)
     console.log(data)
     if (token) {
