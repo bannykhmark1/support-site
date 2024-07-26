@@ -37,7 +37,7 @@ function App() {
       .then(userInfo => {
         const allowedDomains = ['kurganmk.ru', 'reftp.ru', 'hobbs-it.ru'];
         const userEmail = userInfo.default_email || '';
-  
+        console.log(userEmail)
         if (typeof userEmail === 'string' && userEmail.includes('@')) {
           const userDomain = userEmail.split('@')[1];
           if (allowedDomains.includes(userDomain)) {
