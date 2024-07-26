@@ -23,15 +23,27 @@ function App() {
 
   const handleAuthSuccess = (data) => {
     const allowedDomains = ['kurganmk', 'reftp', 'hobbs-it'];
-    const originDomain = data.originDomain || ''; // Default to empty string if undefined
+    const originDomain = data.originDomain || ''; // Убедимся, что значение существует
   
     if (typeof originDomain === 'string' && allowedDomains.some(domain => originDomain.includes(domain))) {
       localStorage.setItem('yandexToken', data.token);
       setIsYandexAuth(true);
     } else {
-      console.log('Unauthorized domain or domain not provided:', originDomain);
+      console.log('Недопустимый домен или домен не предоставлен:', originDomain);
+      alert('Авторизация с этого домена недопустима.');
     }
   };
+  
+  useEffect(() => {
+    const token = localStorage.getItem('yandexToken');
+    console.log(token)
+    if (token) {
+      checkTokenValidity(token)
+        .then(isValid => setIsYandexAuth(isValid))
+        .catch(() => setIsYandexAuth(false));
+    }
+  }, []);
+  
 
   return (
     <div className="bg-gray-100 min-h-screen p-4">
