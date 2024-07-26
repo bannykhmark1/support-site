@@ -54,10 +54,6 @@ function App() {
 
   }, []);
 
-  const handleAuthSuccess = (data) => {
-    localStorage.setItem('yandexToken', data.token);
-    setIsYandexAuth(true);
-  };
 
   return (
     <div className="bg-gray-100 min-h-screen p-4">
