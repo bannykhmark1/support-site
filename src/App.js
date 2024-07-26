@@ -19,46 +19,41 @@ function App() {
         .then(isValid => setIsYandexAuth(isValid))
         .catch(() => setIsYandexAuth(false));
     }
-   
-
   }, []);
 
   const handleAuthSuccess = (data) => {
+    const token = data.token;
 
-    localStorage.setItem('yandexToken', data.token);
-
-    if (data.token) {
-      // Используем токен для запроса информации о пользователе
+    if (token) {
       fetch('https://login.yandex.ru/info?format=json', {
         method: 'GET',
         headers: {
-          'Authorization': `OAuth ${data.token}`,
+          'Authorization': `OAuth ${token}`,
         },
       })
-        .then(response => response.json())
-        .then(userInfo => {
-          const allowedDomains = ['kurganmk.ru', 'reftp.ru', 'hobbs-it.ru'];
-          const userEmail = userInfo.default_email || '';
+      .then(response => response.json())
+      .then(userInfo => {
+        const allowedDomains = ['kurganmk.ru', 'reftp.ru', 'hobbs-it.ru'];
+        const userEmail = userInfo.default_email || '';
 
-          if (typeof userEmail === 'string' && userEmail.includes('@')) {
-            const userDomain = userEmail.split('@')[1];
-            if (allowedDomains.includes(userDomain)) {
-              localStorage.setItem('yandexToken', data.token);
-              setIsYandexAuth(true);
-            } else {
-              console.log('Недопустимый домен:', userDomain);
-              alert('Авторизация с этого домена недопустима.');
-            }
+        if (typeof userEmail === 'string' && userEmail.includes('@')) {
+          const userDomain = userEmail.split('@')[1];
+          if (allowedDomains.includes(userDomain)) {
+            localStorage.setItem('yandexToken', token);
+            setIsYandexAuth(true);
           } else {
-            console.log('Email пользователя не предоставлен или невалиден:', userEmail);
-            alert('Не удалось получить данные пользователя для авторизации.');
+            console.log('Недопустимый домен:', userDomain);
+            alert('Авторизация с этого домена недопустима.');
           }
-        })
-        .catch(error => {
-          console.error('Ошибка при получении информации о пользователе:', error);
-        });
-
-    };
+        } else {
+          console.log('Email пользователя не предоставлен или невалиден:', userEmail);
+          alert('Не удалось получить данные пользователя для авторизации.');
+        }
+      })
+      .catch(error => {
+        console.error('Ошибка при получении информации о пользователе:', error);
+      });
+    }
   };
 
   return (
