@@ -13,23 +13,20 @@ function App() {
 
   useEffect(() => {
     const token = localStorage.getItem('yandexToken');
-    console.log('Token from localStorage:', token); // Отладочное сообщение
+    console.log(token)
     if (token) {
       checkTokenValidity(token)
-        .then(isValid => {
-          console.log('Token validity:', isValid); // Отладочное сообщение
-          setIsYandexAuth(isValid);
-        })
+        .then(isValid => setIsYandexAuth(isValid))
         .catch(() => setIsYandexAuth(false));
     }
+   
+
   }, []);
 
   const handleAuthSuccess = (data) => {
-    console.log('Auth Success Data:', data);
-  
-    const token = data.token;
-  
+    const token = data.access_token; // Получаем токен из данных
     if (token) {
+      // Используем токен для запроса информации о пользователе
       fetch('https://login.yandex.ru/info?format=json', {
         method: 'GET',
         headers: {
@@ -38,7 +35,6 @@ function App() {
       })
       .then(response => response.json())
       .then(userInfo => {
-        console.log('User Info:', userInfo);
         const allowedDomains = ['kurganmk.ru', 'reftp.ru', 'hobbs-it.ru'];
         const userEmail = userInfo.default_email || '';
   
@@ -50,22 +46,17 @@ function App() {
           } else {
             console.log('Недопустимый домен:', userDomain);
             alert('Авторизация с этого домена недопустима.');
-            localStorage.removeItem('yandexToken');
           }
         } else {
           console.log('Email пользователя не предоставлен или невалиден:', userEmail);
           alert('Не удалось получить данные пользователя для авторизации.');
-          localStorage.removeItem('yandexToken');
         }
       })
       .catch(error => {
         console.error('Ошибка при получении информации о пользователе:', error);
       });
-    } else {
-      console.log('Token is not available in handleAuthSuccess');
     }
   };
-  
 
   return (
     <div className="bg-gray-100 min-h-screen p-4">
