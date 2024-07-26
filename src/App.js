@@ -22,19 +22,26 @@ function App() {
   }, []);
 
   const handleAuthSuccess = (data) => {
-    const allowedDomains = ['kurganmk', 'reftp', 'hobbs-it'];
-    const originDomain = data.originDomain || ''; // Убедимся, что значение существует
+    const allowedDomains = ['kurganmk.ru', 'reftp.ru', 'hobbs-it.ru'];
+    const userEmail = data.default_email || ''; // Используем default_email для получения почты
   
-    console.log('Полученный домен:', originDomain);
+    console.log('Полученный email:', userEmail);
   
-    if (typeof originDomain === 'string' && allowedDomains.some(domain => originDomain.includes(domain))) {
-      localStorage.setItem('yandexToken', data.token);
-      setIsYandexAuth(true);
+    if (typeof userEmail === 'string' && userEmail.includes('@')) {
+      const userDomain = userEmail.split('@')[1]; // Извлечение домена из email
+      if (allowedDomains.includes(userDomain)) {
+        localStorage.setItem('yandexToken', data.token);
+        setIsYandexAuth(true);
+      } else {
+        console.log('Недопустимый домен:', userDomain);
+        alert('Авторизация с этого домена недопустима.');
+      }
     } else {
-      console.log('Недопустимый домен или домен не предоставлен:', originDomain);
-      alert('Авторизация с этого домена недопустима.');
+      console.log('Email пользователя не предоставлен или невалиден:', userEmail);
+      alert('Не удалось получить данные пользователя для авторизации.');
     }
   };
+  
   
   
   useEffect(() => {
