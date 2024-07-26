@@ -7,9 +7,9 @@ function LoginYaID({ onAuthSuccess }) {
         {
           client_id: process.env.REACT_APP_YANDEX_CLIENT_ID,
           response_type: 'token',
-          redirect_uri: 'https://support.hobbs-it.ru/redirect/'
+          redirect_uri: 'https://support.hobbs-it.ru/'
         },
-        'https://support.hobbs-it.ru/',
+        'https://support.hobbs-it.ru/redirect',
         {
           view: 'button',
           parentId: 'container',
@@ -35,7 +35,9 @@ function LoginYaID({ onAuthSuccess }) {
     }
   }, [onAuthSuccess]);
 
-  return <div id="container"></div>;
+  return (
+    <div id="container"></div>
+  );
 }
 
 export default LoginYaID;
