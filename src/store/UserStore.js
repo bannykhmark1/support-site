@@ -26,14 +26,14 @@ export default class UserStore {
         const storedUser = localStorage.getItem('user');
         const storedAuth = localStorage.getItem('isAuth');
         if (storedUser && storedAuth === 'true') {
-            console.log("Restoring user auth from localStorage");
+          
             this.setUser(JSON.parse(storedUser));
             this.setIsAuth(true);
         }
     }
 
     logout() {
-        console.log("Executing logout");
+
         localStorage.removeItem('user');
         localStorage.removeItem('isAuth');
         this.setUser({});

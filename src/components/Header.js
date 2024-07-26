@@ -10,7 +10,7 @@ const Header = () => {
 
   useEffect(() => {
     user.restoreAuth(); // Восстанавливаем авторизацию при загрузке
-    console.log('Restored Auth State:', user.isAuth);
+
     check()
       .then(userData => {
         if (userData) {
@@ -31,7 +31,7 @@ const Header = () => {
     window.location.reload(); // Обновляем страницу после выхода
   };
 
-  console.log(user.user.role);
+
 
   return (
     <div className="relative text-center mb-8 mx-auto max-w-4xl">

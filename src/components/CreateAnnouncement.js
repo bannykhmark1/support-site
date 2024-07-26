@@ -10,7 +10,7 @@ const CreateAnnouncement = () => {
         e.preventDefault();
         try {
             const response = await createAnnouncement(title, description, date);
-            console.log('Announcement created:', response);
+    
             // Очистка полей после успешного создания объявления
             setTitle('');
             setDescription('');
