@@ -6,7 +6,7 @@ import MessengerWidget from './components/MessengerWidget';
 import LoginYaID from './components/LoginYaID';
 import RedirectToken from './components/RedirectToken';
 import './App.css';
-import checkTokenValidity from './checkTokenValidity';
+import checkTokenValidity from './checkTokenValidity'; // Импорт функции проверки токена
 
 function App() {
   const [isYandexAuth, setIsYandexAuth] = useState(false);
@@ -17,21 +17,12 @@ function App() {
     if (token && isAuth) {
       handleAuthSuccess({ token });
     }
-
-    const handleAuthMessage = (event) => {
-      if (event.origin === window.location.origin) {
-        handleAuthSuccess(event.data);
-        window.location.reload();
-      }
-    };
-
-    window.addEventListener('message', handleAuthMessage);
-    return () => window.removeEventListener('message', handleAuthMessage);
   }, []);
 
   const handleAuthSuccess = (data) => {
-    const token = data.token;
+    const token = data.token; // Получаем токен из данных
     if (token) {
+      // Используем токен для запроса информации о пользователе
       fetch('https://login.yandex.ru/info?format=json', {
         method: 'GET',
         headers: {
@@ -42,6 +33,7 @@ function App() {
       .then(userInfo => {
         const allowedDomains = ['kurganmk.ru', 'reftp.ru', 'hobbs-it.ru'];
         const userEmail = userInfo.default_email || '';
+        console.log(userEmail)
         if (typeof userEmail === 'string' && userEmail.includes('@')) {
           const userDomain = userEmail.split('@')[1];
           if (allowedDomains.includes(userDomain)) {
@@ -52,9 +44,11 @@ function App() {
             setIsYandexAuth(false);
             localStorage.removeItem('isYandexAuth');
             localStorage.removeItem('yandexToken');
+            console.log('Недопустимый домен:', userDomain);
             alert('Авторизация с этого домена недопустима.');
           }
         } else {
+          console.log('Email пользователя не предоставлен или невалиден:', userEmail);
           alert('Не удалось получить данные пользователя для авторизации.');
         }
       })
@@ -76,9 +70,7 @@ function App() {
         <Header />
         {isYandexAuth ? (
           <>
-            <button onClick={handleLogout} className="bg-red-500 text-white px-4 py-2 rounded mb-4">
-              Выйти из Яндекс ID
-            </button>
+            <button onClick={handleLogout} className="bg-red-500 text-white px-4 py-2 rounded mb-4">Выйти из Яндекс ID</button>
             <MessengerWidget />
             <ListAnnouncement />
             <ContactForm />
