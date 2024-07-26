@@ -1,3 +1,13 @@
+import React, { useState, useEffect } from 'react';
+import Header from './components/Header';
+import ContactForm from './components/ContactForm';
+import ListAnnouncement from './components/ListAnnouncement';
+import MessengerWidget from './components/MessengerWidget';
+import LoginYaID from './components/LoginYaID';
+import RedirectToken from './components/RedirectToken';
+import './App.css';
+import checkTokenValidity from './checkTokenValidity';
+
 function App() {
   const [isYandexAuth, setIsYandexAuth] = useState(false);
 
