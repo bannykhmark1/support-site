@@ -36,7 +36,6 @@ const Header = () => {
   return (
     <div className="relative text-center mb-8 mx-auto max-w-4xl">
       <img src="hobbs-logo.png" alt="Логотип" className="mx-auto w-64" />
-      <p className='mt-4 font-extralight' >8-800-555-35-35</p>
       {user.isAuth ? (
         <button
           className="absolute top-0 right-0 bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
