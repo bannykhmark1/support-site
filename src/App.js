@@ -13,15 +13,20 @@ function App() {
 
   useEffect(() => {
     const token = localStorage.getItem('yandexToken');
-    console.log(token)
+    console.log('Token from localStorage:', token); // Отладочное сообщение
     if (token) {
       checkTokenValidity(token)
-        .then(isValid => setIsYandexAuth(isValid))
+        .then(isValid => {
+          console.log('Token validity:', isValid); // Отладочное сообщение
+          setIsYandexAuth(isValid);
+        })
         .catch(() => setIsYandexAuth(false));
     }
   }, []);
 
   const handleAuthSuccess = (data) => {
+    console.log('Auth Success Data:', data); // Отладочное сообщение
+
     const token = data.token;
 
     if (token) {
@@ -31,28 +36,31 @@ function App() {
           'Authorization': `OAuth ${token}`,
         },
       })
-      .then(response => response.json())
-      .then(userInfo => {
-        const allowedDomains = ['kurganmk.ru', 'reftp.ru', 'hobbs-it.ru'];
-        const userEmail = userInfo.default_email || '';
+        .then(response => response.json())
+        .then(userInfo => {
+          console.log('User Info:', userInfo); // Отладочное сообщение
+          const allowedDomains = ['kurganmk.ru', 'reftp.ru', 'hobbs-it.ru'];
+          const userEmail = userInfo.default_email || '';
 
-        if (typeof userEmail === 'string' && userEmail.includes('@')) {
-          const userDomain = userEmail.split('@')[1];
-          if (allowedDomains.includes(userDomain)) {
-            localStorage.setItem('yandexToken', token);
-            setIsYandexAuth(true);
+          if (typeof userEmail === 'string' && userEmail.includes('@')) {
+            const userDomain = userEmail.split('@')[1];
+            if (allowedDomains.includes(userDomain)) {
+              localStorage.setItem('yandexToken', token);
+              setIsYandexAuth(true);
+            } else {
+              console.log('Недопустимый домен:', userDomain);
+              alert('Авторизация с этого домена недопустима.');
+            }
           } else {
-            console.log('Недопустимый домен:', userDomain);
-            alert('Авторизация с этого домена недопустима.');
+            console.log('Email пользователя не предоставлен или невалиден:', userEmail);
+            alert('Не удалось получить данные пользователя для авторизации.');
           }
-        } else {
-          console.log('Email пользователя не предоставлен или невалиден:', userEmail);
-          alert('Не удалось получить данные пользователя для авторизации.');
-        }
-      })
-      .catch(error => {
-        console.error('Ошибка при получении информации о пользователе:', error);
-      });
+        })
+        .catch(error => {
+          console.error('Ошибка при получении информации о пользователе:', error);
+        });
+    } else {
+      console.log('Token is not available in handleAuthSuccess');
     }
   };
 
