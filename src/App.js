@@ -11,6 +11,13 @@ import checkTokenValidity from './checkTokenValidity'; // Импорт функ�
 function App() {
   const [isYandexAuth, setIsYandexAuth] = useState(false);
 
+  useEffect(() => {
+    const token = localStorage.getItem('yandexToken');
+    const isAuth = localStorage.getItem('isYandexAuth') === 'true';
+    if (token && isAuth) {
+      handleAuthSuccess({ token });
+    }
+  }, []);
 
   const handleAuthSuccess = (data) => {
     const token = data.token; // Получаем токен из данных
@@ -31,8 +38,12 @@ function App() {
           const userDomain = userEmail.split('@')[1];
           if (allowedDomains.includes(userDomain)) {
             setIsYandexAuth(true);
+            localStorage.setItem('isYandexAuth', 'true');
+            localStorage.setItem('yandexToken', token);
           } else {
             setIsYandexAuth(false);
+            localStorage.removeItem('isYandexAuth');
+            localStorage.removeItem('yandexToken');
             console.log('Недопустимый домен:', userDomain);
             alert('Авторизация с этого домена недопустима.');
           }
@@ -47,12 +58,19 @@ function App() {
     }
   };
 
+  const handleLogout = () => {
+    setIsYandexAuth(false);
+    localStorage.removeItem('isYandexAuth');
+    localStorage.removeItem('yandexToken');
+  };
+
   return (
     <div className="bg-gray-100 min-h-screen p-4">
       <div className="max-w-4xl mx-auto bg-white p-6 rounded-lg shadow-lg">
         <Header />
         {isYandexAuth ? (
           <>
+            <button onClick={handleLogout} className="bg-red-500 text-white px-4 py-2 rounded mb-4">Выйти из Яндекс ID</button>
             <MessengerWidget />
             <ListAnnouncement />
             <ContactForm />
