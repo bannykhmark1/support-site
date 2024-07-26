@@ -6,7 +6,7 @@ import MessengerWidget from './components/MessengerWidget';
 import LoginYaID from './components/LoginYaID';
 import RedirectToken from './components/RedirectToken';
 import './App.css';
-import checkTokenValidity from './checkTokenValidity'; // Импорт функции проверки токена
+import checkTokenValidity from './checkTokenValidity';
 
 function App() {
   const [isYandexAuth, setIsYandexAuth] = useState(false);
@@ -22,8 +22,16 @@ function App() {
   }, []);
 
   const handleAuthSuccess = (data) => {
-    localStorage.setItem('yandexToken', data.token);
-    setIsYandexAuth(true);
+    const allowedDomains = ['kurganmk', 'reftp', 'hobbs-it'];
+    const originDomain = data.originDomain; // Assuming you get this in your data
+
+    // Extract the domain and compare
+    if (allowedDomains.some(domain => originDomain.includes(domain))) {
+      localStorage.setItem('yandexToken', data.token);
+      setIsYandexAuth(true);
+    } else {
+      console.log('Unauthorized domain:', originDomain);
+    }
   };
 
   return (
