@@ -1,3 +1,4 @@
+// App.js
 import React, { useState, useEffect } from 'react';
 import Header from './components/Header';
 import ContactForm from './components/ContactForm';
@@ -5,11 +6,12 @@ import ListAnnouncement from './components/ListAnnouncement';
 import MessengerWidget from './components/MessengerWidget';
 import LoginYaID from './components/LoginYaID';
 import RedirectToken from './components/RedirectToken';
+import FeedbackForm from './components/FeedbackForm';
 import './App.css';
-import checkTokenValidity from './checkTokenValidity'; // Импорт функции проверки токена
 
 function App() {
   const [isYandexAuth, setIsYandexAuth] = useState(false);
+  const [isFeedbackOpen, setIsFeedbackOpen] = useState(false);
 
   useEffect(() => {
     const token = localStorage.getItem('yandexToken');
@@ -73,15 +75,22 @@ function App() {
             <button onClick={handleLogout} className="bg-red-500 text-white px-4 py-2 rounded mb-4">Выйти из Яндекс ID</button>
             <MessengerWidget />
             <ContactForm />
+      
           </>
         ) : (
           <>
-            <ListAnnouncement />
-            <LoginYaID className="" onAuthSuccess={handleAuthSuccess} />
-            <RedirectToken className="hidden" onAuthSuccess={handleAuthSuccess} />
+                <button
+              onClick={() => setIsFeedbackOpen(true)}
+              className="bg-blue-500 text-white px-4 py-2 rounded mb-4"
+            >
+              Оставить отзыв
+            </button>
+            <LoginYaID onAuthSuccess={handleAuthSuccess} />
+            <RedirectToken onAuthSuccess={handleAuthSuccess} />
           </>
         )}
       </div>
+      <FeedbackForm isOpen={isFeedbackOpen} onClose={() => setIsFeedbackOpen(false)} />
     </div>
   );
 }
