@@ -6,6 +6,7 @@ import MessengerWidget from './components/MessengerWidget';
 import LoginYaID from './components/LoginYaID';
 import RedirectToken from './components/RedirectToken';
 import FeedbackForm from './components/FeedbackForm';
+import Feedback from './components/FeedBack';
 import './App.css';
 
 function App() {
@@ -75,6 +76,7 @@ function App() {
             <ListAnnouncement />
             <MessengerWidget />
             <ContactForm />
+            <Feedback />
           </>
         ) : (
           <>
