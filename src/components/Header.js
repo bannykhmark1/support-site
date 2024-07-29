@@ -4,7 +4,7 @@ import Auth from './Auth';
 import { Context } from "../index";
 import { check } from "../http/userAPI";
 
-const Header = () => {
+const Header = ({ isYandexAuth }) => {
   const { user } = useContext(Context);
   const [loading, setLoading] = useState(true);
 
@@ -31,25 +31,25 @@ const Header = () => {
     window.location.reload(); // Обновляем страницу после выхода
   };
 
-
-
   return (
-    <div className="relative text-center mb-8 mx-auto max-w-4xl">
-      <img src="hobbs-logo.png" alt="Логотип" className="mx-auto w-64" />
+    <div className="flex justify-center relative text-center mb-8 mx-auto max-w-4xl">
+      <img src="hobbs-logo.png" alt="Логотип" className="md:mx-auto md:w-64 w-48" />
       {user.isAuth ? (
         <button
-          className="absolute top-0 right-0 bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+          className="top-0 right-0 bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
           onClick={handleLogout}
         >
           Выйти
         </button>
       ) : (
-        <button
-          onClick={() => setIsModalOpen(true)}
-          className="absolute top-0 right-0 bg-blue-500 mt-2 text-white font-bold py-2 px-4 rounded hover:bg-blue-600"
-        >
-          Авторизация
-        </button>
+        isYandexAuth && (
+          <button
+            onClick={() => setIsModalOpen(true)}
+            className="md:absolute top-0 right-0 bg-black md:mt-2 text-white font-bold py-2 px-4 rounded hover:bg-blue-600"
+          >
+            Авторизация
+          </button>
+        )
       )}
       <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)}>
         <Auth onClose={() => setIsModalOpen(false)} />

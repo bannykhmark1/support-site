@@ -1,3 +1,4 @@
+// FeedbackForm.js
 import React, { useState } from 'react';
 import axios from 'axios';
 import Modal from './Modal';
@@ -14,7 +15,7 @@ const FeedbackForm = ({ isOpen, onClose }) => {
     const YANDEX_TRACKER_OAUTH_TOKEN = process.env.REACT_APP_YANDEX_TRACKER_OAUTH_TOKEN;
     const YANDEX_TRACKER_ORG_ID = process.env.REACT_APP_YANDEX_TRACKER_ORG_ID;
     const YANDEX_TRACKER_QUEUE = process.env.REACT_APP_YANDEX_TRACKER_QUEUE;
-    
+
     try {
       const response = await axios.post(
         YANDEX_TRACKER_URL,
@@ -32,7 +33,6 @@ const FeedbackForm = ({ isOpen, onClose }) => {
         }
       );
 
-      console.log('Response:', response);
       setStatus(`Задача создана успешно: ${response.data.key}`);
     } catch (error) {
       console.error('Ошибка создания задачи:', error);
