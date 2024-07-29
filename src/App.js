@@ -5,11 +5,12 @@ import ListAnnouncement from './components/ListAnnouncement';
 import MessengerWidget from './components/MessengerWidget';
 import LoginYaID from './components/LoginYaID';
 import RedirectToken from './components/RedirectToken';
-
+import FeedbackForm from './components/FeedbackForm';
 import './App.css';
 
 function App() {
   const [isYandexAuth, setIsYandexAuth] = useState(false);
+  const [isFeedbackOpen, setIsFeedbackOpen] = useState(false);
 
   useEffect(() => {
     const token = localStorage.getItem('yandexToken');
@@ -66,11 +67,10 @@ function App() {
   return (
     <div className="bg-gray-100 min-h-screen p-4">
       <div className="max-w-4xl mx-auto bg-white p-6 rounded-lg shadow-lg">
-        <Header isYandexAuth={isYandexAuth} />
+        <Header isYandexAuth={isYandexAuth} handleYandexLogout={handleLogout} />
         {isYandexAuth ? (
           <>
             <ListAnnouncement />
-            <button onClick={handleLogout} className="bg-red-500 text-white px-4 py-2 rounded mb-4">Выйти из Яндекс ID</button>
             <MessengerWidget />
             <ContactForm />
           </>
