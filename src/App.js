@@ -13,10 +13,13 @@ function App() {
   const [isFeedbackOpen, setIsFeedbackOpen] = useState(false);
 
   useEffect(() => {
+    // Проверка состояния авторизации при инициализации
     const token = localStorage.getItem('yandexToken');
     const isAuth = localStorage.getItem('isYandexAuth') === 'true';
+
     if (token && isAuth) {
-      handleAuthSuccess({ token });
+      // Если токен и состояние авторизации сохранены, используем их
+      handleAuthSuccess({ access_token: token });
     }
   }, []);
 
@@ -45,7 +48,6 @@ function App() {
               setIsYandexAuth(false);
               localStorage.removeItem('isYandexAuth');
               localStorage.removeItem('yandexToken');
-
               alert('Авторизация с этого домена недопустима.');
             }
           } else {
