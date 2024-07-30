@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { createAnnouncement } from '../http/announcementAPI'; // Импортируйте ваши API функции
+import { createAnnouncement } from '../http/announcementAPI';
 
 const CreateAnnouncement = () => {
     const [title, setTitle] = useState('');
@@ -9,9 +9,13 @@ const CreateAnnouncement = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
 
-        // Устанавливаем текущую дату, если поле пустое
-        const today = new Date().toISOString().split('T')[0];
-        const announcementDate = date || today;
+        // Получаем текущую дату и время с учетом часового пояса Свердловской области (UTC+5)
+        const now = new Date();
+        const offset = 5 * 60; // Разница в минутах UTC+5
+        const localTime = new Date(now.getTime() + offset * 60 * 1000);
+        const formattedDate = localTime.toISOString().replace('Z', '+05:00');
+
+        const announcementDate = date || formattedDate;
 
         try {
             const response = await createAnnouncement(title, description, announcementDate);
@@ -52,7 +56,7 @@ const CreateAnnouncement = () => {
             <div className="mb-4">
                 <label htmlFor="date" className="block text-gray-700 font-semibold mb-2">Дата:</label>
                 <input 
-                    type="date" 
+                    type="datetime-local" 
                     id="date" 
                     value={date} 
                     onChange={(e) => setDate(e.target.value)} 
