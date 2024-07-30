@@ -11,9 +11,10 @@ const CreateAnnouncement = () => {
 
         // Получаем текущую дату и время с учетом часового пояса Свердловской области (UTC+5)
         const now = new Date();
-        const offset = 5 * 60; // Разница в минутах UTC+5
-        const localTime = new Date(now.getTime() + offset * 60 * 1000);
-        const formattedDate = localTime.toISOString().replace('Z', '+05:00');
+        const localOffset = now.getTimezoneOffset() * 60000;
+        const ekbOffset = 5 * 60 * 60000; // UTC+5 offset in milliseconds
+        const ekbTime = new Date(now.getTime() + ekbOffset - localOffset);
+        const formattedDate = ekbTime.toISOString().slice(0, 19).replace('T', ' ');
 
         const announcementDate = date || formattedDate;
 
@@ -54,7 +55,7 @@ const CreateAnnouncement = () => {
                 />
             </div>
             <div className="mb-4">
-                <label htmlFor="date" className="block text-gray-700 font-semibold mb-2">Дата:</label>
+                <label htmlFor="date" className="block text-gray-700 font-semibold mb-2">Дата и время:</label>
                 <input 
                     type="datetime-local" 
                     id="date" 
