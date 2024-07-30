@@ -4,27 +4,22 @@ import { createAnnouncement } from '../http/announcementAPI';
 const CreateAnnouncement = () => {
     const [title, setTitle] = useState('');
     const [description, setDescription] = useState('');
-    const [date, setDate] = useState('');
 
     const handleSubmit = async (e) => {
         e.preventDefault();
 
-        // Получаем текущую дату и время с учетом часового пояса Свердловской области (UTC+5)
+        // Получаем текущую дату и время с учетом часового пояса Екатеринбурга (UTC+5)
         const now = new Date();
-        const localOffset = now.getTimezoneOffset() * 60000;
-        const ekbOffset = 5 * 60 * 60000; // UTC+5 offset in milliseconds
-        const ekbTime = new Date(now.getTime() + ekbOffset - localOffset);
+        const ekbOffset = 5 * 60 * 60 * 1000; // UTC+5 в миллисекундах
+        const ekbTime = new Date(now.getTime() + ekbOffset - now.getTimezoneOffset() * 60 * 1000);
         const formattedDate = ekbTime.toISOString().slice(0, 19).replace('T', ' ');
 
-        const announcementDate = date || formattedDate;
-
         try {
-            const response = await createAnnouncement(title, description, announcementDate);
+            const response = await createAnnouncement(title, description, formattedDate);
     
             // Очистка полей после успешного создания объявления
             setTitle('');
             setDescription('');
-            setDate('');
         } catch (error) {
             console.error('Error creating announcement:', error);
         }
@@ -52,16 +47,6 @@ const CreateAnnouncement = () => {
                     onChange={(e) => setDescription(e.target.value)} 
                     required 
                     className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:border-blue-500 min-h-[100px]"
-                />
-            </div>
-            <div className="mb-4">
-                <label htmlFor="date" className="block text-gray-700 font-semibold mb-2">Дата и время:</label>
-                <input 
-                    type="datetime-local" 
-                    id="date" 
-                    value={date} 
-                    onChange={(e) => setDate(e.target.value)} 
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:border-blue-500"
                 />
             </div>
             <button 
