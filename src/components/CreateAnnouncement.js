@@ -4,17 +4,21 @@ import { createAnnouncement } from '../http/announcementAPI'; // Импорти�
 const CreateAnnouncement = () => {
     const [title, setTitle] = useState('');
     const [description, setDescription] = useState('');
-    const [date, setDate] = useState('');
+    const [date, setDate] = useState(new Date().toISOString().split('T')[0]);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+
+        // Используем текущую дату, если поле пустое
+        const announcementDate = date || new Date().toISOString().split('T')[0];
+
         try {
-            const response = await createAnnouncement(title, description, date);
+            const response = await createAnnouncement(title, description, announcementDate);
     
             // Очистка полей после успешного создания объявления
             setTitle('');
             setDescription('');
-            setDate('');
+            setDate(new Date().toISOString().split('T')[0]);
         } catch (error) {
             console.error('Error creating announcement:', error);
         }
@@ -51,7 +55,6 @@ const CreateAnnouncement = () => {
                     id="date" 
                     value={date} 
                     onChange={(e) => setDate(e.target.value)} 
-                    required 
                     className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:border-blue-500"
                 />
             </div>
