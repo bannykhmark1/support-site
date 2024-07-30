@@ -54,7 +54,7 @@ const ListAnnouncement = () => {
                         <div className="text-gray-600 mb-2">Команда поддержки УАГ</div>
                         <h3 className="text-2xl font-semibold text-gray-900 mb-4">{mostRecentAnnouncement.title}</h3>
                         <p className="text-gray-700 mb-4">{mostRecentAnnouncement.description}</p>
-                        <p className="text-gray-700 text-xs mb-4">{mostRecentAnnouncement.date}</p>
+                        <p className="text-gray-700 text-sm font-bold mb-4">{mostRecentAnnouncement.date}</p>
                         {user.isAuth && user.user.role === 'ADMIN' && (
                             <div className="flex justify-end">
                                 <button
