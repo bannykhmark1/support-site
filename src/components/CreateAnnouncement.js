@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { createAnnouncement } from '../http/announcementAPI';
-import { format } from 'date-fns';
-import { utcToZonedTime } from 'date-fns-tz';
+import moment from 'moment-timezone';
 
 const CreateAnnouncement = () => {
     const [title, setTitle] = useState('');
@@ -11,10 +10,8 @@ const CreateAnnouncement = () => {
         e.preventDefault();
 
         // Получаем текущую дату и время с учетом часового пояса Екатеринбурга (UTC+5)
-        const timeZone = 'Asia/Yekaterinburg';
-        const now = new Date();
-        const ekbTime = utcToZonedTime(now, timeZone);
-        const formattedDate = format(ekbTime, 'yyyy-MM-dd HH:mm:ss');
+        const ekbTime = moment.tz('Asia/Yekaterinburg');
+        const formattedDate = ekbTime.format('YYYY-MM-DD HH:mm:ss');
 
         try {
             const response = await createAnnouncement(title, description, formattedDate);
