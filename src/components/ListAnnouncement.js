@@ -3,6 +3,7 @@ import { getAllAnnouncements, deleteAnnouncement } from '../http/announcementAPI
 import Modal from './Modal';
 import CreateAnnouncement from './CreateAnnouncement';
 import { Context } from "../index";
+import moment from 'moment-timezone';
 
 const ListAnnouncement = () => {
     const [announcements, setAnnouncements] = useState([]);
@@ -32,6 +33,11 @@ const ListAnnouncement = () => {
         }
     };
 
+    const formatDate = (dateString) => {
+        // Преобразование даты с учётом часового пояса Екатеринбурга
+        return moment.tz(dateString, 'Asia/Yekaterinburg').format('YYYY-MM-DD HH:mm:ss');
+    };
+
     const mostRecentAnnouncement = announcements.length ? announcements[0] : null;
 
     return (
@@ -54,7 +60,7 @@ const ListAnnouncement = () => {
                         <div className="text-gray-600 mb-2">Команда поддержки УАГ</div>
                         <h3 className="text-2xl font-semibold text-gray-900 mb-4">{mostRecentAnnouncement.title}</h3>
                         <p className="text-gray-700 mb-4">{mostRecentAnnouncement.description}</p>
-                        <p className="text-gray-700 mb-4">{mostRecentAnnouncement.date}</p>
+                        <p className="text-gray-700 mb-4">{formatDate(mostRecentAnnouncement.date)}</p>
                         {user.isAuth && user.user.role === 'ADMIN' && (
                             <div className="flex justify-end">
                                 <button
@@ -88,6 +94,7 @@ const ListAnnouncement = () => {
                             <div className="text-gray-600 mb-2">Команда поддержки УАГ</div>
                             <h3 className="text-2xl font-semibold text-gray-900 mb-4">{announcement.title}</h3>
                             <p className="text-gray-700 mb-4">{announcement.description}</p>
+                            <p className="text-gray-700 mb-4">{formatDate(announcement.date)}</p>
                             {user.isAuth && user.user.role === 'ADMIN' && (
                                 <div className="flex justify-end">
                                     <button
