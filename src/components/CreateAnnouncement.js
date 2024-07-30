@@ -10,9 +10,9 @@ const CreateAnnouncement = () => {
 
         // Получаем текущую дату и время с учетом часового пояса Екатеринбурга (UTC+5)
         const now = new Date();
-        const ekbOffset = 5 * 60 * 60 * 1000; // UTC+5 в миллисекундах
+        const ekbOffset = 60 * 60 * 1000; // UTC+5 в миллисекундах
         const ekbTime = new Date(now.getTime() + ekbOffset - now.getTimezoneOffset() * 60 * 1000);
-        const formattedDate = ekbTime.toISOString().slice(0, 19).replace('T', ' ');
+        const formattedDate = ekbTime.toISOString().slice(0, 19).replace('Z', ' ');
 
         try {
             const response = await createAnnouncement(title, description, formattedDate);
