@@ -2,7 +2,7 @@ import React, { useEffect, useCallback } from 'react';
 
 function LoginYaID({ onAuthSuccess }) {
   const initYaAuthSuggest = useCallback(() => {
-    if (window.YaAuthSuggest) {
+
       window.YaAuthSuggest.init(
         {
           client_id: process.env.REACT_APP_YANDEX_CLIENT_ID,
@@ -20,7 +20,7 @@ function LoginYaID({ onAuthSuccess }) {
           console.error('Ошибка при инициализации Яндекс авторизации:', error);
         }
       });
-    }
+    
   }, [onAuthSuccess]);
 
   useEffect(() => {
