@@ -10,6 +10,14 @@
             redirect_uri: 'https://support.hobbs-it.ru/redirect',
           },
           'https://support.hobbs-it.ru/',
+          {
+            view: 'button',
+            parentId: 'container',
+            buttonView: 'main',
+            buttonTheme: 'light',
+            buttonSize: 'm',
+            buttonBorderRadius: 0,
+          }
         )
         .then(({ handler }) => handler())
         .then(data => {
