@@ -44,7 +44,7 @@ const ListAnnouncement = () => {
     return (
         <div className="max-w-4xl mx-auto mt-10 p-4">
             <div className="flex justify-between items-center mb-6">
-                <h2 className="text-4xl font-bold text-gray-800">Объявления</h2>
+                <h2 className="text-3xl font-bold text-gray-800">Объявления</h2>
                 {user.isAuth && user.user.role === 'ADMIN' && (
                     <button
                         onClick={() => setIsModalOpen(true)}
