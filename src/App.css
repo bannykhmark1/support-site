@@ -7,6 +7,11 @@
   pointer-events: none;
 }
 
+/* Скрыть кнопку закрытия в виджете Яндекс авторизации */
+button[data-t="suggest:close"] {
+  display: none !important;
+}
+
 @media (prefers-reduced-motion: no-preference) {
   .App-logo {
     animation: App-logo-spin infinite 20s linear;
