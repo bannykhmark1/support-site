@@ -1,7 +1,7 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useCallback } from 'react';
 
 function LoginYaID({ onAuthSuccess }) {
-  const initYaAuthSuggest = () => {
+  const initYaAuthSuggest = useCallback(() => {
     if (window.YaAuthSuggest) {
       window.YaAuthSuggest.init(
         {
@@ -21,11 +21,11 @@ function LoginYaID({ onAuthSuccess }) {
         }
       });
     }
-  };
+  }, [onAuthSuccess]);
 
   useEffect(() => {
     initYaAuthSuggest();
-  }, [onAuthSuccess]);
+  }, [initYaAuthSuggest]);
 
   return (
     <div>
