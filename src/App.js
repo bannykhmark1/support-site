@@ -69,13 +69,14 @@ function App() {
 
   return (
     <div className="bg-gray-100 min-h-screen p-4">
-      <div className="max-w-4xl mx-auto bg-white p-6 rounded-lg shadow-lg">
+      <div className="max-w-6xl mx-auto bg-white p-6 rounded-lg shadow-lg">
         <Header isYandexAuth={isYandexAuth} handleYandexLogout={handleLogout} />
         {isYandexAuth ? (
           <>
-            <ListAnnouncement />
-            <MessengerWidget />
+            <div className="md:flex">
             <ContactForm />
+            <ListAnnouncement />
+            </div>
             <Feedback />
           </>
         ) : (
