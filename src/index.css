@@ -12,6 +12,11 @@ body {
 }
 
 
+/* Скрыть кнопку закрытия в виджете Яндекс авторизации */
+button[data-t="suggest:close"] {
+  display: none !important;
+}
+
 
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
