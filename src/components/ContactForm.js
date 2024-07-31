@@ -12,7 +12,7 @@ const ContactForm = () => {
     
     <div className="max-w-4xl mx-auto mt-10 p-4">
 <div className="flex justify-between items-center mb-6">
-<h2 className="text-4xl font-bold text-gray-800">Обратная связь</h2>
+<h2 className="text-3xl font-bold text-gray-800">Написать в поддержку</h2>
        
       </div>
       <div className="bg-white shadow-lg w rounded-lg p-6 mb-6">
