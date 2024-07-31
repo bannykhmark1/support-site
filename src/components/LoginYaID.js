@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 
 function LoginYaID({ onAuthSuccess }) {
-  useEffect(() => {
+  const initYaAuthSuggest = () => {
     if (window.YaAuthSuggest) {
       window.YaAuthSuggest.init(
         {
@@ -21,10 +21,17 @@ function LoginYaID({ onAuthSuccess }) {
         }
       });
     }
+  };
+
+  useEffect(() => {
+    initYaAuthSuggest();
   }, [onAuthSuccess]);
 
   return (
-    <div id="container"></div>
+    <div>
+      <div id="container"></div>
+      <button onClick={initYaAuthSuggest}>Открыть авторизацию Яндекс</button>
+    </div>
   );
 }
 
