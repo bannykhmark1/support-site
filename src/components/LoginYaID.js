@@ -10,7 +10,6 @@
             redirect_uri: 'https://support.hobbs-it.ru/redirect',
           },
           'https://support.hobbs-it.ru/',
-ф
         )
         .then(({ handler }) => handler())
         .then(data => {
