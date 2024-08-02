@@ -6,7 +6,7 @@ import { MdEmail } from "react-icons/md";
 const ContactForm = () => {
   const subject = encodeURIComponent("Support Request");
   const body = encodeURIComponent("");
-  const yandexMailUrl = `https://mail.yandex.com/compose?mailto=do_support@kurganmk.ru&subject=${subject}&body=${body}`;
+   const yandexMailUrl = `https://mail.yandex.ru/compose?mailto=do_support@kurganmk.ru&subject=${subject}&body=${body}`;
 
   return (
     
