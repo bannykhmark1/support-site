@@ -1,8 +1,7 @@
-import React, { useEffect } from 'react';
+  import React, { useEffect } from 'react';
 
-function LoginYaID({ onAuthSuccess }) {
-  useEffect(() => {
-    const initYaAuth = () => {
+  function LoginYaID({ onAuthSuccess }) {
+    useEffect(() => {
       if (window.YaAuthSuggest) {
         window.YaAuthSuggest.init(
           {
@@ -22,27 +21,11 @@ function LoginYaID({ onAuthSuccess }) {
           }
         });
       }
-    };
+    }, [onAuthSuccess]);
 
-    // Удаление предыдущего виджета, если он есть
-    const container = document.getElementById('container');
-    if (container) {
-      container.innerHTML = '';
-    }
+    return (
+      <div id="container"></div>
+    );
+  }
 
-    initYaAuth();
-
-    return () => {
-      // Очищаем контейнер при размонтировании компонента
-      if (container) {
-        container.innerHTML = '';
-      }
-    };
-  }, [onAuthSuccess]);
-
-  return (
-    <div id="container"></div>
-  );
-}
-
-export default LoginYaID;
+  export default LoginYaID;

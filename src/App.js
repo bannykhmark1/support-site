@@ -65,16 +65,7 @@ function App() {
     setIsYandexAuth(false);
     localStorage.removeItem('isYandexAuth');
     localStorage.removeItem('yandexToken');
-  
-    // Удаление всех куки, связанных с Яндекс
-    document.cookie.split(";").forEach((c) => {
-      document.cookie = c.replace(/^ +/, "").replace(/=.*/, "=;expires=" + new Date().toUTCString() + ";path=/");
-    });
-  
-    // Переинициализация виджета после логаута
-    window.location.reload(); // Обновление страницы после выхода для повторной инициализации виджета
   };
-  
 
   return (
     <div className="bg-gray-100 min-h-screen p-4">
