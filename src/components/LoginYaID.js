@@ -2,8 +2,8 @@ import React, { useEffect } from 'react';
 
 function LoginYaID({ onAuthSuccess }) {
   useEffect(() => {
-    if (window.YaAuthSuggest) {
-      const initWidget = () => {
+    const initYaAuth = () => {
+      if (window.YaAuthSuggest) {
         window.YaAuthSuggest.init(
           {
             client_id: process.env.REACT_APP_YANDEX_CLIENT_ID,
@@ -21,22 +21,23 @@ function LoginYaID({ onAuthSuccess }) {
             console.error('Ошибка при инициализации Яндекс авторизации:', error);
           }
         });
-      };
-
-      // Инициализация виджета сразу при монтировании
-      initWidget();
-
-      // Переинициализация виджета при каждом обновлении
-      const observer = new MutationObserver(initWidget);
-      const container = document.getElementById('container');
-      if (container) {
-        observer.observe(container, { childList: true });
       }
+    };
 
-      return () => {
-        observer.disconnect();
-      };
+    // Удаление предыдущего виджета, если он есть
+    const container = document.getElementById('container');
+    if (container) {
+      container.innerHTML = '';
     }
+
+    initYaAuth();
+
+    return () => {
+      // Очищаем контейнер при размонтировании компонента
+      if (container) {
+        container.innerHTML = '';
+      }
+    };
   }, [onAuthSuccess]);
 
   return (
