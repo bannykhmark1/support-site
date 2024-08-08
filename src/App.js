@@ -65,6 +65,9 @@ function App() {
     setIsYandexAuth(false);
     localStorage.removeItem('isYandexAuth');
     localStorage.removeItem('yandexToken');
+
+    // Переинициализация виджета после логаута
+    window.location.reload(); // Обновление страницы после выхода для повторной инициализации виджета
   };
 
   return (
