@@ -4,7 +4,7 @@ import Header from './components/Header';
 import ContactForm from './components/ContactForm';
 import ListAnnouncement from './components/ListAnnouncement';
 import Feedback from './components/FeedBack';
-import RedirectToken from './components/RedirectToken';
+import RedirectToken from './components/RedirectToken'; // Убедитесь, что этот импорт правильный
 import './App.css';
 
 function App() {
@@ -76,7 +76,7 @@ function App() {
         ) : (
           <>
             <LoginYaID onAuthSuccess={handleAuthSuccess} />
-            <RedirectToken onAuthSuccess={handleAuthSuccess} />
+            <RedirectToken onAuthSuccess={handleAuthSuccess} />  {/* Убедитесь, что сюда передается функция */}
           </>
         )}
       </div>
