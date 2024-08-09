@@ -8,6 +8,7 @@ import RedirectToken from './components/RedirectToken';
 import FeedbackForm from './components/FeedbackForm';
 import Feedback from './components/FeedBack';
 import './App.css';
+import ErrorBoundary from './components/ErrorBoundary';
 
 function App() {
   const [isYandexAuth, setIsYandexAuth] = useState(false);
@@ -81,8 +82,10 @@ function App() {
           </>
         ) : (
           <>
+          <ErrorBoundary>
             <LoginYaID onAuthSuccess={handleAuthSuccess} />
             <RedirectToken onAuthSuccess={handleAuthSuccess} />
+            </ErrorBoundary>
           </>
         )}
       </div>
