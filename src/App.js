@@ -5,14 +5,11 @@ import ListAnnouncement from './components/ListAnnouncement';
 import MessengerWidget from './components/MessengerWidget';
 import LoginYaID from './components/LoginYaID';
 import RedirectToken from './components/RedirectToken';
-import FeedbackForm from './components/FeedbackForm';
-import Feedback from './components/FeedBack';
+import Feedback from './components/Feedback';
 import './App.css';
-import ErrorBoundary from './components/ErrorBoundary';
 
 function App() {
   const [isYandexAuth, setIsYandexAuth] = useState(false);
-  const [isFeedbackOpen, setIsFeedbackOpen] = useState(false);
 
   useEffect(() => {
     // Проверка состояния авторизации при инициализации
@@ -75,17 +72,15 @@ function App() {
         {isYandexAuth ? (
           <>
             <div className="md:flex">
-            <ContactForm />
-            <ListAnnouncement />
+              <ContactForm />
+              <ListAnnouncement />
             </div>
             <Feedback />
           </>
         ) : (
           <>
-          <ErrorBoundary>
             <LoginYaID onAuthSuccess={handleAuthSuccess} />
             <RedirectToken onAuthSuccess={handleAuthSuccess} />
-            </ErrorBoundary>
           </>
         )}
       </div>
