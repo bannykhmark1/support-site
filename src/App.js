@@ -1,26 +1,33 @@
-import React, { useState, useEffect, useCallback } from 'react';
-import LoginYaID from './components/LoginYaID';
+import React, { useState, useEffect } from 'react';
 import Header from './components/Header';
 import ContactForm from './components/ContactForm';
 import ListAnnouncement from './components/ListAnnouncement';
-import RedirectToken from './components/RedirectToken'; // Убедитесь, что этот импорт правильный
+import MessengerWidget from './components/MessengerWidget';
+import LoginYaID from './components/LoginYaID';
+import RedirectToken from './components/RedirectToken';
+import FeedbackForm from './components/FeedbackForm';
+import Feedback from './components/FeedBack';
 import './App.css';
 
 function App() {
   const [isYandexAuth, setIsYandexAuth] = useState(false);
+  const [isFeedbackOpen, setIsFeedbackOpen] = useState(false);
 
   useEffect(() => {
+    // Проверка состояния авторизации при инициализации
     const token = localStorage.getItem('yandexToken');
     const isAuth = localStorage.getItem('isYandexAuth') === 'true';
 
     if (token && isAuth) {
+      // Если токен и состояние авторизации сохранены, используем их
       handleAuthSuccess({ access_token: token });
     }
   }, []);
 
-  const handleAuthSuccess = useCallback((data) => {
-    const token = data.access_token;
+  const handleAuthSuccess = (data) => {
+    const token = data.access_token; // Получаем токен из данных
     if (token) {
+      // Используем токен для запроса информации о пользователе
       fetch('https://login.yandex.ru/info?format=json', {
         method: 'GET',
         headers: {
@@ -52,7 +59,7 @@ function App() {
           console.error('Ошибка при получении информации о пользователе:', error);
         });
     }
-  }, []);
+  };
 
   const handleLogout = () => {
     setIsYandexAuth(false);
@@ -62,20 +69,19 @@ function App() {
 
   return (
     <div className="bg-gray-100 min-h-screen p-4">
-      <div className="max-w-6xl mx-auto bg-white p-6 rounded-lg shadow-lg">
+      <div className="max-w-4xl mx-auto bg-white p-6 rounded-lg shadow-lg">
         <Header isYandexAuth={isYandexAuth} handleYandexLogout={handleLogout} />
         {isYandexAuth ? (
           <>
-            <div className="md:flex">
-              <ContactForm />
-              <ListAnnouncement />
-            </div>
-
+            <ListAnnouncement />
+            <MessengerWidget />
+            <ContactForm />
+            <Feedback />
           </>
         ) : (
           <>
-            <LoginYaID />
-            <RedirectToken />  {/* Убедитесь, что тут нет передачи функции */}
+            <LoginYaID onAuthSuccess={handleAuthSuccess} />
+            <RedirectToken onAuthSuccess={handleAuthSuccess} />
           </>
         )}
       </div>

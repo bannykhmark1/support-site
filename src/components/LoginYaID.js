@@ -1,21 +1,18 @@
 import React, { useEffect } from 'react';
 
-function LoginYaID() {
+function LoginYaID({ onAuthSuccess }) {
   useEffect(() => {
-    const token = localStorage.getItem('yandexToken');
-
-    // Если токен уже существует, пропускаем инициализацию
-    if (!token && window.YaAuthSuggest) {
+    if (window.YaAuthSuggest) {
       window.YaAuthSuggest.init(
         {
-          client_id: process.env.REACT_APP_YANDEX_CLIENT_ID, // Ваш CLIENT_ID из настроек приложения Яндекс
+          client_id: process.env.REACT_APP_YANDEX_CLIENT_ID,
           response_type: 'token',
-          redirect_uri: 'https://support.hobbs-it.ru/redirect', // URL для редиректа
+          redirect_uri: 'https://support.hobbs-it.ru/redirect',
         },
-        'https://support.hobbs-it.ru/', // URL сайта
+        'https://support.hobbs-it.ru/',
         {
-          view: 'button', // Виджет с кнопкой
-          parentId: 'container', // ID элемента, в который будет вставлен виджет
+          view: 'button',
+          parentId: 'container',
           buttonView: 'main',
           buttonTheme: 'light',
           buttonSize: 'm',
@@ -24,28 +21,18 @@ function LoginYaID() {
       )
       .then(({ handler }) => handler())
       .then(data => {
-        // Сохраняем токен в localStorage
-        localStorage.setItem('yandexToken', data.token);
-        console.log('Сообщение с токеном: ', data);
+        onAuthSuccess(data); // Передаем данные в App
       })
       .catch(error => {
-        console.error('Ошибка при инициализации Яндекс авторизации:', error);
+        if (error.code !== 'in_progress') {
+          console.error('Ошибка при инициализации Яндекс авторизации:', error);
+        }
       });
     }
-    
-    // Добавляем и удаляем скрипт при монтировании и размонтировании компонента
-    const script = document.createElement('script');
-    script.src = 'https://yastatic.net/s3/passport-sdk/autofill/v1/sdk-suggest-with-polyfills-latest.js';
-    script.async = true;
-    document.body.appendChild(script);
-
-    return () => {
-      document.body.removeChild(script);
-    };
-  }, []);
+  }, [onAuthSuccess]);
 
   return (
-    <div id="container"></div> // Контейнер для виджета Яндекс авторизации
+    <div id="container"></div>
   );
 }
 
