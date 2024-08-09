@@ -23,13 +23,12 @@ function LoginYaID({ onAuthSuccess }) {
         return handler();
       })
       .then(data => {
-        onAuthSuccess(data); // Передаем данные в App
+        onAuthSuccess(data);
       })
       .catch(error => {
         if (error.code !== 'in_progress') {
           console.error('Ошибка при инициализации Яндекс авторизации:', error);
         }
-        // Если ошибка 'in_progress', мы её просто игнорируем и не выводим в консоль
       });
     }
   }, [onAuthSuccess]);

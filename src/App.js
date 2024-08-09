@@ -1,31 +1,27 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import Header from './components/Header';
 import ContactForm from './components/ContactForm';
 import ListAnnouncement from './components/ListAnnouncement';
-import MessengerWidget from './components/MessengerWidget';
+import Feedback from './components/FeedBack';
 import LoginYaID from './components/LoginYaID';
 import RedirectToken from './components/RedirectToken';
-import Feedback from './components/Feedback';
 import './App.css';
 
 function App() {
   const [isYandexAuth, setIsYandexAuth] = useState(false);
 
   useEffect(() => {
-    // Проверка состояния авторизации при инициализации
     const token = localStorage.getItem('yandexToken');
     const isAuth = localStorage.getItem('isYandexAuth') === 'true';
 
     if (token && isAuth) {
-      // Если токен и состояние авторизации сохранены, используем их
       handleAuthSuccess({ access_token: token });
     }
   }, []);
 
-  const handleAuthSuccess = (data) => {
-    const token = data.access_token; // Получаем токен из данных
+  const handleAuthSuccess = useCallback((data) => {
+    const token = data.access_token;
     if (token) {
-      // Используем токен для запроса информации о пользователе
       fetch('https://login.yandex.ru/info?format=json', {
         method: 'GET',
         headers: {
@@ -57,7 +53,7 @@ function App() {
           console.error('Ошибка при получении информации о пользователе:', error);
         });
     }
-  };
+  }, []);
 
   const handleLogout = () => {
     setIsYandexAuth(false);
@@ -75,7 +71,7 @@ function App() {
               <ContactForm />
               <ListAnnouncement />
             </div>
-
+            <Feedback />
           </>
         ) : (
           <>
