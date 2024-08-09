@@ -3,7 +3,7 @@ import React, { useEffect } from 'react';
 function LoginYaID({ onAuthSuccess }) {
   useEffect(() => {
     const token = localStorage.getItem('yandexToken');
-
+    console.log(token)
     if (!token && window.YaAuthSuggest) {  // Инициализация происходит только если токена нет и библиотека загружена
       window.YaAuthSuggest.init(
         {
