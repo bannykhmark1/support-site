@@ -1,9 +1,9 @@
 import React, { useState, useEffect, useCallback } from 'react';
+import LoginYaID from './components/LoginYaID';
 import Header from './components/Header';
 import ContactForm from './components/ContactForm';
 import ListAnnouncement from './components/ListAnnouncement';
 import Feedback from './components/FeedBack';
-import LoginYaID from './components/LoginYaID';
 import RedirectToken from './components/RedirectToken';
 import './App.css';
 
