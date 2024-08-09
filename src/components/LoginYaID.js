@@ -4,7 +4,7 @@ function LoginYaID({ onAuthSuccess }) {
   useEffect(() => {
     const token = localStorage.getItem('yandexToken');
     console.log(token)
-    if (!token && window.YaAuthSuggest) {  // Инициализация происходит только если токена нет и библиотека загружена
+    if (!token && window.YaAuthSuggest && token != null) {  // Инициализация происходит только если токена нет и библиотека загружена
       window.YaAuthSuggest.init(
         {
           client_id: process.env.REACT_APP_YANDEX_CLIENT_ID,
