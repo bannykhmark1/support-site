@@ -1,3 +1,4 @@
+import Cookies from 'js-cookie';
 import React, { useState, useEffect } from 'react';
 import Header from './components/Header';
 import ContactForm from './components/ContactForm';
@@ -15,11 +16,10 @@ function App() {
 
   useEffect(() => {
     // Проверка состояния авторизации при инициализации
-    const token = localStorage.getItem('yandexToken');
-    const isAuth = localStorage.getItem('isYandexAuth') === 'true';
+    const token = Cookies.get('yandexToken');
+    const isAuth = Cookies.get('isYandexAuth') === 'true';
 
     if (token && isAuth) {
-      // Если токен и состояние авторизации сохранены, используем их
       handleAuthSuccess({ access_token: token });
     }
   }, []);
@@ -43,12 +43,12 @@ function App() {
             const userDomain = userEmail.split('@')[1];
             if (allowedDomains.includes(userDomain)) {
               setIsYandexAuth(true);
-              localStorage.setItem('isYandexAuth', 'true');
-              localStorage.setItem('yandexToken', token);
+              Cookies.set('isYandexAuth', 'true', { expires: 7 }); // Куки на 7 дней
+              Cookies.set('yandexToken', token, { expires: 7 });
             } else {
               setIsYandexAuth(false);
-              localStorage.removeItem('isYandexAuth');
-              localStorage.removeItem('yandexToken');
+              Cookies.remove('isYandexAuth');
+              Cookies.remove('yandexToken');
               alert('Авторизация с этого домена недопустима.');
             }
           } else {
@@ -63,8 +63,8 @@ function App() {
 
   const handleLogout = () => {
     setIsYandexAuth(false);
-    localStorage.removeItem('isYandexAuth');
-    localStorage.removeItem('yandexToken');
+    Cookies.remove('isYandexAuth');
+    Cookies.remove('yandexToken');
   };
 
   return (
