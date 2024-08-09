@@ -2,7 +2,9 @@ import React, { useEffect } from 'react';
 
 function LoginYaID({ onAuthSuccess }) {
   useEffect(() => {
-    if (window.YaAuthSuggest) {
+    const token = localStorage.getItem('yandexToken');
+
+    if (!token && window.YaAuthSuggest) {  // Инициализация происходит только если токена нет и библиотека загружена
       window.YaAuthSuggest.init(
         {
           client_id: process.env.REACT_APP_YANDEX_CLIENT_ID,
@@ -26,9 +28,7 @@ function LoginYaID({ onAuthSuccess }) {
         onAuthSuccess(data);
       })
       .catch(error => {
-        if (error.code !== 'in_progress') {
-          console.error('Ошибка при инициализации Яндекс авторизации:', error);
-        }
+        console.error('Ошибка при инициализации Яндекс авторизации:', error);
       });
     }
   }, [onAuthSuccess]);
