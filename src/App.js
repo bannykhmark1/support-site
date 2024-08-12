@@ -10,7 +10,7 @@ import Feedback from "./components/FeedBack";
 import "./App.css";
 
 function App() {
-  const [isYandexAuth, setIsYandexAuth] = useState(true);
+  const [isYandexAuth, setIsYandexAuth] = useState(false);
   const [isFeedbackOpen, setIsFeedbackOpen] = useState(false);
 
   useEffect(() => {
