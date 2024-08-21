@@ -7,7 +7,7 @@
           {
             client_id: process.env.REACT_APP_YANDEX_CLIENT_ID,
             response_type: 'token',
-            redirect_uri: 'https://oauth.yandex.ru/suggest/token',
+            redirect_uri: 'https://support.hobbs-it.ru/redirect',
           },
           'https://support.hobbs-it.ru/',
 
