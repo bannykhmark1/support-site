@@ -9,7 +9,7 @@
             response_type: 'token',
             redirect_uri: 'https://oauth.yandex.ru/suggest/token',
           },
-          'https://oauth.yandex.ru/suggest/token',
+          'https://support.hobbs-it.ru/',
 
         )
         .then(({ handler }) => handler())
