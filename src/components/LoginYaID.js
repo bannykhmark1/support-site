@@ -1,6 +1,7 @@
   import React, { useEffect } from 'react';
 
   function LoginYaID({ onAuthSuccess, yaAuth }) {
+    console.log(yaAuth)
     useEffect(() => {
       if (window.YaAuthSuggest && yaAuth === false) {
         window.YaAuthSuggest.init(
