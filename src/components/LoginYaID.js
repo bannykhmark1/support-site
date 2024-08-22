@@ -1,8 +1,8 @@
   import React, { useEffect } from 'react';
 
-  function LoginYaID({ onAuthSuccess }) {
+  function LoginYaID({ onAuthSuccess, yaAuth }) {
     useEffect(() => {
-      if (window.YaAuthSuggest) {
+      if (window.YaAuthSuggest && yaAuth === false) {
         window.YaAuthSuggest.init(
           {
             client_id: process.env.REACT_APP_YANDEX_CLIENT_ID,
