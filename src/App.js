@@ -85,8 +85,8 @@ function App() {
           </>
         ) : (
           <>
-            <LoginYaID onAuthSuccess={handleAuthSuccess} />
-            <RedirectToken onAuthSuccess={handleAuthSuccess} />
+            <LoginYaID onAuthSuccess={handleAuthSuccess} yaAuth={isYandexAuth} />
+            <RedirectToken onAuthSuccess={handleAuthSuccess}  />
           </>
         )}
       </div>
