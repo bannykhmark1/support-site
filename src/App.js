@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import Header from "./components/Header";
 import ContactForm from "./components/ContactForm";
 import ListAnnouncement from "./components/ListAnnouncement";
@@ -11,23 +11,10 @@ import "./App.css";
 
 function App() {
   const [isYandexAuth, setIsYandexAuth] = useState(false);
-  const [isFeedbackOpen, setIsFeedbackOpen] = useState(false);
-
-  useEffect(() => {
-    // Проверка состояния авторизации при инициализации
-    const token = localStorage.getItem("yandexToken");
-    const isAuth = localStorage.getItem("isYandexAuth") === "true";
-
-    if (token && isAuth) {
-      // Если токен и состояние авторизации сохранены, используем их
-      handleAuthSuccess({ access_token: token });
-    }
-  }, []);
 
   const handleAuthSuccess = (data) => {
-    const token = data.access_token; // Получаем токен из данных
+    const token = data.access_token;
     if (token) {
-      // Используем токен для запроса информации о пользователе
       fetch("https://login.yandex.ru/info?format=json", {
         method: "GET",
         headers: {
@@ -43,12 +30,8 @@ function App() {
             const userDomain = userEmail.split("@")[1];
             if (allowedDomains.includes(userDomain)) {
               setIsYandexAuth(true);
-              localStorage.setItem("isYandexAuth", "true");
-              localStorage.setItem("yandexToken", token);
             } else {
               setIsYandexAuth(false);
-              localStorage.removeItem("isYandexAuth");
-              localStorage.removeItem("yandexToken");
               alert("Авторизация с этого домена недопустима.");
             }
           } else {
@@ -56,18 +39,13 @@ function App() {
           }
         })
         .catch((error) => {
-          console.error(
-            "Ошибка при получении информации о пользователе:",
-            error
-          );
+          console.error("Ошибка при получении информации о пользователе:", error);
         });
     }
   };
 
   const handleLogout = () => {
     setIsYandexAuth(false);
-    localStorage.removeItem("isYandexAuth");
-    localStorage.removeItem("yandexToken");
   };
 
   return (
@@ -77,16 +55,15 @@ function App() {
         {isYandexAuth ? (
           <>
             <div className="md:flex">
-            <ContactForm />
-            <ListAnnouncement />
-      
+              <ContactForm />
+              <ListAnnouncement />
             </div>
             <Feedback />
           </>
         ) : (
           <>
             <LoginYaID onAuthSuccess={handleAuthSuccess} yaAuth={isYandexAuth} />
-            <RedirectToken onAuthSuccess={handleAuthSuccess}  />
+            <RedirectToken onAuthSuccess={handleAuthSuccess} />
           </>
         )}
       </div>
