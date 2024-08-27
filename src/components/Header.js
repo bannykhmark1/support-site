@@ -34,13 +34,14 @@ const Header = ({ isYandexAuth, handleYandexLogout }) => {
   const showButtons = user.isAuth || isYandexAuth;
 
   return (
-    <div className={`flex flex-col md:flex-row justify-between items-center text-center mb-8 mx-auto max-w-6xl p-4 ${!showButtons ? 'items-center' : ''}`}>
-      <div className='flex flex-col justify-center self-center items-center m-auto'>
+    <div className={`flex flex-col md:flex-row justify-between items-center text-center mx-auto max-w-6xl p-4 ${!showButtons ? 'items-center' : ''}`}>
+      <div className='flex flex-col  self-center items-center ms:m-auto'>
       <img src="hobbs-logo.png" alt="Логотип" className={`md:w-64 w-48 mb-4 md:mb-0 ${!showButtons ? 'mx-auto' : ''}`} />
-      <span className='mt-4'>8-800-555-35-35</span>
+      <span className='md:mt-4 mb-4'>8-800-555-35-35</span>
       </div>
+      <a className='self-start border p-2 border-black from-neutral-700 rounded' href="#">Инструкция по Единой форме обращения</a>
       {showButtons && (
-        <div className="flex space-x-2">
+        <div className="flex self-start space-x-2">
           {user.isAuth ? (
             <button
               className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
