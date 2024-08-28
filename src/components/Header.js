@@ -61,14 +61,7 @@ const Header = ({ isYandexAuth, handleYandexLogout }) => {
             </button>
           ) : (
             <>
-              {isYandexAuth && (
-                <button
-                  onClick={() => setIsModalOpen(true)}
-                  className="bg-black text-white font-bold py-2 px-4 rounded hover:bg-gray-700"
-                >
-                  Авторизация
-                </button>
-              )}
+  
               {isYandexAuth && (
                 <button
                   onClick={handleYandexLogout}
