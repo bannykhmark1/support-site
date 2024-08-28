@@ -1,6 +1,7 @@
   import React, { useEffect } from 'react';
 
   function LoginYaID({ onAuthSuccess, yaAuth }) {
+    if(yaAuth === false) {
     useEffect(() => {
       if (window.YaAuthSuggest && yaAuth === false) {
         window.YaAuthSuggest.init(
@@ -23,6 +24,7 @@
         });
       }
     }, [onAuthSuccess]);
+  }
 
     return (
       <div id="container"></div>
