@@ -4,7 +4,7 @@ function LoginYaID({ }) {
   useEffect(() => {
     YaAuthSuggest.init(
       {
-         client_id: 'c46f0c53093440c39f12eff95a9f2f93',
+         client_id: process.env.REACT_APP_YANDEX_CLIENT_ID,
          response_type: 'token',
          redirect_uri: 'https://support.hobbs-it.ru/redirect'
       },
