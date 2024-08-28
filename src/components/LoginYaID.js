@@ -22,7 +22,6 @@
           }
         });
       }
-          console.log(data)
     }, [onAuthSuccess]);
 
     return (
