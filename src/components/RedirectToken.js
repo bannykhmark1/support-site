@@ -10,6 +10,7 @@ const RedirectToken = () => {
   useEffect(() => {
     const params = new URLSearchParams(window.location.hash.slice(1));
     const token = params.get('access_token');
+    console.log(token)
 
   }, );
 
