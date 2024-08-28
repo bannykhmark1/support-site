@@ -25,11 +25,26 @@ function App() {
         .then((userInfo) => {
           const allowedDomains = ["kurganmk.ru", "reftp.ru", "hobbs-it.ru"];
           const userEmail = userInfo.default_email || "";
-
+  
           if (userEmail && userEmail.includes("@")) {
             const userDomain = userEmail.split("@")[1];
             if (allowedDomains.includes(userDomain)) {
-              setIsYandexAuth(true);
+              // Сохраняем пользователя в базе данных
+              fetch("https://support.hobbs-it.ru/api/userYandex/auth/yandex", {
+                method: "POST",
+                headers: {
+                  "Content-Type": "application/json",
+                },
+                body: JSON.stringify({ email: userEmail }),
+              })
+              .then((response) => response.json())
+              .then((data) => {
+                console.log("Пользователь сохранен в БД:", data);
+                setIsYandexAuth(true);
+              })
+              .catch((error) => {
+                console.error("Ошибка при сохранении пользователя:", error);
+              });
             } else {
               setIsYandexAuth(false);
               alert("Авторизация с этого домена недопустима.");
@@ -46,6 +61,7 @@ function App() {
       alert("Не удалось получить токен доступа.");
     }
   };
+  
 
   const handleLogout = () => {
     setIsYandexAuth(false);
