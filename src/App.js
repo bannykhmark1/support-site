@@ -10,7 +10,7 @@ import Feedback from "./components/FeedBack";
 import "./App.css";
 
 function App() {
-  const [isYandexAuth, setIsYandexAuth] = useState(false);
+  const [isYandexAuth, setIsYandexAuth] = useState(true);
   const [userRole, setUserRole] = useState(null); // Для хранения роли пользователя
 
   const handleAuthSuccess = (data) => {

@@ -2,7 +2,7 @@ import { $authHost, $host } from "./index";
 
 // Создание объявления
 export const createAnnouncement = async (title, description, date) => {
-    const { data } = await $authHost.post('api/announcements', { title, description, date });
+    const { data } = await $host.post('api/announcements', { title, description, date });
     return data;
 };
 
@@ -20,12 +20,12 @@ export const getAnnouncementById = async (id) => {
 
 // Обновление объявления
 export const updateAnnouncement = async (id, title, description, date) => {
-    const { data } = await $authHost.put(`api/announcements/${id}`, { title, description, date });
+    const { data } = await $host.put(`api/announcements/${id}`, { title, description, date });
     return data;
 };
 
 // Удаление объявления
 export const deleteAnnouncement = async (id) => {
-    const { data } = await $authHost.delete(`api/announcements/${id}`);
+    const { data } = await $host.delete(`api/announcements/${id}`);
     return data;
 };
