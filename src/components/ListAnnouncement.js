@@ -1,16 +1,14 @@
-import React, { useState, useEffect, useContext } from 'react';
+import React, { useState, useEffect } from 'react';
 import { getAllAnnouncements, deleteAnnouncement } from '../http/announcementAPI';
 import Modal from './Modal';
 import CreateAnnouncement from './CreateAnnouncement';
-import { Context } from "../index";
 import moment from 'moment-timezone';
 
-const ListAnnouncement = () => {
+const ListAnnouncement = ({ userRole }) => {
     const [announcements, setAnnouncements] = useState([]);
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [isAllAnnouncementsModalOpen, setIsAllAnnouncementsModalOpen] = useState(false);
     const [showAll, setShowAll] = useState(false); // Состояние для показа всех объявлений
-    const { user } = useContext(Context);
 
     useEffect(() => {
         const fetchAnnouncements = async () => {
@@ -41,11 +39,14 @@ const ListAnnouncement = () => {
     // Определяем, какие объявления показывать
     const visibleAnnouncements = showAll ? announcements : announcements.slice(0, 3);
 
+    // Проверяем, является ли пользователь администратором
+    const isAdmin = userRole === 'ADMIN';
+
     return (
         <div className="max-w-xl mx-auto mt-10 p-4">
             <div className="flex justify-between items-center mb-6">
                 <h2 className="text-3xl font-bold text-gray-800">Объявления</h2>
-                {user.isAuth && user.user.role === 'ADMIN' && (
+                {isAdmin && (
                     <button
                         onClick={() => setIsModalOpen(true)}
                         className="bg-gradient-to-r from-green-400 to-blue-500 text-white font-bold py-2 px-6 rounded-full shadow-md hover:shadow-lg transition duration-300"
@@ -62,7 +63,7 @@ const ListAnnouncement = () => {
                         <h3 className="text-xl font-semibold text-gray-900 mb-4">{announcement.title}</h3>
                         <p className="text-gray-700 mb-4">{announcement.description}</p>
                         <p className="text-gray-700 text-sm font-bold">{formatDate(announcement.date)}</p>
-                        {user.isAuth && user.user.role === 'ADMIN' && (
+                        {isAdmin && (
                             <div className="flex justify-end">
                                 <button
                                     onClick={() => handleDelete(announcement.id)}
@@ -96,7 +97,7 @@ const ListAnnouncement = () => {
                             <h3 className="text-2xl font-semibold text-gray-900 mb-4">{announcement.title}</h3>
                             <p className="text-gray-700 mb-4">{announcement.description}</p>
                             <p className="text-gray-700 mb-4">{formatDate(announcement.date)}</p>
-                            {user.isAuth && user.user.role === 'ADMIN' && (
+                            {isAdmin && (
                                 <div className="flex justify-end">
                                     <button
                                         onClick={() => handleDelete(announcement.id)}
