@@ -26,7 +26,7 @@ function App() {
           const allowedDomains = ["kurganmk.ru", "reftp.ru", "hobbs-it.ru"];
           const userEmail = userInfo.default_email || "";
 
-          if (typeof userEmail === "string" && userEmail.includes("@")) {
+          if (userEmail && userEmail.includes("@")) {
             const userDomain = userEmail.split("@")[1];
             if (allowedDomains.includes(userDomain)) {
               setIsYandexAuth(true);
@@ -40,12 +40,16 @@ function App() {
         })
         .catch((error) => {
           console.error("Ошибка при получении информации о пользователе:", error);
+          alert("Не удалось получить данные о пользователе.");
         });
+    } else {
+      alert("Не удалось получить токен доступа.");
     }
   };
 
   const handleLogout = () => {
     setIsYandexAuth(false);
+    window.location.reload(); // Перезагружаем страницу после выхода
   };
 
   return (

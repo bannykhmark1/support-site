@@ -19,10 +19,9 @@ const Header = ({ isYandexAuth, handleYandexLogout }) => {
       })
       .catch(err => {
         console.error('Ошибка при проверке пользователя', err);
-        // Здесь можно обработать ошибку, если нужно, например, показав уведомление пользователю
       })
       .finally(() => setLoading(false));
-  }, [user, loading]); // Добавляем loading в зависимости
+  }, [user]); // Убрали лишнюю зависимость
 
   const [isModalOpen, setIsModalOpen] = useState(false);
 
@@ -34,14 +33,25 @@ const Header = ({ isYandexAuth, handleYandexLogout }) => {
   const showButtons = user.isAuth || isYandexAuth;
 
   return (
-    <div className={`flex flex-col md:flex-row justify-between items-center text-center mx-auto max-w-6xl p-4 ${!showButtons ? 'items-center' : ''}`}>
-      <div className='flex flex-col  self-center items-center ms:m-auto'>
-      <img src="hobbs-logo.png" alt="Логотип" className={`md:w-64 w-48 mb-4 md:mb-0 ${!showButtons ? 'mx-auto' : ''}`} />
-      <span className='md:mt-4 mb-4'>8-800-555-35-35</span>
+    <header className="flex flex-col md:flex-row items-start justify-between mx-auto max-w-6xl p-4">
+      <div className="flex flex-col m-auto items-center md:items-center">
+        <img
+          src="hobbs-logo.png"
+          alt="Логотип"
+          className="w-48 md:w-64 mb-4 md:mb-0"
+        />
+        <span className="md:ml-4 md:mt-2 text-lg">8-800-555-35-35</span>
       </div>
-      <a className='self-start border p-2 border-black from-neutral-700 rounded' href="#">Инструкция по Единой форме обращения</a>
+
       {showButtons && (
-        <div className="flex self-start space-x-2">
+        <nav className="flex flex-col md:flex-row md:items-center space-y-4 md:space-y-0 md:space-x-4 mt-4 md:mt-0">
+          <a
+            className="border p-2 border-black rounded hover:bg-gray-200"
+            href="https://wiki.yandex.ru/homepage/bazaznanijjkmk/support.-pervaja-linija/instrukcija-po-edinojj-forme-obrashhenija-v-sluzhb/"
+          >
+            Инструкция по Единой форме обращения
+          </a>
+
           {user.isAuth ? (
             <button
               className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
@@ -69,12 +79,13 @@ const Header = ({ isYandexAuth, handleYandexLogout }) => {
               )}
             </>
           )}
-        </div>
+        </nav>
       )}
+
       <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)}>
         <Auth onClose={() => setIsModalOpen(false)} />
       </Modal>
-    </div>
+    </header>
   );
 };
 
