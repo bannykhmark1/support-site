@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Header from "./components/Header";
 import ContactForm from "./components/ContactForm";
 import ListAnnouncement from "./components/ListAnnouncement";
@@ -9,26 +9,28 @@ import "./App.css";
 
 function App() {
   const [isYandexAuth, setIsYandexAuth] = useState(false);
-  const [userRole, setUserRole] = useState(null); // Для хранения роли пользователя
+  const [userRole, setUserRole] = useState(null);
 
-  const handleAuthSuccess = (data) => {
-    const token = data.access_token;
+  useEffect(() => {
+    const token = localStorage.getItem('yandexToken');
     if (token) {
+      // Проверяем токен
       fetch("https://login.yandex.ru/info?format=json", {
         method: "GET",
         headers: {
           Authorization: `OAuth ${token}`,
         },
       })
-        .then((response) => response.json())
-        .then((userInfo) => {
+        .then(response => response.json())
+        .then(userInfo => {
           const allowedDomains = ["kurganmk.ru", "reftp.ru", "hobbs-it.ru"];
           const userEmail = userInfo.default_email || "";
 
           if (userEmail && userEmail.includes("@")) {
             const userDomain = userEmail.split("@")[1];
             if (allowedDomains.includes(userDomain)) {
-              // Сохраняем пользователя в базе данных
+              setIsYandexAuth(true);
+
               fetch("https://support.hobbs-it.ru/api/userYandex/auth/yandex", {
                 method: "POST",
                 headers: {
@@ -36,24 +38,16 @@ function App() {
                 },
                 body: JSON.stringify({ email: userEmail }),
               })
-              .then((response) => response.json())
-              .then((data) => {
-                console.log("Пользователь сохранен в БД:", data);
-                setIsYandexAuth(true);
-
-                // Получаем роль пользователя
+              .then(response => response.json())
+              .then(() => {
                 fetch(`https://support.hobbs-it.ru/api/userYandex/auth/yandex/${userEmail}`)
-                  .then((response) => response.json())
-                  .then((userData) => {
+                  .then(response => response.json())
+                  .then(userData => {
                     setUserRole(userData.role);
                   })
-                  .catch((error) => {
-                    console.error("Ошибка при получении данных о пользователе:", error);
-                  });
+                  .catch(error => console.error("Ошибка при получении данных о пользователе:", error));
               })
-              .catch((error) => {
-                console.error("Ошибка при сохранении пользователя:", error);
-              });
+              .catch(error => console.error("Ошибка при сохранении пользователя:", error));
             } else {
               setIsYandexAuth(false);
               alert("Авторизация с этого домена недопустима.");
@@ -62,19 +56,22 @@ function App() {
             alert("Не удалось получить данные пользователя для авторизации.");
           }
         })
-        .catch((error) => {
+        .catch(error => {
           console.error("Ошибка при получении информации о пользователе:", error);
           alert("Не удалось получить данные о пользователе.");
         });
-    } else {
-      alert("Не удалось получить токен доступа.");
     }
+  }, []);
+
+  const handleAuthSuccess = (data) => {
+    // Нет необходимости в этом методе, поскольку мы уже обрабатываем авторизацию в useEffect
   };
 
   const handleLogout = () => {
+    localStorage.removeItem('yandexToken'); // Удаляем токен из localStorage
     setIsYandexAuth(false);
-    setUserRole(null); // Сброс роли пользователя
-    window.location.reload(); // Перезагружаем страницу после выхода
+    setUserRole(null);
+    window.location.reload();
   };
 
   return (
@@ -84,13 +81,13 @@ function App() {
         {!isYandexAuth ? (
           <>
             <LoginYaID onAuthSuccess={handleAuthSuccess} yaAuth={isYandexAuth} />
-            <RedirectToken onAuthSuccess={handleAuthSuccess} />
+            <RedirectToken />
           </>
         ) : (
           <>
             <div className="md:flex">
               <ContactForm />
-              <ListAnnouncement userRole={userRole} /> {/* Передаем роль пользователя */}
+              <ListAnnouncement userRole={userRole} />
             </div>
             <Feedback />
           </>
