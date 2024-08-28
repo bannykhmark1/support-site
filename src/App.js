@@ -13,6 +13,7 @@ function App() {
   const [isYandexAuth, setIsYandexAuth] = useState(false);
 
   const handleAuthSuccess = (data) => {
+    console.log(data)
     const token = data.access_token;
     if (token) {
       fetch("https://login.yandex.ru/info?format=json", {
