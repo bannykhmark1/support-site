@@ -39,4 +39,5 @@ export default class UserStore {
         this.setUser({});
         this.setIsAuth(false);
     }
+    
 }

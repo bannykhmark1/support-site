@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React, { useContext, useEffect } from 'react';
 import { Context } from './index';
 import Header from "./components/Header";
 import ContactForm from "./components/ContactForm";
@@ -9,6 +9,12 @@ import './App.css';
 
 function App() {
   const { user } = useContext(Context);
+
+  // Обновляем компонент, когда изменяется состояние авторизации
+  useEffect(() => {
+    // Логика для восстановления авторизации при загрузке
+    user.restoreAuth();
+  }, [user]);
 
   return (
     <div className="bg-gray-100 min-h-screen p-4">
