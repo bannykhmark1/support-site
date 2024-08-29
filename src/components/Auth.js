@@ -4,7 +4,7 @@ import { observer } from 'mobx-react-lite';
 import { Context } from '../index';
 import { sendVerificationCode, verifyCodeAPI } from '../http/userAPI';
 
-const Auth = observer(() => {
+const Auth = observer(({ onLogin }) => { // Добавляем пропс onLogin
     const { user } = useContext(Context);
     const navigate = useNavigate();
     const [email, setEmail] = useState('');
@@ -27,6 +27,7 @@ const Auth = observer(() => {
             user.setIsAuth(true);
             localStorage.setItem('user', JSON.stringify(data));
             localStorage.setItem('isAuth', 'true');
+            if (onLogin) onLogin(); // Вызовем onLogin для обновления состояния в App
             navigate('/');
         } catch (e) {
             alert(e.response?.data?.message || "Ошибка при проверке кода");

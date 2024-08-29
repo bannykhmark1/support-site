@@ -11,23 +11,23 @@ function App() {
   const [userRole, setUserRole] = useState(null);
 
   const handleLogin = () => {
-    // Логика для авторизации пользователя
     setIsAuthenticated(true);
-    setUserRole("user"); // Устанавливаем роль пользователя
+    setUserRole("user");
   };
 
   const handleLogout = () => {
     setIsAuthenticated(false);
     setUserRole(null);
+    localStorage.removeItem('user');
+    localStorage.removeItem('isAuth');
     window.location.reload(); // Перезагружаем страницу после выхода
   };
 
   return (
     <div className="bg-gray-100 min-h-screen p-4">
       <div className="max-w-6xl mx-auto bg-white p-6 rounded-lg shadow-lg">
-        {/* Если пользователь не авторизован, показываем компонент Auth */}
         {!isAuthenticated ? (
-          <Auth onLogin={handleLogin} />
+          <Auth onLogin={handleLogin} /> // Передаем handleLogin в Auth
         ) : (
           <>
             <Header isAuthenticated={isAuthenticated} handleLogout={handleLogout} />
