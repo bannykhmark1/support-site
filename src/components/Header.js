@@ -7,9 +7,6 @@ import { Context } from "../index";
 const Header = ({ isYandexAuth, handleYandexLogout }) => {
   const { user } = useContext(Context);
 
-
-
-
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const handleLogout = () => {

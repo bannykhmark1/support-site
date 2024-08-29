@@ -10,6 +10,7 @@ export default class UserStore {
     setUser(user) {
         this._user = user;
     }
+
     setIsAuth(bool) {
         this._isAuth = bool;
     }
@@ -17,6 +18,7 @@ export default class UserStore {
     get user() {
         return this._user;
     }
+
     get isAuth() {
         return this._isAuth;
     }
@@ -26,18 +28,15 @@ export default class UserStore {
         const storedUser = localStorage.getItem('user');
         const storedAuth = localStorage.getItem('isAuth');
         if (storedUser && storedAuth === 'true') {
-          
             this.setUser(JSON.parse(storedUser));
             this.setIsAuth(true);
         }
     }
 
     logout() {
-
         localStorage.removeItem('user');
         localStorage.removeItem('isAuth');
         this.setUser({});
         this.setIsAuth(false);
-    
     }
 }
