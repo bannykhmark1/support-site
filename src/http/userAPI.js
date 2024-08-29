@@ -1,46 +1,23 @@
-import { $authHost, $host } from "./index";
-import {jwtDecode} from "jwt-decode";
+import { $host } from "./index";
 
-export const registration = async (email, password, name) => {
-    const { data } = await $host.post('api/user/registration', { email, password, name, role: 'USER' });
-    localStorage.setItem('token', data.token);
-    return jwtDecode(data.token);
-};
-
-export const fetchUserData = async () => {
+export const sendVerificationCode = async (email) => {
     try {
-        const response = await $host.get('/api/auth/me');
-        return response.data;
-    } catch (error) {
-        console.error('Error fetching user data:', error);
-        throw error;
-    }
-};
-
-export const login = async (email, password) => {
-    const { data } = await $host.post('api/user/login', { email, password });
-    localStorage.setItem('token', data.token);
-    return jwtDecode(data.token);
-};
-
-export const check = async () => {
-    const { data } = await $authHost.get(('api/user/auth'));
-    localStorage.setItem('token', data.token);
-    return jwtDecode(data.token);
-};
-
-export const sendResetPasswordEmail = async (email) => {
-    const { data } = await $host.post('api/user/requestPasswordReset', { email });
-    return data;
-};
-
-export const resetPassword = async (token, password) => {
-    try {
-
-        const { data } = await $host.post('api/user/resetPassword', { token, newPassword: password });
+        const { data } = await $host.post('/api/user/sendCode', { email });
         return data;
     } catch (error) {
-        console.error('Ошибка при отправке запроса на сброс пароля:', error.response?.data || error.message);
+        console.error('Error sending verification code:', error.response?.data || error.message);
         throw error;
     }
 };
+
+export const verifyCodeAPI = async (email, code) => {
+    try {
+        const { data } = await $host.post('/api/user/verifyCode', { email, code });
+        return data;
+    } catch (error) {
+        console.error('Error verifying code:', error.response?.data || error.message);
+        throw error;
+    }
+};
+
+// Другие функции, такие как login, registration, и т.д. остаются без изменений

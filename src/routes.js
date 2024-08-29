@@ -2,12 +2,10 @@ import { createBrowserRouter } from "react-router-dom";
 import { LOGIN_ROUTE, REGISTRATION_ROUTE, APP_ROUTE, ANNOUNCEMENTS_ROUTE, CREATE_ANNOUNCEMENT_ROUTE, EDIT_ANNOUNCEMENT_ROUTE, REDIRECT_TOKEN } from "./utils/consts";
 import Auth from "./components/Auth";
 import App from "./App";
-import RedirectToken from "./components/RedirectToken";
 
 import CreateAnnouncement from "./components/CreateAnnouncement";
 import ListAnnouncement from "./components/ListAnnouncement";
 import EditAnnouncement from "./components/EditAnnouncement";
-import LoginYaID from "./components/LoginYaID";
 
 export const authRoutes = [
   {
@@ -21,10 +19,7 @@ export const authRoutes = [
 ];
 
 export const publicRoutes = [
-  {
-    path: REDIRECT_TOKEN,
-    element: <RedirectToken />
-  },
+
   {
     path: APP_ROUTE,
     element: <App />
@@ -47,8 +42,4 @@ export const publicRoutes = [
 export const router = createBrowserRouter([
   ...authRoutes,
   ...publicRoutes,
-  {
-    path: '/login-yaid',
-    element: <LoginYaID />
-  }
 ]);

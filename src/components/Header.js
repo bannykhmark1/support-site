@@ -2,26 +2,13 @@ import React, { useContext, useEffect, useState } from 'react';
 import Modal from './Modal';
 import Auth from './Auth';
 import { Context } from "../index";
-import { check } from "../http/userAPI";
+
 
 const Header = ({ isYandexAuth, handleYandexLogout }) => {
   const { user } = useContext(Context);
-  const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    user.restoreAuth(); // Восстанавливаем авторизацию при загрузке
 
-    check()
-      .then(userData => {
-        if (userData) {
-          user.setUser(userData);
-        }
-      })
-      .catch(err => {
-        console.error('Ошибка при проверке пользователя', err);
-      })
-      .finally(() => setLoading(false));
-  }, [user]); // Убрали лишнюю зависимость
+
 
   const [isModalOpen, setIsModalOpen] = useState(false);
 
