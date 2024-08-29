@@ -6,6 +6,7 @@ import { sendVerificationCode, verifyCodeAPI } from '../http/userAPI';
 
 const Auth = observer(({ onLogin }) => { // Получаем onLogin через пропсы
     const { user } = useContext(Context);
+    console.log(user)
     const navigate = useNavigate();
     const [email, setEmail] = useState('');
     const [code, setCode] = useState('');

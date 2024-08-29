@@ -9,7 +9,7 @@ import './App.css';
 
 function App() {
     const { user } = useContext(Context);
-    console.log(user)
+
     // Обновляем компонент, когда изменяется состояние авторизации
     useEffect(() => {
         // Логика для восстановления авторизации при загрузке
