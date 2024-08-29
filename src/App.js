@@ -28,14 +28,6 @@ function App() {
                 } else {
                     localStorage.removeItem('token');
                 }
-
-                // Настройка таймера для автоматического выхода
-                const timeLeft = decodedToken.exp * 1000 - Date.now();
-                setTimeout(() => {
-                    setAuthState(false); // Сброс authState
-                    user.setIsAuth(false);
-                    localStorage.removeItem('token');
-                }, timeLeft);
             } catch (e) {
                 console.error("Ошибка при декодировании токена:", e);
                 localStorage.removeItem('token');
