@@ -9,9 +9,11 @@ const CreateAnnouncement = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
 
-        // Получаем текущую дату и время с учетом часового пояса Екатеринбурга (UTC+5)
-        const ekbTime = moment.tz('Asia/Yekaterinburg');
-        const formattedDate = ekbTime.format('YYYY-MM-DD HH:mm:ss');
+        // Получаем текущее время на клиенте (время будет таким, какое на машине пользователя)
+        const localTime = moment();
+        
+        // Форматируем дату в нужном формате
+        const formattedDate = localTime.format('YYYY-MM-DD HH:mm:ss');
 
         try {
             const response = await createAnnouncement(title, description, formattedDate);
