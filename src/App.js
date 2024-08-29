@@ -1,6 +1,6 @@
-import React, { useContext, useEffect } from 'react';
+import React, { useContext, useState, useEffect } from 'react';
 import { Context } from './index';
-import { jwtDecode } from 'jwt-decode';
+import { jwtDecode } from 'jwt-decode'; // Исправление импорта
 import Header from "./components/Header";
 import ContactForm from "./components/ContactForm";
 import ListAnnouncement from "./components/ListAnnouncement";
@@ -10,6 +10,8 @@ import './App.css';
 
 function App() {
     const { user } = useContext(Context);
+    const [authState, setAuthState] = useState(false); // Новая переменная состояния
+    const [userRole, setUserRole] = useState(''); // Переменная состояния для роли пользователя
 
     // Восстановление авторизации при загрузке страницы
     useEffect(() => {
@@ -20,7 +22,9 @@ function App() {
 
                 // Проверяем, не истек ли срок действия токена
                 if (decodedToken.exp * 1000 > Date.now()) {
+                    setAuthState(true); // Обновляем authState
                     user.setIsAuth(true);
+                    setUserRole(decodedToken.role); // Устанавливаем роль пользователя
                 } else {
                     localStorage.removeItem('token');
                 }
@@ -28,6 +32,7 @@ function App() {
                 // Настройка таймера для автоматического выхода
                 const timeLeft = decodedToken.exp * 1000 - Date.now();
                 setTimeout(() => {
+                    setAuthState(false); // Сброс authState
                     user.setIsAuth(false);
                     localStorage.removeItem('token');
                 }, timeLeft);
@@ -41,14 +46,14 @@ function App() {
     return (
         <div className="bg-gray-100 min-h-screen p-4">
             <div className="max-w-6xl mx-auto bg-white p-6 rounded-lg shadow-lg">
-                {!user.isAuth ? (
-                    <Auth onLogin={() => user.setIsAuth(true)} /> // Передаем onLogin как пропс
+                {!authState ? ( // Используем authState вместо user.isAuth
+                    <Auth onLogin={() => user.setIsAuth(true)} setAuthState={setAuthState} /> // Передаем setAuthState как пропс
                 ) : (
                     <>
-                        <Header isAuthenticated={user.isAuth} handleLogout={() => user.logout()} />
+                        <Header isAuthenticated={authState} handleLogout={() => user.logout()} />
                         <div className="md:flex">
                             <ContactForm />
-                            <ListAnnouncement userRole={user.user.role} />
+                            <ListAnnouncement userRole={userRole} /> {/* Передаем userRole как пропс */}
                         </div>
                         <Feedback />
                     </>

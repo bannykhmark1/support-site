@@ -9,6 +9,13 @@ const Header = ({ isAuthenticated, handleLogout }) => {
 
   const showButtons = isAuthenticated || user.isAuth;
 
+  const handleLogoutClick = () => {
+    localStorage.removeItem('token'); // Удаляем токен из localStorage
+    user.setIsAuth(false); // Обновляем состояние авторизации
+    if (handleLogout) handleLogout(); // Вызываем переданный пропс handleLogout
+    window.location.reload(); // Перезагружаем страницу
+  };
+
   return (
     <header className="flex flex-col md:flex-row items-start justify-between mx-auto max-w-6xl p-4">
       <div className="flex flex-col items-center md:items-center">
@@ -30,7 +37,7 @@ const Header = ({ isAuthenticated, handleLogout }) => {
           {user.isAuth ? (
             <button
               className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-              onClick={handleLogout}
+              onClick={handleLogoutClick}
             >
               Выйти
             </button>
