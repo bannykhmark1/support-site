@@ -24,6 +24,8 @@ const Auth = observer(({ onLogin }) => { // Получаем onLogin через 
         try {
             const data = await verifyCodeAPI(email, code);
             if (data.success) {
+                console.log(data)
+                console.log(data.user)
                 user.setUser(data.user); // Предполагается, что сервер возвращает объект user
                 user.setIsAuth(true);
                 localStorage.setItem('user', JSON.stringify(data.user));
