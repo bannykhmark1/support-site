@@ -25,11 +25,10 @@ export default class UserStore {
 
     // Новый метод для восстановления состояния из localStorage
     restoreAuth() {
-        const storedUser = localStorage.getItem('user');
-        const storedAuth = localStorage.getItem('isAuth');
-        if (storedUser && storedAuth === 'true') {
-            this.setUser(JSON.parse(storedUser));
-            this.setIsAuth(true);
+        const token = localStorage.getItem('token');
+        if (token) {
+            user.setIsAuth(true);
+            user.setToken(token);
         }
     }
 
@@ -38,6 +37,10 @@ export default class UserStore {
         localStorage.removeItem('isAuth');
         this.setUser({});
         this.setIsAuth(false);
+    }
+
+    setToken(token) {
+        this.token = token;
     }
     
 }
