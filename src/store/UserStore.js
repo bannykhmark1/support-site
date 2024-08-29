@@ -24,13 +24,7 @@ export default class UserStore {
     }
 
     // Новый метод для восстановления состояния из localStorage
-    restoreAuth() {
-        const token = localStorage.getItem('token');
-        if (token) {
-            user.setIsAuth(true);
-            user.setToken(token);
-        }
-    }
+
 
     logout() {
         localStorage.removeItem('user');

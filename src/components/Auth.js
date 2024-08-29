@@ -2,11 +2,12 @@ import React, { useContext, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { observer } from 'mobx-react-lite';
 import { Context } from '../index';
+import { jwtDecode }  from 'jwt-decode';
 import { sendVerificationCode, verifyCodeAPI } from '../http/userAPI';
 
 const Auth = observer(({ onLogin }) => { // Получаем onLogin через пропсы
-    const { user } = useContext(Context);
-    console.log(user)
+    const { token } = useContext(Context);
+    const [isAuth, setIsAuth] = useState(false);
     const navigate = useNavigate();
     const [email, setEmail] = useState('');
     const [code, setCode] = useState('');
@@ -24,11 +25,12 @@ const Auth = observer(({ onLogin }) => { // Получаем onLogin через 
     const handleVerifyCode = async () => {
         try {
             const data = await verifyCodeAPI(email, code);
+            console.log(jwtDecode(data.token))
             console.log('Data received from server:', data); // Логирование ответа
             
             if (data.token) { // Проверяем, есть ли токен в ответе
-                user.setIsAuth(true); // Обновляем состояние авторизации
-                user.setToken(data.token); // Сохраняем токен в состоянии пользователя
+                setIsAuth(true); // Обновляем состояние авторизации
+         
                 localStorage.setItem('token', data.token); // Сохраняем токен в localStorage
                 
                 if (onLogin) onLogin(); // Вызовем onLogin для обновления состояния в App

@@ -1,5 +1,6 @@
 import React, { useContext, useEffect } from 'react';
 import { Context } from './index';
+import { jwtDecode } from 'jwt-decode';
 import Header from "./components/Header";
 import ContactForm from "./components/ContactForm";
 import ListAnnouncement from "./components/ListAnnouncement";
@@ -10,10 +11,31 @@ import './App.css';
 function App() {
     const { user } = useContext(Context);
 
-    // Обновляем компонент, когда изменяется состояние авторизации
+    // Восстановление авторизации при загрузке страницы
     useEffect(() => {
-        // Логика для восстановления авторизации при загрузке
-        user.restoreAuth();
+        const token = localStorage.getItem('token');
+        if (token) {
+            try {
+                const decodedToken = jwtDecode(token);
+
+                // Проверяем, не истек ли срок действия токена
+                if (decodedToken.exp * 1000 > Date.now()) {
+                    user.setIsAuth(true);
+                } else {
+                    localStorage.removeItem('token');
+                }
+
+                // Настройка таймера для автоматического выхода
+                const timeLeft = decodedToken.exp * 1000 - Date.now();
+                setTimeout(() => {
+                    user.setIsAuth(false);
+                    localStorage.removeItem('token');
+                }, timeLeft);
+            } catch (e) {
+                console.error("Ошибка при декодировании токена:", e);
+                localStorage.removeItem('token');
+            }
+        }
     }, [user]);
 
     return (
