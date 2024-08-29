@@ -23,22 +23,24 @@ const Auth = observer(({ onLogin }) => { // Получаем onLogin через 
     const handleVerifyCode = async () => {
         try {
             const data = await verifyCodeAPI(email, code);
-            if (data.success) {
-                console.log(data)
-                console.log(data.user)
-                user.setUser(data.user); // Предполагается, что сервер возвращает объект user
-                user.setIsAuth(true);
-                localStorage.setItem('user', JSON.stringify(data.user));
-                localStorage.setItem('isAuth', 'true');
+            console.log('Data received from server:', data); // Логирование ответа
+            
+            if (data.token) { // Проверяем, есть ли токен в ответе
+                user.setIsAuth(true); // Обновляем состояние авторизации
+                user.setToken(data.token); // Сохраняем токен в состоянии пользователя
+                localStorage.setItem('token', data.token); // Сохраняем токен в localStorage
+                
                 if (onLogin) onLogin(); // Вызовем onLogin для обновления состояния в App
                 navigate('/');
             } else {
-                alert("Ошибка при проверке кода");
+                alert("Ошибка при проверке кода: токен не получен");
             }
         } catch (e) {
+            console.error('Error caught:', e); // Логирование ошибки
             alert(e.response?.data?.message || "Ошибка при проверке кода");
         }
     };
+    
 
     return (
         <div className='flex flex-col justify-between h-screen'>
