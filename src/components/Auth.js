@@ -4,7 +4,7 @@ import { observer } from 'mobx-react-lite';
 import { Context } from '../index';
 import { sendVerificationCode, verifyCodeAPI } from '../http/userAPI';
 
-const Auth = observer(({ onLogin }) => { // Добавляем пропс onLogin
+const Auth = observer(({ onLogin }) => { // Получаем onLogin через пропсы
     const { user } = useContext(Context);
     const navigate = useNavigate();
     const [email, setEmail] = useState('');
@@ -23,12 +23,16 @@ const Auth = observer(({ onLogin }) => { // Добавляем пропс onLogi
     const handleVerifyCode = async () => {
         try {
             const data = await verifyCodeAPI(email, code);
-            user.setUser(data);
-            user.setIsAuth(true);
-            localStorage.setItem('user', JSON.stringify(data));
-            localStorage.setItem('isAuth', 'true');
-            if (onLogin) onLogin(); // Вызовем onLogin для обновления состояния в App
-            navigate('/');
+            if (data.success) {
+                user.setUser(data.user); // Предполагается, что сервер возвращает объект user
+                user.setIsAuth(true);
+                localStorage.setItem('user', JSON.stringify(data.user));
+                localStorage.setItem('isAuth', 'true');
+                if (onLogin) onLogin(); // Вызовем onLogin для обновления состояния в App
+                navigate('/');
+            } else {
+                alert("Ошибка при проверке кода");
+            }
         } catch (e) {
             alert(e.response?.data?.message || "Ошибка при проверке кода");
         }
