@@ -12,11 +12,9 @@ const CreateAnnouncement = () => {
         // Получаем текущее время на клиенте (время будет таким, какое на машине пользователя)
         const localTime = moment().format('LLLL');
         
-        // Форматируем дату в нужном формате
-
         try {
             const response = await createAnnouncement(title, description, localTime);
-            window.location.reload()
+            window.location.reload();
             // Очистка полей после успешного создания объявления
             setTitle('');
             setDescription('');
@@ -36,7 +34,7 @@ const CreateAnnouncement = () => {
                     value={title} 
                     onChange={(e) => setTitle(e.target.value)} 
                     required 
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:border-blue-500"
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:border-blue-500 whitespace-pre-line"
                 />
             </div>
             <div className="mb-4">
@@ -46,7 +44,7 @@ const CreateAnnouncement = () => {
                     value={description} 
                     onChange={(e) => setDescription(e.target.value)} 
                     required 
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:border-blue-500 min-h-[100px]"
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:border-blue-500 min-h-[100px] whitespace-pre-line"
                 />
             </div>
             <button 

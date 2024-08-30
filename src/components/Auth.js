@@ -29,6 +29,7 @@ const Auth = observer(({ onLogin, setAuthState }) => {
     
             if (data.token) {
                 setAuthState(true);
+                window.location.reload();
                 localStorage.setItem('token', data.token);
                 if (onLogin) onLogin();
                 navigate('/');

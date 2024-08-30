@@ -78,7 +78,7 @@ const ListAnnouncement = ({ userRole }) => {
                                 <span className="text-gray-500 text-xs ml-2">Изменено</span>
                             )}
                         </h3>
-                        <p className="text-gray-700 mb-4">{announcement.description}</p>
+                        <p className="text-gray-700 mb-4 whitespace-pre-line">{announcement.description}</p>
                         <p className="text-gray-400 text-sm">
                             {announcement.date.split('T')[0]}
                             &nbsp;  
@@ -90,16 +90,16 @@ const ListAnnouncement = ({ userRole }) => {
                                     <FaEllipsisV className="text-gray-600 hover:text-gray-800" />
                                 </button>
                                 {activeMenu === announcement.id && (
-                                    <div className="absolute right-0 mt-2 w-32 bg-white border border-gray-200 rounded shadow-lg z-10">
+                                    <div className="absolute right-0 mt-2 py-2 w-48 bg-white border rounded shadow-xl">
                                         <button
                                             onClick={() => handleEdit(announcement.id)}
-                                            className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                                            className="block w-full text-left px-4 py-2 text-gray-800 hover:bg-gray-100"
                                         >
                                             Редактировать
                                         </button>
                                         <button
                                             onClick={() => handleDelete(announcement.id)}
-                                            className="block w-full text-left px-4 py-2 text-sm text-red-700 hover:bg-red-100"
+                                            className="block w-full text-left px-4 py-2 text-gray-800 hover:bg-gray-100"
                                         >
                                             Удалить
                                         </button>
@@ -109,49 +109,27 @@ const ListAnnouncement = ({ userRole }) => {
                         )}
                     </div>
                 ))}
-
-                {/* Кнопка для открытия модального окна с полным списком объявлений */}
-                <div className="text-right">
-                    <button
-                        onClick={() => setIsViewAllModalOpen(true)}
-                        className="text-blue-600 hover:underline mt-4"
-                    >
-                        Показать все объявления
-                    </button>
-                </div>
+                {announcements.length > 3 && (
+                    <div className="flex justify-center">
+                        <button
+                            onClick={() => setIsViewAllModalOpen(true)}
+                            className="text-gray-600 border border-gray-300 px-4 py-2 rounded-lg hover:bg-gray-100 transition duration-300"
+                        >
+                            Посмотреть все
+                        </button>
+                    </div>
+                )}
             </div>
 
             <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)}>
-                <CreateAnnouncement onClose={() => setIsModalOpen(false)} />
+                <CreateAnnouncement />
             </Modal>
 
-            <Modal isOpen={isEditModalOpen} onClose={closeEditModal}>
-                <EditAnnouncement id={currentAnnouncementId} onClose={closeEditModal} />
-            </Modal>
-
-            {/* Модальное окно для отображения всех объявлений */}
-            <Modal isOpen={isViewAllModalOpen} onClose={() => setIsViewAllModalOpen(false)}>
-                <div className="bg-white w-full shadow-lg rounded-lg p-6 mb-6 overflow-y-auto max-h-[80vh]">
-                    <h3 className="text-2xl font-bold text-gray-800 mb-4">Все объявления</h3>
-                    {announcements.map((announcement) => (
-                        <div key={announcement.id} className="mb-6 pb-6 border-b border-gray-200">
-                            <div className="text-gray-600 mb-2">Команда поддержки УАГ</div>
-                            <h3 className="text-xl font-semibold text-gray-900 mb-4">
-                                {announcement.title}
-                                {announcement.updatedAt && announcement.updatedAt !== announcement.createdAt && (
-                                    <span className="text-gray-400 text-xs ml-2">Изменено</span>
-                                )}
-                            </h3>
-                            <p className="text-gray-700 mb-4">{announcement.description}</p>
-                            <p className="text-gray-400 text-sm ">
-                            {announcement.date.split('T')[0]}
-                            &nbsp;  
-                            {announcement.date.slice('11', '19')}
-                        </p>
-                        </div>
-                    ))}
-                </div>
-            </Modal>
+            {isEditModalOpen && (
+                <Modal isOpen={isEditModalOpen} onClose={closeEditModal}>
+                    <EditAnnouncement id={currentAnnouncementId} onClose={closeEditModal} />
+                </Modal>
+            )}
         </div>
     );
 };
