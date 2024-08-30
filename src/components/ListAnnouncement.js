@@ -54,27 +54,32 @@ const ListAnnouncement = ({ userRole }) => {
             </div>
 
             <div className="bg-white shadow-lg rounded-lg p-6 mb-6">
-                {visibleAnnouncements.map((announcement) => (
-                    <div key={announcement.id} className="mb-6 pb-6 border-b border-gray-200">
-                        <div className="text-gray-600 mb-2">Команда поддержки УАГ</div>
-                        <h3 className="text-xl font-semibold text-gray-900 mb-4">{announcement.title}</h3>
-                        <p className="text-gray-700 mb-4">{announcement.description}</p>
-                        <p className="text-gray-700 text-sm font-bold">
-                            {announcement.date.split('T')[0]}
-                            &nbsp;  
-                            {(announcement.date.slice('11', '19'))}</p>
-                        {isAdmin && (
-                            <div className="flex justify-end">
-                                <button
-                                    onClick={() => handleDelete(announcement.id)}
-                                    className="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded-full shadow-md transition duration-300"
-                                >
-                                    Удалить
-                                </button>
-                            </div>
-                        )}
-                    </div>
-                ))}
+            {visibleAnnouncements.map((announcement) => (
+    <div key={announcement.id} className="mb-6 pb-6 border-b border-gray-200">
+        <div className="text-gray-600 mb-2">Команда поддержки УАГ</div>
+        <h3 className="text-xl font-semibold text-gray-900 mb-4">{announcement.title}</h3>
+        <p className="text-gray-700 mb-4">{announcement.description}</p>
+        <p className="text-gray-700 text-sm font-bold">
+            {announcement.date.split('T')[0]}
+            &nbsp;  
+            {announcement.date.slice('11', '19')}
+        </p>
+        {announcement.updatedAt && announcement.updatedAt !== announcement.createdAt && (
+            <p className="text-gray-500 text-sm mt-2">Изменено: {moment(announcement.updatedAt).format('LLL')}</p>
+        )}
+        {isAdmin && (
+            <div className="flex justify-end">
+                <button
+                    onClick={() => handleDelete(announcement.id)}
+                    className="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded-full shadow-md transition duration-300"
+                >
+                    Удалить
+                </button>
+            </div>
+        )}
+    </div>
+))}
+
                 {!showAll && announcements.length > 3 && (
                     <button
                         onClick={() => setShowAll(true)}
