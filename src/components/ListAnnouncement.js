@@ -93,7 +93,7 @@ const ListAnnouncement = ({ userRole }) => {
                             <div className="text-gray-600 mb-2">Команда поддержки УАГ</div>
                             <h3 className="text-2xl font-semibold text-gray-900 mb-4">{announcement.title}</h3>
                             <p className="text-gray-700 mb-4">{announcement.description}</p>
-                            <p className="text-gray-700 mb-4">{(announcement.date.toISOString().split('T')[0])}</p>
+                            <p className="text-gray-700 mb-4">{(announcement.date.split('T')[0])}</p>
                             {isAdmin && (
                                 <div className="flex justify-end">
                                     <button
