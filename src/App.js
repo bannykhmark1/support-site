@@ -1,58 +1,74 @@
-import React, { useContext, useState, useEffect } from 'react';
-import { Context } from './index';
-import { jwtDecode } from 'jwt-decode'; // Исправление импорта
+import React, { useState } from "react";
 import Header from "./components/Header";
 import ContactForm from "./components/ContactForm";
 import ListAnnouncement from "./components/ListAnnouncement";
+import MessengerWidget from "./components/MessengerWidget";
+import LoginYaID from "./components/LoginYaID";
+import RedirectToken from "./components/RedirectToken";
+import FeedbackForm from "./components/FeedbackForm";
 import Feedback from "./components/FeedBack";
-import Auth from "./components/Auth";
-import './App.css';
+import "./App.css";
 
 function App() {
-    const { user } = useContext(Context);
-    const [authState, setAuthState] = useState(false); // Новая переменная состояния
-    const [userRole, setUserRole] = useState(''); // Переменная состояния для роли пользователя
+  const [isYandexAuth, setIsYandexAuth] = useState(false);
 
-    // Восстановление авторизации при загрузке страницы
-    useEffect(() => {
-        const token = localStorage.getItem('token');
-        if (token) {
-            try {
-                const decodedToken = jwtDecode(token);
+  const handleAuthSuccess = (data) => {
+    const token = data.access_token;
+    if (token) {
+      fetch("https://login.yandex.ru/info?format=json", {
+        method: "GET",
+        headers: {
+          Authorization: `OAuth ${token}`,
+        },
+      })
+        .then((response) => response.json())
+        .then((userInfo) => {
+          const allowedDomains = ["kurganmk.ru", "reftp.ru", "hobbs-it.ru"];
+          const userEmail = userInfo.default_email || "";
 
-                // Проверяем, не истек ли срок действия токена
-                if (decodedToken.exp * 1000 > Date.now()) {
-                    setAuthState(true); // Обновляем authState
-                    user.setIsAuth(true);
-                    setUserRole(decodedToken.role); // Устанавливаем роль пользователя
-                } else {
-                    localStorage.removeItem('token');
-                }
-            } catch (e) {
-                console.error("Ошибка при декодировании токена:", e);
-                localStorage.removeItem('token');
+          if (typeof userEmail === "string" && userEmail.includes("@")) {
+            const userDomain = userEmail.split("@")[1];
+            if (allowedDomains.includes(userDomain)) {
+              setIsYandexAuth(true);
+            } else {
+              setIsYandexAuth(false);
+              alert("Авторизация с этого домена недопустима.");
             }
-        }
-    }, [user]);
+          } else {
+            alert("Не удалось получить данные пользователя для авторизации.");
+          }
+        })
+        .catch((error) => {
+          console.error("Ошибка при получении информации о пользователе:", error);
+        });
+    }
+  };
 
-    return (
-        <div className="bg-gray-100 min-h-screen p-4">
-            <div className="max-w-6xl mx-auto bg-white p-6 rounded-lg shadow-lg">
-                {!authState ? ( // Используем authState вместо user.isAuth
-                    <Auth onLogin={() => user.setIsAuth(true)} setAuthState={setAuthState} /> // Передаем setAuthState как пропс
-                ) : (
-                    <>
-                        <Header isAuthenticated={authState} handleLogout={() => user.logout()} />
-                        <div className="md:flex">
-                            <ContactForm />
-                            <ListAnnouncement userRole={userRole} /> {/* Передаем userRole как пропс */}
-                        </div>
-                        <Feedback />
-                    </>
-                )}
+  const handleLogout = () => {
+    setIsYandexAuth(false);
+  };
+
+  return (
+    <div className="bg-gray-100 min-h-screen p-4">
+      <div className="max-w-6xl mx-auto bg-white p-6 rounded-lg shadow-lg">
+        <Header isYandexAuth={isYandexAuth} handleYandexLogout={handleLogout} />
+        {isYandexAuth ? (
+          <>
+            <div className="md:flex">
+              <ContactForm />
+              <ListAnnouncement />
             </div>
-        </div>
-    );
+            <Feedback />
+          </>
+        ) : (
+          <>
+            <LoginYaID onAuthSuccess={handleAuthSuccess} yaAuth={isYandexAuth} />
+            <RedirectToken onAuthSuccess={handleAuthSuccess} />
+          </>
+        )}
+      </div>
+    </div>
+  );
 }
 
 export default App;
