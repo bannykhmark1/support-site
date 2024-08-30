@@ -31,7 +31,7 @@ const ListAnnouncement = ({ userRole }) => {
             console.error('Failed to delete announcement:', error);
         }
     };
-    console.log(date)
+    console.log(announcement.date)
 
     const formatDate = (dateString) => {
         return moment.tz(dateString, 'Asia/Yekaterinburg').format('YYYY-MM-DD HH:mm:ss');
