@@ -9,8 +9,9 @@ import { FaEllipsisV } from 'react-icons/fa';
 const ListAnnouncement = ({ userRole }) => {
     const [announcements, setAnnouncements] = useState([]);
     const [isModalOpen, setIsModalOpen] = useState(false);
+    const [showAll, setShowAll] = useState(false); // Состояние для показа всех объявлений
     const [isEditModalOpen, setIsEditModalOpen] = useState(false);
-    const [isViewAllModalOpen, setIsViewAllModalOpen] = useState(false);
+    const [isViewAllModalOpen, setIsViewAllModalOpen] = useState(false); // Для отображения модального окна со всеми объявлениями
     const [currentAnnouncementId, setCurrentAnnouncementId] = useState(null);
     const [activeMenu, setActiveMenu] = useState(null);
 
@@ -51,7 +52,7 @@ const ListAnnouncement = ({ userRole }) => {
         setCurrentAnnouncementId(null);
     };
 
-    const visibleAnnouncements = announcements.slice(0, 3);
+    const visibleAnnouncements = showAll ? announcements : announcements.slice(0, 3);
     const isAdmin = userRole === 'ADMIN';
 
     return (
@@ -99,7 +100,7 @@ const ListAnnouncement = ({ userRole }) => {
                                         </button>
                                         <button
                                             onClick={() => handleDelete(announcement.id)}
-                                            className="block w-full text-left px-4 py-2 text-gray-800 hover:bg-gray-100"
+                                            className="block w-full text-left px-4 py-2 text-red-700 hover:bg-red-100"
                                         >
                                             Удалить
                                         </button>
@@ -109,15 +110,13 @@ const ListAnnouncement = ({ userRole }) => {
                         )}
                     </div>
                 ))}
-                {announcements.length > 3 && (
-                    <div className="flex justify-center">
-                        <button
-                            onClick={() => setIsViewAllModalOpen(true)}
-                            className="text-gray-600 border border-gray-300 px-4 py-2 rounded-lg hover:bg-gray-100 transition duration-300"
-                        >
-                            Посмотреть все
-                        </button>
-                    </div>
+                {!showAll && announcements.length > 3 && (
+                    <button
+                        onClick={() => setIsViewAllModalOpen(true)} // Открываем модальное окно с полным списком объявлений
+                        className="text-indigo-600 font-bold hover:underline focus:outline-none"
+                    >
+                        Показать всё
+                    </button>
                 )}
             </div>
 
@@ -129,6 +128,51 @@ const ListAnnouncement = ({ userRole }) => {
                 <Modal isOpen={isEditModalOpen} onClose={closeEditModal}>
                     <EditAnnouncement id={currentAnnouncementId} onClose={closeEditModal} />
                 </Modal>
+            )}
+
+            {isViewAllModalOpen && ( // Модальное окно для показа всех объявлений
+  <Modal isOpen={isViewAllModalOpen} onClose={() => setIsViewAllModalOpen(false)}>
+  <div className="bg-white rounded-lg p-6">
+      <h2 className="text-xl font-semibold mb-4 text-center">Все объявления</h2>
+      <div className="space-y-4">
+          {announcements.map((announcement) => (
+              <div key={announcement.id} className="border-b border-gray-200 pb-4 mb-4 relative">
+                  <h3 className="text-lg font-semibold text-gray-900">{announcement.title}</h3>
+                  <p className="text-gray-600 mt-2 whitespace-pre-line">{announcement.description}</p>
+                  <p className="text-gray-400 text-sm mt-2">
+                      {announcement.date.split('T')[0]}
+                      &nbsp;
+                      {announcement.date.slice('11', '19')}
+                  </p>
+                  {isAdmin && (
+                      <div className="absolute top-0 right-0">
+                          <button onClick={() => toggleMenu(announcement.id)}>
+                              <FaEllipsisV className="text-gray-600 hover:text-gray-800" />
+                          </button>
+                          {activeMenu === announcement.id && (
+                              <div className="absolute right-0 mt-2 py-2 w-48 bg-white border rounded shadow-xl">
+                                  <button
+                                      onClick={() => handleEdit(announcement.id)}
+                                      className="block w-full text-left px-4 py-2 text-gray-800 hover:bg-gray-100"
+                                  >
+                                      Редактировать
+                                  </button>
+                                  <button
+                                      onClick={() => handleDelete(announcement.id)}
+                                      className="block w-full text-left px-4 py-2 text-red-700 hover:bg-red-100"
+                                  >
+                                      Удалить
+                                  </button>
+                              </div>
+                          )}
+                      </div>
+                  )}
+              </div>
+          ))}
+      </div>
+  </div>
+</Modal>
+
             )}
         </div>
     );
