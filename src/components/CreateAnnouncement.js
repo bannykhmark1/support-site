@@ -17,7 +17,7 @@ const CreateAnnouncement = () => {
 
         try {
             const response = await createAnnouncement(title, description, formattedDate);
-    
+            window.location.reload()
             // Очистка полей после успешного создания объявления
             setTitle('');
             setDescription('');
