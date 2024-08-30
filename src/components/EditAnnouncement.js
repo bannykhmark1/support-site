@@ -1,11 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { getAnnouncementById, updateAnnouncement } from '../http/announcementAPI';
-import { useParams, useNavigate } from 'react-router-dom';
 import moment from 'moment-timezone';
 
-const EditAnnouncement = () => {
-    const { id } = useParams();
-    const navigate = useNavigate();
+const EditAnnouncement = ({ id, onClose }) => {
     const [title, setTitle] = useState('');
     const [description, setDescription] = useState('');
     const [updatedAt, setUpdatedAt] = useState('');
@@ -26,14 +23,12 @@ const EditAnnouncement = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-
-        // Получаем текущее время
         const updatedTime = moment().format('LLLL');
 
         try {
             await updateAnnouncement(id, title, description, updatedTime);
             alert('Объявление успешно обновлено!');
-            navigate('/');
+            onClose();
         } catch (error) {
             console.error('Failed to update announcement:', error);
             alert('Не удалось обновить объявление');

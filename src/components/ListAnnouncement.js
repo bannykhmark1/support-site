@@ -2,13 +2,14 @@ import React, { useState, useEffect } from 'react';
 import { getAllAnnouncements, deleteAnnouncement } from '../http/announcementAPI';
 import Modal from './Modal';
 import CreateAnnouncement from './CreateAnnouncement';
+import EditAnnouncement from './EditAnnouncement';
 import moment from 'moment-timezone';
 
 const ListAnnouncement = ({ userRole }) => {
     const [announcements, setAnnouncements] = useState([]);
     const [isModalOpen, setIsModalOpen] = useState(false);
-    const [isAllAnnouncementsModalOpen, setIsAllAnnouncementsModalOpen] = useState(false);
-    const [showAll, setShowAll] = useState(false); // Состояние для показа всех объявлений
+    const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+    const [currentAnnouncementId, setCurrentAnnouncementId] = useState(null);
 
     useEffect(() => {
         const fetchAnnouncements = async () => {
@@ -19,7 +20,7 @@ const ListAnnouncement = ({ userRole }) => {
             } catch (error) {
                 console.error('Failed to fetch announcements:', error);
             }
-        }
+        };
         fetchAnnouncements();
     }, []);
 
@@ -32,11 +33,17 @@ const ListAnnouncement = ({ userRole }) => {
         }
     };
 
+    const handleEdit = (id) => {
+        setCurrentAnnouncementId(id);
+        setIsEditModalOpen(true);
+    };
 
-    // Определяем, какие объявления показывать
-    const visibleAnnouncements = showAll ? announcements : announcements.slice(0, 3);
+    const closeEditModal = () => {
+        setIsEditModalOpen(false);
+        setCurrentAnnouncementId(null);
+    };
 
-    // Проверяем, является ли пользователь администратором
+    const visibleAnnouncements = announcements.slice(0, 3);
     const isAdmin = userRole === 'ADMIN';
 
     return (
@@ -54,67 +61,45 @@ const ListAnnouncement = ({ userRole }) => {
             </div>
 
             <div className="bg-white shadow-lg rounded-lg p-6 mb-6">
-            {visibleAnnouncements.map((announcement) => (
-    <div key={announcement.id} className="mb-6 pb-6 border-b border-gray-200">
-        <div className="text-gray-600 mb-2">Команда поддержки УАГ</div>
-        <h3 className="text-xl font-semibold text-gray-900 mb-4">{announcement.title}</h3>
-        <p className="text-gray-700 mb-4">{announcement.description}</p>
-        <p className="text-gray-700 text-sm font-bold">
-            {announcement.date.split('T')[0]}
-            &nbsp;  
-            {announcement.date.slice('11', '19')}
-        </p>
-        {announcement.updatedAt && announcement.updatedAt !== announcement.createdAt && (
-            <p className="text-gray-500 text-sm mt-2">Изменено: {moment(announcement.updatedAt).format('LLL')}</p>
-        )}
-        {isAdmin && (
-            <div className="flex justify-end">
-                <button
-                    onClick={() => handleDelete(announcement.id)}
-                    className="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded-full shadow-md transition duration-300"
-                >
-                    Удалить
-                </button>
-            </div>
-        )}
-    </div>
-))}
-
-                {!showAll && announcements.length > 3 && (
-                    <button
-                        onClick={() => setShowAll(true)}
-                        className="text-indigo-600 font-bold hover:underline focus:outline-none"
-                    >
-                        Показать всё
-                    </button>
-                )}
+                {visibleAnnouncements.map((announcement) => (
+                    <div key={announcement.id} className="mb-6 pb-6 border-b border-gray-200">
+                        <div className="text-gray-600 mb-2">Команда поддержки УАГ</div>
+                        <h3 className="text-xl font-semibold text-gray-900 mb-4">{announcement.title}</h3>
+                        <p className="text-gray-700 mb-4">{announcement.description}</p>
+                        <p className="text-gray-700 text-sm font-bold">
+                            {announcement.date.split('T')[0]}
+                            &nbsp;  
+                            {announcement.date.slice('11', '19')}
+                        </p>
+                        {announcement.updatedAt && announcement.updatedAt !== announcement.createdAt && (
+                            <p className="text-gray-500 text-sm mt-2">Изменено: {moment(announcement.updatedAt).format('LLL')}</p>
+                        )}
+                        {isAdmin && (
+                            <div className="flex justify-end space-x-2">
+                                <button
+                                    onClick={() => handleEdit(announcement.id)}
+                                    className="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded-full shadow-md transition duration-300"
+                                >
+                                    Редактировать
+                                </button>
+                                <button
+                                    onClick={() => handleDelete(announcement.id)}
+                                    className="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded-full shadow-md transition duration-300"
+                                >
+                                    Удалить
+                                </button>
+                            </div>
+                        )}
+                    </div>
+                ))}
             </div>
 
             <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)}>
                 <CreateAnnouncement onClose={() => setIsModalOpen(false)} />
             </Modal>
 
-            <Modal isOpen={isAllAnnouncementsModalOpen} onClose={() => setIsAllAnnouncementsModalOpen(false)}>
-                <div className="bg-white shadow-lg rounded-lg p-6 mb-4 max-h-screen overflow-y-auto">
-                    {announcements.map((announcement) => (
-                        <div key={announcement.id} className="mb-6 pb-6 border-b border-gray-200">
-                            <div className="text-gray-600 mb-2">Команда поддержки УАГ</div>
-                            <h3 className="text-2xl font-semibold text-gray-900 mb-4">{announcement.title}</h3>
-                            <p className="text-gray-700 mb-4">{announcement.description}</p>
-                            <p className="text-gray-700 mb-4">{(announcement.date.split('Z')[0])}</p>
-                            {isAdmin && (
-                                <div className="flex justify-end">
-                                    <button
-                                        onClick={() => handleDelete(announcement.id)}
-                                        className="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded-full shadow-md transition duration-300"
-                                    >
-                                        Удалить
-                                    </button>
-                                </div>
-                            )}
-                        </div>
-                    ))}
-                </div>
+            <Modal isOpen={isEditModalOpen} onClose={closeEditModal}>
+                <EditAnnouncement id={currentAnnouncementId} onClose={closeEditModal} />
             </Modal>
         </div>
     );
