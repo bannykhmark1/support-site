@@ -33,7 +33,7 @@ const ListAnnouncement = ({ userRole }) => {
     };
 
     const formatDate = (dateString) => {
-        return moment.tz(dateString, 'Asia/Yekaterinburg').format('YYYY-MM-DD HH:mm:ss');
+        return dateString.format('YYYY-MM-DD HH:mm:ss');
     };
 
     // Определяем, какие объявления показывать
