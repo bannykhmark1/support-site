@@ -24,7 +24,7 @@ const Header = ({ isAuthenticated, handleLogout }) => {
           alt="Логотип"
           className="w-48 md:w-64 mb-4 md:mb-0"
         />
-        <span className="md:ml-4 md:mt-2 text-lg">8-800-555-35-35</span>
+        <span className="md:ml-4 md:mt-2 text-lg"></span>
       </div>
       {showButtons && (
         <nav className="flex flex-col md:flex-row md:items-center space-y-4 md:space-y-0 md:space-x-4 mt-4 md:mt-0">
