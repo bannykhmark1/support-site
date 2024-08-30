@@ -10,13 +10,12 @@ const CreateAnnouncement = () => {
         e.preventDefault();
 
         // Получаем текущее время на клиенте (время будет таким, какое на машине пользователя)
-        const localTime = moment();
+        const localTime = moment().format('LLLL');
         
         // Форматируем дату в нужном формате
-        const formattedDate = localTime.format('YYYY-MM-DD HH:mm:ss');
 
         try {
-            const response = await createAnnouncement(title, description, formattedDate);
+            const response = await createAnnouncement(title, description, localTime);
             window.location.reload()
             // Очистка полей после успешного создания объявления
             setTitle('');
