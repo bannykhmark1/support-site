@@ -31,9 +31,10 @@ const ListAnnouncement = ({ userRole }) => {
             console.error('Failed to delete announcement:', error);
         }
     };
+    console.log(date)
 
     const formatDate = (dateString) => {
-        return dateString.format('YYYY-MM-DD HH:mm:ss');
+        return moment.tz(dateString, 'Asia/Yekaterinburg').format('YYYY-MM-DD HH:mm:ss');
     };
 
     // Определяем, какие объявления показывать
