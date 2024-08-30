@@ -31,7 +31,6 @@ const ListAnnouncement = ({ userRole }) => {
             console.error('Failed to delete announcement:', error);
         }
     };
-    console.log(announcement.date)
 
     const formatDate = (dateString) => {
         return moment.tz(dateString, 'Asia/Yekaterinburg').format('YYYY-MM-DD HH:mm:ss');
@@ -65,7 +64,7 @@ const ListAnnouncement = ({ userRole }) => {
                         <div className="text-gray-600 mb-2">Команда поддержки УАГ</div>
                         <h3 className="text-xl font-semibold text-gray-900 mb-4">{announcement.title}</h3>
                         <p className="text-gray-700 mb-4">{announcement.description}</p>
-                        <p className="text-gray-700 text-sm font-bold">{formatDate(announcement.date)}</p>
+                        <p className="text-gray-700 text-sm font-bold">{(announcement.date)}</p>
                         {isAdmin && (
                             <div className="flex justify-end">
                                 <button
