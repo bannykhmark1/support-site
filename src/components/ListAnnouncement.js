@@ -42,6 +42,8 @@ const ListAnnouncement = ({ userRole }) => {
     // Проверяем, является ли пользователь администратором
     const isAdmin = userRole === 'ADMIN';
 
+    console.log(isAdmin)
+
     return (
         <div className="max-w-xl mx-auto mt-10 p-4">
             <div className="flex justify-between items-center mb-6">
