@@ -1,4 +1,4 @@
-import React, { useContext, useState, useEffect } from 'react';
+import React, { useContext, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { observer } from 'mobx-react-lite';
 import { Context } from '../index';
@@ -16,7 +16,9 @@ const Auth = observer(({ onLogin, setAuthState }) => {
     const [isCodeSent, setIsCodeSent] = useState(false);
     const [isCodeVerified, setIsCodeVerified] = useState(false);
     const [authMethod, setAuthMethod] = useState('code');
+    const [isPasswordRequired, setIsPasswordRequired] = useState(false);
 
+    // Отправка кода на почту
     const handleSendCode = async () => {
         try {
             await sendVerificationCode(email);
@@ -27,6 +29,7 @@ const Auth = observer(({ onLogin, setAuthState }) => {
         }
     };
 
+    // Проверка кода
     const handleVerifyCode = async () => {
         try {
             const data = await verifyCodeAPI(email, code);
@@ -34,10 +37,12 @@ const Auth = observer(({ onLogin, setAuthState }) => {
                 const passwordStatus = await checkPasswordStatusAPI(email); // Проверка статуса пароля
                 if (!passwordStatus.hasPermanentPassword) {
                     // Если пароля нет, предлагаем установить новый
+                    setIsPasswordRequired(true);
                     toast.success('Код успешно проверен! Установите новый пароль.');
                 } else {
-                    // Если пароль есть, перенаправляем пользователя
+                    // Если пароль есть, сразу предоставляем доступ
                     toast.success('Код успешно проверен! Вы успешно вошли.');
+                    onLogin();
                     navigate('/'); // Перенаправление на главную страницу
                 }
                 setIsCodeVerified(true);
@@ -49,16 +54,33 @@ const Auth = observer(({ onLogin, setAuthState }) => {
         }
     };
 
+    // Установка нового пароля
     const handleChangePassword = async () => {
         try {
             await setNewPasswordAPI(email, newPassword);
             toast.success('Пароль успешно установлен!');
+            onLogin();
             navigate('/'); // Перенаправление на главную страницу
         } catch (e) {
             toast.error(e.response?.data?.message || "Ошибка при изменении пароля");
         }
     };
 
+    // Вход с паролем
+    const handleLoginWithPassword = async () => {
+        try {
+            const data = await loginWithPasswordAPI(email, password);
+            if (data.token) {
+                toast.success('Успешный вход!');
+                onLogin();
+                navigate('/'); // Перенаправление на главную страницу
+            }
+        } catch (e) {
+            toast.error(e.response?.data?.message || "Ошибка при входе");
+        }
+    };
+
+    // Основная логика входа в зависимости от выбранного метода
     const handleLogin = async () => {
         if (authMethod === 'code') {
             if (isCodeSent) {
@@ -67,15 +89,7 @@ const Auth = observer(({ onLogin, setAuthState }) => {
                 await handleSendCode();
             }
         } else if (authMethod === 'password') {
-            try {
-                const data = await loginWithPasswordAPI(email, password);
-                if (data.token) {
-                    toast.success('Успешный вход!');
-                    navigate('/'); // Перенаправление на главную страницу
-                }
-            } catch (e) {
-                toast.error(e.response?.data?.message || "Ошибка при входе");
-            }
+            await handleLoginWithPassword();
         }
     };
 
@@ -86,14 +100,14 @@ const Auth = observer(({ onLogin, setAuthState }) => {
                 <div className="w-full max-w-md p-8 bg-white rounded shadow-lg">
                     <h2 className="text-2xl font-bold text-center">Авторизация</h2>
                     <div className="flex justify-center space-x-4 mt-4">
-                        <button 
-                            className={`px-4 py-2 rounded ${authMethod === 'code' ? 'bg-green-500 text-white' : 'bg-gray-200'}`} 
+                        <button
+                            className={`px-4 py-2 rounded ${authMethod === 'code' ? 'bg-green-500 text-white' : 'bg-gray-200'}`}
                             onClick={() => setAuthMethod('code')}
                         >
                             Вход по коду
                         </button>
-                        <button 
-                            className={`px-4 py-2 rounded ${authMethod === 'password' ? 'bg-green-500 text-white' : 'bg-gray-200'}`} 
+                        <button
+                            className={`px-4 py-2 rounded ${authMethod === 'password' ? 'bg-green-500 text-white' : 'bg-gray-200'}`}
                             onClick={() => setAuthMethod('password')}
                         >
                             Вход по паролю
@@ -116,7 +130,7 @@ const Auth = observer(({ onLogin, setAuthState }) => {
                                         onChange={e => setCode(e.target.value)}
                                     />
                                 )}
-                                {isCodeVerified && (
+                                {isPasswordRequired && (
                                     <input
                                         className="w-full px-3 py-2 border rounded"
                                         placeholder="Введите новый пароль..."
