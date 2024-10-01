@@ -6,7 +6,7 @@ import { sendVerificationCode, verifyCodeAPI, setNewPasswordAPI, checkPasswordSt
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
-const Auth = observer(({ onLogin, setAuthState }) => {
+const Auth = observer(() => {
     const { token } = useContext(Context);
     const navigate = useNavigate();
     const [email, setEmail] = useState('');
@@ -15,7 +15,7 @@ const Auth = observer(({ onLogin, setAuthState }) => {
     const [isCodeSent, setIsCodeSent] = useState(false);
     const [isCodeVerified, setIsCodeVerified] = useState(false);
     const [authMethod, setAuthMethod] = useState('code');
-    const [passwordRequired, setPasswordRequired] = useState(false); // Добавляем состояние для определения необходимости пароля
+    const [passwordRequired, setPasswordRequired] = useState(false);
 
     // Отправка кода
     const handleSendCode = async () => {
@@ -33,13 +33,13 @@ const Auth = observer(({ onLogin, setAuthState }) => {
         try {
             const data = await verifyCodeAPI(email, code);
             if (data.token) {
-                const passwordStatus = await checkPasswordStatusAPI(email); // Проверка, есть ли постоянный пароль
+                const passwordStatus = await checkPasswordStatusAPI(email);
                 if (!passwordStatus.hasPermanentPassword) {
                     toast.success('Код успешно проверен! Установите новый пароль или пропустите шаг.');
-                    setPasswordRequired(true); // Показываем поле для ввода пароля
+                    setPasswordRequired(true);
                 } else {
                     toast.success('Код успешно проверен! Вы успешно вошли.');
-                    navigate('/'); // Перенаправление на главную страницу
+                    navigate('/');
                 }
                 setIsCodeVerified(true);
             } else {
@@ -55,7 +55,7 @@ const Auth = observer(({ onLogin, setAuthState }) => {
         try {
             await setNewPasswordAPI(email, newPassword);
             toast.success('Пароль успешно установлен!');
-            navigate('/'); // Перенаправление на главную страницу
+            navigate('/');
         } catch (e) {
             toast.error(e.response?.data?.message || "Ошибка при изменении пароля");
         }
@@ -64,7 +64,7 @@ const Auth = observer(({ onLogin, setAuthState }) => {
     // Пропуск установки пароля
     const handleSkipPassword = () => {
         toast.info('Пропуск установки пароля.');
-        navigate('/'); // Перенаправление на главную страницу
+        navigate('/');
     };
 
     return (
@@ -97,12 +97,28 @@ const Auth = observer(({ onLogin, setAuthState }) => {
                                     onChange={e => setEmail(e.target.value)}
                                 />
                                 {isCodeSent && (
-                                    <input
-                                        className="w-full px-3 py-2 border rounded"
-                                        placeholder="Введите код..."
-                                        value={code}
-                                        onChange={e => setCode(e.target.value)}
-                                    />
+                                    <>
+                                        <input
+                                            className="w-full px-3 py-2 border rounded"
+                                            placeholder="Введите код..."
+                                            value={code}
+                                            onChange={e => setCode(e.target.value)}
+                                        />
+                                        <button
+                                            className="px-4 py-2 text-white bg-green-500 rounded hover:bg-green-600"
+                                            onClick={handleVerifyCode}
+                                        >
+                                            Проверить код
+                                        </button>
+                                    </>
+                                )}
+                                {!isCodeSent && (
+                                    <button
+                                        className="px-4 py-2 text-white bg-green-500 rounded hover:bg-green-600"
+                                        onClick={handleSendCode}
+                                    >
+                                        Отправить код
+                                    </button>
                                 )}
                                 {passwordRequired && isCodeVerified && (
                                     <>
