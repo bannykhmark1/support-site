@@ -2,14 +2,15 @@ import React, { useContext, useState } from 'react';
 import { observer } from 'mobx-react-lite';
 import { useNavigate } from 'react-router-dom';
 import { Context } from '../index';
-import { sendVerificationCode, verifyCodeAPI, setNewPasswordAPI, checkPasswordStatusAPI } from '../http/userAPI';
+import { sendVerificationCode, verifyCodeAPI, setNewPasswordAPI, checkPasswordStatusAPI, loginWithPasswordAPI } from '../http/userAPI'; // Добавляем loginWithPasswordAPI 
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
-const Auth = observer(() => {
-    const { token } = useContext(Context);
+const Auth = observer(({ setAuthState }) => {  // Передаем setAuthState через пропс
+    const { user } = useContext(Context);
     const navigate = useNavigate();
     const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');  // Поле для пароля
     const [code, setCode] = useState('');
     const [newPassword, setNewPassword] = useState('');
     const [isCodeSent, setIsCodeSent] = useState(false);
@@ -33,12 +34,14 @@ const Auth = observer(() => {
         try {
             const data = await verifyCodeAPI(email, code);
             if (data.token) {
+                localStorage.setItem('token', data.token);  // Сохраняем токен
                 const passwordStatus = await checkPasswordStatusAPI(email);
                 if (!passwordStatus.hasPermanentPassword) {
                     toast.success('Код успешно проверен! Установите новый пароль или пропустите шаг.');
                     setPasswordRequired(true);
                 } else {
                     toast.success('Код успешно проверен! Вы успешно вошли.');
+                    setAuthState(true);  // Обновляем authState через пропс
                     navigate('/');
                 }
                 setIsCodeVerified(true);
@@ -55,16 +58,27 @@ const Auth = observer(() => {
         try {
             await setNewPasswordAPI(email, newPassword);
             toast.success('Пароль успешно установлен!');
+            setAuthState(true);  // Обновляем authState через пропс
             navigate('/');
         } catch (e) {
             toast.error(e.response?.data?.message || "Ошибка при изменении пароля");
         }
     };
 
-    // Пропуск установки пароля
-    const handleSkipPassword = () => {
-        toast.info('Пропуск установки пароля.');
-        navigate('/');
+    // Вход по логину и паролю
+    const handleLogin = async () => {
+        try {
+            const data = await loginWithPasswordAPI (email, password);  // Используем loginWithPasswordAPI  для входа
+            if (data.token) {
+                localStorage.setItem('token', data.token);  // Сохраняем токен
+                setAuthState(true);  // Обновляем authState через пропс
+                navigate('/');
+            } else {
+                toast.error("Ошибка при входе: токен не получен");
+            }
+        } catch (e) {
+            toast.error(e.response?.data?.message || "Ошибка при входе");
+        }
     };
 
     return (
@@ -129,19 +143,37 @@ const Auth = observer(() => {
                                             onChange={e => setNewPassword(e.target.value)}
                                         />
                                         <button
-                                            className="px-4 py-2 text-white bg-green-500 rounded hover:bg-green-600"
+                                            className="px-4 mr-4 py-2 text-white bg-green-500 rounded hover:bg-green-600"
                                             onClick={handleChangePassword}
                                         >
                                             Установить пароль
                                         </button>
-                                        <button
-                                            className="px-4 py-2 text-white bg-gray-500 rounded hover:bg-gray-600 mt-2"
-                                            onClick={handleSkipPassword}
-                                        >
-                                            Пропустить
-                                        </button>
                                     </>
                                 )}
+                            </>
+                        )}
+
+                        {authMethod === 'password' && (
+                            <>
+                                <input
+                                    className="w-full px-3 py-2 border rounded"
+                                    placeholder="Введите ваш email..."
+                                    value={email}
+                                    onChange={e => setEmail(e.target.value)}
+                                />
+                                <input
+                                    className="w-full px-3 py-2 border rounded"
+                                    type="password"
+                                    placeholder="Введите ваш пароль..."
+                                    value={password}
+                                    onChange={e => setPassword(e.target.value)}
+                                />
+                                <button
+                                    className="px-4 py-2 text-white bg-green-500 rounded hover:bg-green-600"
+                                    onClick={handleLogin}
+                                >
+                                    Войти
+                                </button>
                             </>
                         )}
                     </div>
