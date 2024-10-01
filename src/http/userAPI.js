@@ -25,13 +25,18 @@ export const verifyCodeAPI = async (email, code) => {
 // Установка нового пароля
 export const setNewPasswordAPI = async (email, newPassword) => {
     try {
-        const { data } = await $host.post('/api/user/setNewPassword', { email, newPassword });
+        const token = localStorage.getItem('token'); // Получаем токен из localStorage
+        const { data } = await $host.post('/api/user/setNewPassword', { email, newPassword }, {
+            headers: {
+                Authorization: `Bearer ${token}` // Добавляем токен в заголовок
+            }
+        });
         return data;
     } catch (error) {
         console.error('Error setting new password:', error.response?.data || error.message);
         throw error;
     }
-};
+}
 
 // Проверка статуса пароля (есть ли постоянный пароль)
 export const checkPasswordStatusAPI = async (email) => {
