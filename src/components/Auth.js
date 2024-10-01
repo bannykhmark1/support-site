@@ -1,33 +1,19 @@
-import React, { useContext, useState, useEffect } from 'react';
+import React, { useContext, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { observer } from 'mobx-react-lite';
 import { Context } from '../index';
-import { sendVerificationCode, verifyCodeAPI, loginWithPasswordAPI, checkPasswordStatusAPI } from '../http/userAPI';
+import { sendVerificationCode, verifyCodeAPI, setNewPasswordAPI } from '../http/userAPI';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
-// Код компонента Auth
 const Auth = observer(({ onLogin, setAuthState }) => {
     const { token } = useContext(Context);
     const navigate = useNavigate();
     const [email, setEmail] = useState('');
     const [code, setCode] = useState('');
-    const [password, setPassword] = useState('');
+    const [newPassword, setNewPassword] = useState('');
     const [isCodeSent, setIsCodeSent] = useState(false);
-    const [hasPermanentPassword, setHasPermanentPassword] = useState(false);
-
-    useEffect(() => {
-        const checkPasswordStatus = async () => {
-            try {
-                const data = await checkPasswordStatusAPI(email);
-                setHasPermanentPassword(data.hasPermanentPassword);
-            } catch (e) {
-                console.log('Ошибка проверки статуса пароля:', e.response?.data?.message || e.message);
-            }
-        };
-
-        if (email) checkPasswordStatus();
-    }, [email]);
+    const [isCodeVerified, setIsCodeVerified] = useState(false);
 
     const handleSendCode = async () => {
         try {
@@ -35,69 +21,109 @@ const Auth = observer(({ onLogin, setAuthState }) => {
             setIsCodeSent(true);
             toast.success('Код успешно отправлен на вашу почту!');
         } catch (e) {
-            toast.error(e.response?.data?.message || e.message);
+            toast.error(e.response?.data?.message || "Ошибка при отправке кода");
         }
     };
-    
+
     const handleVerifyCode = async () => {
         try {
             const data = await verifyCodeAPI(email, code);
-            setAuthState(data.token);
-            token.setToken(data.token);
-            navigate('/');
+            if (data.token) {
+                setIsCodeVerified(true);
+                toast.success('Код успешно проверен! Установите новый пароль.');
+            } else {
+                toast.error("Ошибка при проверке кода: токен не получен");
+            }
         } catch (e) {
-            toast.error(e.response?.data?.message || e.message);
+            toast.error(e.response?.data?.message || "Ошибка при проверке кода");
         }
     };
-    
-    const handleLogin = async () => {
+
+    const handleChangePassword = async () => {
         try {
-            const data = await loginWithPasswordAPI(email, password);
-            setAuthState(data.token);
-            token.setToken(data.token);
+            await setNewPasswordAPI(email, newPassword);
+            toast.success('Пароль успешно изменён!');
+            // После успешного изменения пароля можно перенаправить пользователя
             navigate('/');
         } catch (e) {
-            toast.error(e.response?.data?.message || e.message);
+            toast.error(e.response?.data?.message || "Ошибка при изменении пароля");
         }
     };
-    
+
+    const handleKeyDown = (event) => {
+        if (event.key === 'Enter') {
+            if (isCodeVerified) {
+                handleChangePassword();
+            } else if (isCodeSent) {
+                handleVerifyCode();
+            } else {
+                handleSendCode();
+            }
+        }
+    };
+
     return (
-        <div>
-            <h1>Авторизация</h1>
-            <input
-                type="email"
-                placeholder="Email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-            />
-            {isCodeSent && (
-                <>
-                    <input
-                        type="text"
-                        placeholder="Код верификации"
-                        value={code}
-                        onChange={(e) => setCode(e.target.value)}
-                    />
-                    <button onClick={handleVerifyCode}>Подтвердить код</button>
-                </>
-            )}
-            {!isCodeSent && !hasPermanentPassword && (
-                <button onClick={handleSendCode}>Отправить код</button>
-            )}
-            {hasPermanentPassword && (
-                <>
-                    <input
-                        type="password"
-                        placeholder="Пароль"
-                        value={password}
-                        onChange={(e) => setPassword(e.target.value)}
-                    />
-                    <button onClick={handleLogin}>Войти</button>
-                </>
-            )}
-            <ToastContainer />
+        <div className='flex flex-col justify-between min-h-full'>
+            <ToastContainer position="top-right" autoClose={3000} hideProgressBar={false} />
+            <div className="flex items-center justify-center h-full">
+                <div className="w-full max-w-md p-8 bg-white rounded shadow-lg">
+                    <h2 className="text-2xl font-bold text-center">Авторизация</h2>
+                    <div className="mt-6 space-y-4">
+                        <input
+                            className="w-full px-3 py-2 border rounded"
+                            placeholder="Введите ваш email..."
+                            value={email}
+                            onChange={e => setEmail(e.target.value)}
+                            onKeyDown={handleKeyDown}
+                        />
+                        {isCodeSent && (
+                            <input
+                                className="w-full px-3 py-2 border rounded"
+                                placeholder="Введите код..."
+                                value={code}
+                                onChange={e => setCode(e.target.value)}
+                                onKeyDown={handleKeyDown}
+                            />
+                        )}
+                        {isCodeVerified && (
+                            <input
+                                className="w-full px-3 py-2 border rounded"
+                                placeholder="Введите новый пароль..."
+                                type="password"
+                                value={newPassword}
+                                onChange={e => setNewPassword(e.target.value)}
+                                onKeyDown={handleKeyDown}
+                            />
+                        )}
+                        <div className="flex items-center justify-between mt-4">
+                            {!isCodeSent ? (
+                                <button
+                                    className="px-4 py-2 text-white bg-green-500 rounded hover:bg-green-600"
+                                    onClick={handleSendCode}
+                                >
+                                    Отправить код
+                                </button>
+                            ) : isCodeVerified ? (
+                                <button
+                                    className="px-4 py-2 text-white bg-green-500 rounded hover:bg-green-600"
+                                    onClick={handleChangePassword}
+                                >
+                                    Установить пароль
+                                </button>
+                            ) : (
+                                <button
+                                    className="px-4 py-2 text-white bg-green-500 rounded hover:bg-green-600"
+                                    onClick={handleVerifyCode}
+                                >
+                                    Войти
+                                </button>
+                            )}
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     );
 });
 
-export default Auth;    
+export default Auth;
