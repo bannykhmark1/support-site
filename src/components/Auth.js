@@ -42,23 +42,10 @@ const Auth = observer(({ onLogin, setAuthState }) => {
     const handleChangePassword = async () => {
         try {
             await setNewPasswordAPI(email, newPassword);
-            toast.success('Пароль успешно изменён!');
-            // После успешного изменения пароля можно перенаправить пользователя
+            toast.success('Пароль успешно установлен!');
             navigate('/');
         } catch (e) {
             toast.error(e.response?.data?.message || "Ошибка при изменении пароля");
-        }
-    };
-
-    const handleKeyDown = (event) => {
-        if (event.key === 'Enter') {
-            if (isCodeVerified) {
-                handleChangePassword();
-            } else if (isCodeSent) {
-                handleVerifyCode();
-            } else {
-                handleSendCode();
-            }
         }
     };
 
@@ -74,7 +61,6 @@ const Auth = observer(({ onLogin, setAuthState }) => {
                             placeholder="Введите ваш email..."
                             value={email}
                             onChange={e => setEmail(e.target.value)}
-                            onKeyDown={handleKeyDown}
                         />
                         {isCodeSent && (
                             <input
@@ -82,17 +68,14 @@ const Auth = observer(({ onLogin, setAuthState }) => {
                                 placeholder="Введите код..."
                                 value={code}
                                 onChange={e => setCode(e.target.value)}
-                                onKeyDown={handleKeyDown}
                             />
                         )}
                         {isCodeVerified && (
                             <input
                                 className="w-full px-3 py-2 border rounded"
                                 placeholder="Введите новый пароль..."
-                                type="password"
                                 value={newPassword}
                                 onChange={e => setNewPassword(e.target.value)}
-                                onKeyDown={handleKeyDown}
                             />
                         )}
                         <div className="flex items-center justify-between mt-4">
@@ -115,7 +98,7 @@ const Auth = observer(({ onLogin, setAuthState }) => {
                                     className="px-4 py-2 text-white bg-green-500 rounded hover:bg-green-600"
                                     onClick={handleVerifyCode}
                                 >
-                                    Войти
+                                    Проверить код
                                 </button>
                             )}
                         </div>
