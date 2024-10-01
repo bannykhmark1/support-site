@@ -3,6 +3,7 @@ import { LOGIN_ROUTE, REGISTRATION_ROUTE, APP_ROUTE, ANNOUNCEMENTS_ROUTE, CREATE
 import Auth from "./components/Auth";
 import App from "./App";
 
+import SetNewPassword from "./components/SetNewPassword";
 import CreateAnnouncement from "./components/CreateAnnouncement";
 import ListAnnouncement from "./components/ListAnnouncement";
 import EditAnnouncement from "./components/EditAnnouncement";
