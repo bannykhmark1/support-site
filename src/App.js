@@ -19,18 +19,13 @@ function App() {
         if (token) {
             try {
                 const decodedToken = jwtDecode(token);
-
-                // Проверяем, не истек ли срок действия токена
-                if (decodedToken.exp * 1000 > Date.now()) {
-                    setAuthState(true); // Обновляем authState
-                    user.setIsAuth(true);
-                    setUserRole(decodedToken.role); // Устанавливаем роль пользователя
-                } else {
-                    localStorage.removeItem('token');
-                }
+                // Удаляем проверку на истечение срока действия токена
+                setAuthState(true); // Обновляем authState
+                user.setIsAuth(true);
+                setUserRole(decodedToken.role); // Устанавливаем роль пользователя
             } catch (e) {
                 console.error("Ошибка при декодировании токена:", e);
-                localStorage.removeItem('token');
+                localStorage.removeItem('token'); // Удаляем токен только в случае ошибки
             }
         }
     }, [user]);
