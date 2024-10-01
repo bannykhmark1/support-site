@@ -1,8 +1,8 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext, useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { observer } from 'mobx-react-lite';
 import { Context } from '../index';
-import { sendVerificationCode, verifyCodeAPI, setNewPasswordAPI, loginWithPasswordAPI } from '../http/userAPI';
+import { sendVerificationCode, verifyCodeAPI, setNewPasswordAPI, loginWithPasswordAPI, checkPasswordStatusAPI } from '../http/userAPI';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
@@ -12,10 +12,10 @@ const Auth = observer(({ onLogin, setAuthState }) => {
     const [email, setEmail] = useState('');
     const [code, setCode] = useState('');
     const [newPassword, setNewPassword] = useState('');
-    const [password, setPassword] = useState(''); // Для входа по паролю
+    const [password, setPassword] = useState('');
     const [isCodeSent, setIsCodeSent] = useState(false);
     const [isCodeVerified, setIsCodeVerified] = useState(false);
-    const [authMethod, setAuthMethod] = useState('code'); // 'code' или 'password'
+    const [authMethod, setAuthMethod] = useState('code');
 
     const handleSendCode = async () => {
         try {
@@ -31,8 +31,16 @@ const Auth = observer(({ onLogin, setAuthState }) => {
         try {
             const data = await verifyCodeAPI(email, code);
             if (data.token) {
+                const passwordStatus = await checkPasswordStatusAPI(email); // Проверка статуса пароля
+                if (!passwordStatus.hasPermanentPassword) {
+                    // Если пароля нет, предлагаем установить новый
+                    toast.success('Код успешно проверен! Установите новый пароль.');
+                } else {
+                    // Если пароль есть, перенаправляем пользователя
+                    toast.success('Код успешно проверен! Вы успешно вошли.');
+                    navigate('/'); // Перенаправление на главную страницу
+                }
                 setIsCodeVerified(true);
-                toast.success('Код успешно проверен! Установите новый пароль.');
             } else {
                 toast.error("Ошибка при проверке кода: токен не получен");
             }
@@ -45,7 +53,7 @@ const Auth = observer(({ onLogin, setAuthState }) => {
         try {
             await setNewPasswordAPI(email, newPassword);
             toast.success('Пароль успешно установлен!');
-            navigate('/');
+            navigate('/'); // Перенаправление на главную страницу
         } catch (e) {
             toast.error(e.response?.data?.message || "Ошибка при изменении пароля");
         }
@@ -62,9 +70,8 @@ const Auth = observer(({ onLogin, setAuthState }) => {
             try {
                 const data = await loginWithPasswordAPI(email, password);
                 if (data.token) {
-                    // Здесь вы можете сохранить токен и обновить состояние аутентификации
                     toast.success('Успешный вход!');
-                    navigate('/'); // Перенаправление на главную страницу или в нужный раздел
+                    navigate('/'); // Перенаправление на главную страницу
                 }
             } catch (e) {
                 toast.error(e.response?.data?.message || "Ошибка при входе");
@@ -133,7 +140,7 @@ const Auth = observer(({ onLogin, setAuthState }) => {
                                     placeholder="Введите пароль..."
                                     value={password}
                                     onChange={e => setPassword(e.target.value)}
-                                    type="password" // Замените на type="password" для безопасности
+                                    type="password"
                                 />
                             </>
                         )}
