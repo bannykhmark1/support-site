@@ -25,7 +25,7 @@ export const publicRoutes = [
     element: <App />
   },
   {
-    path: RESET_PASSWORD_ROUTE,  // Сброс пароля через токен
+    path: SET_NEW_PASSWORD,  // Сброс пароля через токен
     element: <SetNewPassword />
   },
   {
