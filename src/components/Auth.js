@@ -16,6 +16,7 @@ const Auth = observer(({ setAuthState }) => {  // Передаем setAuthState 
     const [isCodeSent, setIsCodeSent] = useState(false);
     const [isCodeVerified, setIsCodeVerified] = useState(false);
     const [authMethod, setAuthMethod] = useState('code');
+    const [skipPasswordStep, setSkipPasswordStep] = useState(false);
     const [passwordRequired, setPasswordRequired] = useState(false);
 
     // Отправка кода
@@ -79,6 +80,11 @@ const Auth = observer(({ setAuthState }) => {  // Передаем setAuthState 
         } catch (e) {
             toast.error(e.response?.data?.message || "Ошибка при входе");
         }
+    };
+    const handleSkipPasswordStep = () => {
+        setSkipPasswordStep(true);
+        setAuthState(true); // Устанавливаем состояние авторизации
+        navigate('/'); // Перенаправляем на главную страницу
     };
 
     return (
@@ -147,6 +153,12 @@ const Auth = observer(({ setAuthState }) => {  // Передаем setAuthState 
                                             onClick={handleChangePassword}
                                         >
                                             Установить пароль
+                                        </button>
+                                        <button
+                                            className="px-4 ml-4 py-2 text-white bg-gray-500 rounded hover:bg-gray-600"
+                                            onClick={handleSkipPasswordStep} // Кнопка для пропуска
+                                        >
+                                            Пропустить
                                         </button>
                                     </>
                                 )}
