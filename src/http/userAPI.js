@@ -26,6 +26,7 @@ export const verifyCodeAPI = async (email, code) => {
 export const setNewPasswordAPI = async (email, newPassword) => {
     try {
         const token = localStorage.getItem('token'); // Получаем токен из localStorage
+        console.log(token)
         const { data } = await $host.post('/api/user/setNewPassword', { email, newPassword }, {
             headers: {
                 Authorization: `Bearer ${token}` // Добавляем токен в заголовок
