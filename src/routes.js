@@ -1,5 +1,5 @@
 import { createBrowserRouter } from "react-router-dom";
-import { LOGIN_ROUTE, REGISTRATION_ROUTE, APP_ROUTE, ANNOUNCEMENTS_ROUTE, CREATE_ANNOUNCEMENT_ROUTE, EDIT_ANNOUNCEMENT_ROUTE, REDIRECT_TOKEN } from "./utils/consts";
+import { LOGIN_ROUTE, REGISTRATION_ROUTE, APP_ROUTE, ANNOUNCEMENTS_ROUTE, CREATE_ANNOUNCEMENT_ROUTE, EDIT_ANNOUNCEMENT_ROUTE, REDIRECT_TOKEN, SET_NEW_PASSWORD } from "./utils/consts";
 import Auth from "./components/Auth";
 import App from "./App";
 
@@ -23,6 +23,10 @@ export const publicRoutes = [
   {
     path: APP_ROUTE,
     element: <App />
+  },
+  {
+    path: RESET_PASSWORD_ROUTE,  // Сброс пароля через токен
+    element: <SetNewPassword />
   },
   {
     path: LOGIN_ROUTE,

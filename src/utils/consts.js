@@ -7,3 +7,4 @@ export const ANNOUNCEMENTS_ROUTE = '/announcements';
 export const CREATE_ANNOUNCEMENT_ROUTE = '/announcements/create';
 export const EDIT_ANNOUNCEMENT_ROUTE = '/announcements/edit/:id';
 export const REDIRECT_TOKEN = '/redirect'
+export const SET_NEW_PASSWORD = '/setnewpassword'

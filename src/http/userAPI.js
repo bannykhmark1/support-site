@@ -20,4 +20,14 @@ export const verifyCodeAPI = async (email, code) => {
     }
 };
 
+export const changePasswordAPI = async (newPassword) => {
+    try {
+        const { data } = await $authHost.post('/api/user/changePassword', { newPassword });
+        return data;
+    } catch (error) {
+        console.error('Error changing password:', error.response?.data || error.message);
+        throw error;
+    }
+}
+
 // Другие функции, такие как login, registration, и т.д. остаются без изменений

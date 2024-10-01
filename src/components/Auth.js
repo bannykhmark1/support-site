@@ -1,8 +1,8 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext, useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { observer } from 'mobx-react-lite';
 import { Context } from '../index';
-import { sendVerificationCode, verifyCodeAPI } from '../http/userAPI';
+import { sendVerificationCode, verifyCodeAPI, loginWithPasswordAPI, checkPasswordStatusAPI } from '../http/userAPI';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
@@ -11,7 +11,23 @@ const Auth = observer(({ onLogin, setAuthState }) => {
     const navigate = useNavigate();
     const [email, setEmail] = useState('');
     const [code, setCode] = useState('');
+    const [password, setPassword] = useState('');
     const [isCodeSent, setIsCodeSent] = useState(false);
+    const [hasPermanentPassword, setHasPermanentPassword] = useState(false);
+
+    useEffect(() => {
+        // Проверка, имеет ли пользователь постоянный пароль
+        const checkPasswordStatus = async () => {
+            try {
+                const data = await checkPasswordStatusAPI(email);
+                setHasPermanentPassword(data.hasPermanentPassword);
+            } catch (e) {
+                console.log('Ошибка проверки статуса пароля:', e.response?.data?.message || e.message);
+            }
+        };
+
+        if (email) checkPasswordStatus();
+    }, [email]);
 
     const handleSendCode = async () => {
         try {
@@ -41,9 +57,29 @@ const Auth = observer(({ onLogin, setAuthState }) => {
         }
     };
 
+    const handleLoginWithPassword = async () => {
+        try {
+            const data = await loginWithPasswordAPI(email, password);
+    
+            if (data.token) {
+                setAuthState(true);
+                window.location.reload();
+                localStorage.setItem('token', data.token);
+                if (onLogin) onLogin();
+                navigate('/');
+            } else {
+                toast.error("Ошибка при входе: токен не получен");
+            }
+        } catch (e) {
+            toast.error(e.response?.data?.message || "Ошибка при входе с паролем");
+        }
+    };
+
     const handleKeyDown = (event) => {
         if (event.key === 'Enter') {
-            if (isCodeSent) {
+            if (hasPermanentPassword && password) {
+                handleLoginWithPassword();
+            } else if (isCodeSent) {
                 handleVerifyCode();
             } else {
                 handleSendCode();
@@ -65,29 +101,47 @@ const Auth = observer(({ onLogin, setAuthState }) => {
                             onChange={e => setEmail(e.target.value)}
                             onKeyDown={handleKeyDown}
                         />
-                        {isCodeSent && (
+                        {hasPermanentPassword ? (
                             <input
                                 className="w-full px-3 py-2 border rounded"
-                                placeholder="Введите код..."
-                                value={code}
-                                onChange={e => setCode(e.target.value)}
+                                type="password"
+                                placeholder="Введите ваш пароль..."
+                                value={password}
+                                onChange={e => setPassword(e.target.value)}
                                 onKeyDown={handleKeyDown}
                             />
+                        ) : (
+                            isCodeSent && (
+                                <input
+                                    className="w-full px-3 py-2 border rounded"
+                                    placeholder="Введите код..."
+                                    value={code}
+                                    onChange={e => setCode(e.target.value)}
+                                    onKeyDown={handleKeyDown}
+                                />
+                            )
                         )}
                         <div className="flex items-center justify-between mt-4">
-                            {!isCodeSent ? (
+                            {!isCodeSent && !hasPermanentPassword ? (
                                 <button
                                     className="px-4 py-2 text-white bg-green-500 rounded hover:bg-green-600"
                                     onClick={handleSendCode}
                                 >
                                     Отправить код
                                 </button>
+                            ) : hasPermanentPassword ? (
+                                <button
+                                    className="px-4 py-2 text-white bg-green-500 rounded hover:bg-green-600"
+                                    onClick={handleLoginWithPassword}
+                                >
+                                    Войти с паролем
+                                </button>
                             ) : (
                                 <button
                                     className="px-4 py-2 text-white bg-green-500 rounded hover:bg-green-600"
                                     onClick={handleVerifyCode}
                                 >
-                                    Войти
+                                    Войти с кодом
                                 </button>
                             )}
                         </div>
