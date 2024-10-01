@@ -6,6 +6,7 @@ import { sendVerificationCode, verifyCodeAPI, loginWithPasswordAPI, checkPasswor
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
+// Код компонента Auth
 const Auth = observer(({ onLogin, setAuthState }) => {
     const { token } = useContext(Context);
     const navigate = useNavigate();
@@ -16,7 +17,6 @@ const Auth = observer(({ onLogin, setAuthState }) => {
     const [hasPermanentPassword, setHasPermanentPassword] = useState(false);
 
     useEffect(() => {
-        // Проверка, имеет ли пользователь постоянный пароль
         const checkPasswordStatus = async () => {
             try {
                 const data = await checkPasswordStatusAPI(email);
@@ -35,121 +35,69 @@ const Auth = observer(({ onLogin, setAuthState }) => {
             setIsCodeSent(true);
             toast.success('Код успешно отправлен на вашу почту!');
         } catch (e) {
-            toast.error(e.response?.data?.message || "Ошибка при отправке кода");
+            toast.error(e.response?.data?.message || e.message);
         }
     };
-
+    
     const handleVerifyCode = async () => {
         try {
             const data = await verifyCodeAPI(email, code);
-    
-            if (data.token) {
-                setAuthState(true);
-                window.location.reload();
-                localStorage.setItem('token', data.token);
-                if (onLogin) onLogin();
-                navigate('/');
-            } else {
-                toast.error("Ошибка при проверке кода: токен не получен");
-            }
+            setAuthState(data.token);
+            token.setToken(data.token);
+            navigate('/');
         } catch (e) {
-            toast.error(e.response?.data?.message || "Ошибка при проверке кода");
+            toast.error(e.response?.data?.message || e.message);
         }
     };
-
-    const handleLoginWithPassword = async () => {
+    
+    const handleLogin = async () => {
         try {
             const data = await loginWithPasswordAPI(email, password);
-    
-            if (data.token) {
-                setAuthState(true);
-                window.location.reload();
-                localStorage.setItem('token', data.token);
-                if (onLogin) onLogin();
-                navigate('/');
-            } else {
-                toast.error("Ошибка при входе: токен не получен");
-            }
+            setAuthState(data.token);
+            token.setToken(data.token);
+            navigate('/');
         } catch (e) {
-            toast.error(e.response?.data?.message || "Ошибка при входе с паролем");
+            toast.error(e.response?.data?.message || e.message);
         }
     };
-
-    const handleKeyDown = (event) => {
-        if (event.key === 'Enter') {
-            if (hasPermanentPassword && password) {
-                handleLoginWithPassword();
-            } else if (isCodeSent) {
-                handleVerifyCode();
-            } else {
-                handleSendCode();
-            }
-        }
-    };
-
+    
     return (
-        <div className='flex flex-col justify-between min-h-full'>
-            <ToastContainer position="top-right" autoClose={3000} hideProgressBar={false} />
-            <div className="flex items-center justify-center h-full">
-                <div className="w-full max-w-md p-8 bg-white rounded shadow-lg">
-                    <h2 className="text-2xl font-bold text-center">Авторизация</h2>
-                    <div className="mt-6 space-y-4">
-                        <input
-                            className="w-full px-3 py-2 border rounded"
-                            placeholder="Введите ваш email..."
-                            value={email}
-                            onChange={e => setEmail(e.target.value)}
-                            onKeyDown={handleKeyDown}
-                        />
-                        {hasPermanentPassword ? (
-                            <input
-                                className="w-full px-3 py-2 border rounded"
-                                type="password"
-                                placeholder="Введите ваш пароль..."
-                                value={password}
-                                onChange={e => setPassword(e.target.value)}
-                                onKeyDown={handleKeyDown}
-                            />
-                        ) : (
-                            isCodeSent && (
-                                <input
-                                    className="w-full px-3 py-2 border rounded"
-                                    placeholder="Введите код..."
-                                    value={code}
-                                    onChange={e => setCode(e.target.value)}
-                                    onKeyDown={handleKeyDown}
-                                />
-                            )
-                        )}
-                        <div className="flex items-center justify-between mt-4">
-                            {!isCodeSent && !hasPermanentPassword ? (
-                                <button
-                                    className="px-4 py-2 text-white bg-green-500 rounded hover:bg-green-600"
-                                    onClick={handleSendCode}
-                                >
-                                    Отправить код
-                                </button>
-                            ) : hasPermanentPassword ? (
-                                <button
-                                    className="px-4 py-2 text-white bg-green-500 rounded hover:bg-green-600"
-                                    onClick={handleLoginWithPassword}
-                                >
-                                    Войти с паролем
-                                </button>
-                            ) : (
-                                <button
-                                    className="px-4 py-2 text-white bg-green-500 rounded hover:bg-green-600"
-                                    onClick={handleVerifyCode}
-                                >
-                                    Войти с кодом
-                                </button>
-                            )}
-                        </div>
-                    </div>
-                </div>
-            </div>
+        <div>
+            <h1>Авторизация</h1>
+            <input
+                type="email"
+                placeholder="Email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+            />
+            {isCodeSent && (
+                <>
+                    <input
+                        type="text"
+                        placeholder="Код верификации"
+                        value={code}
+                        onChange={(e) => setCode(e.target.value)}
+                    />
+                    <button onClick={handleVerifyCode}>Подтвердить код</button>
+                </>
+            )}
+            {!isCodeSent && !hasPermanentPassword && (
+                <button onClick={handleSendCode}>Отправить код</button>
+            )}
+            {hasPermanentPassword && (
+                <>
+                    <input
+                        type="password"
+                        placeholder="Пароль"
+                        value={password}
+                        onChange={(e) => setPassword(e.target.value)}
+                    />
+                    <button onClick={handleLogin}>Войти</button>
+                </>
+            )}
+            <ToastContainer />
         </div>
     );
 });
 
-export default Auth;
+export default Auth;    
