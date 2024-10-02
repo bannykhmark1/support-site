@@ -85,7 +85,7 @@ const ListAnnouncement = ({ userRole }) => {
                 {visibleAnnouncements.map((announcement) => (
                     <div
                         key={announcement.id}
-                        className={`mb-6 pb-6 border-b border-gray-200 relative ${announcement.isResolved ? 'border-green-500' : 'border-red-500'}`}
+                        className={`mb-6 pb-6 border-b border-gray-200 relative p-4 ${announcement.isResolved ? 'border-green-500' : 'border-red-500'}`}
                     >
                         <div className="text-gray-600 mb-2">Команда поддержки УАГ</div>
                         <h3 className="text-xl font-semibold text-gray-900 mb-4">
@@ -108,15 +108,8 @@ const ListAnnouncement = ({ userRole }) => {
                                     onChange={() => handleCheckboxChange(announcement.id, announcement.isResolved)}
                                     className={`form-checkbox ${announcement.isResolved ? 'text-green-500' : 'text-red-500'}`}
                                 />
-                                <span className={`ml-2 ${announcement.isResolved ? 'text-green-600' : 'text-red-600'}`}>
-                                    {announcement.isResolved ? 'Решено' : 'Не решено'}
-                                </span>
                             </label>
-                        ) : (
-                            <span className={`ml-2 ${announcement.isResolved ? 'text-green-600' : 'text-red-600'}`}>
-                                {announcement.isResolved ? 'Решено' : 'Не решено'}
-                            </span>
-                        )}
+                        ) : null}
                     </div>
                 ))}
             </div>
