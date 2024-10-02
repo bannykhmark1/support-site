@@ -19,8 +19,8 @@ export const getAnnouncementById = async (id) => {
 };
 
 // Обновление объявления
-export const updateAnnouncement = async (id, { title, description, date, isResolved }) => {
-    const { data } = await $host.put(`api/announcements/${id}`, { title, description, date, isResolved });
+export const updateAnnouncement = async (id, title, description, date) => {
+    const { data } = await $host.put(`api/announcements/${id}`, { title, description, date });
     return data;
 };
 
