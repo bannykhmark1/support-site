@@ -83,33 +83,36 @@ const ListAnnouncement = ({ userRole }) => {
                 )}
             </div>
 
-            <div key={announcement.id} className="mb-6 pb-6 border-b border-gray-200 relative">
-                <div className="text-gray-600 mb-2">Команда поддержки УАГ</div>
-                <h3 className="text-xl font-semibold text-gray-900 mb-4">
-                    {announcement.title}
-                    {announcement.updatedAt && announcement.updatedAt !== announcement.createdAt && (
-                        <span className="text-gray-500 text-xs ml-2">Изменено</span>
-                    )}
-                </h3>
-                <p className="text-gray-700 mb-4 whitespace-pre-line">{announcement.description}</p>
-                <p className="text-gray-400 text-sm">
-                    {announcement.date.split('T')[0]}
-                    &nbsp;
-                    {announcement.date.slice('11', '19')}
-                </p>
-                <label className="inline-flex items-center">
-                    <input
-                        type="checkbox"
-                        checked={announcement.isResolved}
-                        onChange={() => handleCheckboxChange(announcement.id, announcement.isResolved)}
-                        className={`form-checkbox ${announcement.isResolved ? 'text-green-500' : 'text-red-500'}`}
-                    />
-                    <span className={`ml-2 ${announcement.isResolved ? 'text-green-600' : 'text-red-600'}`}>
-                        {announcement.isResolved ? 'Решено' : 'Не решено'}
-                    </span>
-                </label>
+            <div className="bg-white w-full shadow-lg rounded-lg p-6 mb-6">
+                {visibleAnnouncements.map((announcement) => (
+                    <div key={announcement.id} className="mb-6 pb-6 border-b border-gray-200 relative">
+                        <div className="text-gray-600 mb-2">Команда поддержки УАГ</div>
+                        <h3 className="text-xl font-semibold text-gray-900 mb-4">
+                            {announcement.title}
+                            {announcement.updatedAt && announcement.updatedAt !== announcement.createdAt && (
+                                <span className="text-gray-500 text-xs ml-2">Изменено</span>
+                            )}
+                        </h3>
+                        <p className="text-gray-700 mb-4 whitespace-pre-line">{announcement.description}</p>
+                        <p className="text-gray-400 text-sm">
+                            {announcement.date.split('T')[0]}
+                            &nbsp;
+                            {announcement.date.slice('11', '19')}
+                        </p>
+                        <label className="inline-flex items-center">
+                            <input
+                                type="checkbox"
+                                checked={announcement.isResolved}
+                                onChange={() => handleCheckboxChange(announcement.id, announcement.isResolved)}
+                                className={`form-checkbox ${announcement.isResolved ? 'text-green-500' : 'text-red-500'}`}
+                            />
+                            <span className={`ml-2 ${announcement.isResolved ? 'text-green-600' : 'text-red-600'}`}>
+                                {announcement.isResolved ? 'Решено' : 'Не решено'}
+                            </span>
+                        </label>
+                    </div>
+                ))}
             </div>
-
 
             <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)}>
                 <CreateAnnouncement />
