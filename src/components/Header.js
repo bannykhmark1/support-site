@@ -17,14 +17,14 @@ const Header = ({ isAuthenticated, handleLogout }) => {
   };
 
   return (
-    <header className="flex flex-col md:flex-row items-start justify-between mx-auto max-w-6xl p-4">
-      <div className="flex flex-col items-center md:items-center">
+    <header className="flex mx-auto flex-col justify-between md:flex-row items-center p-10 pt-4 pb-4">
+      <div className="flex flex-col items-center md:items-start">
         <img
           src="hobbs-logo.png"
           alt="Логотип"
           className="w-48 md:w-64 mb-4 md:mb-0"
         />
-        <span className="md:ml-4 md:mt-2 text-lg"></span>
+        <span className="md:mt-2 text-lg font-bold">+7 (343) 364-44-60</span>
       </div>
       {showButtons && (
         <nav className="flex flex-col md:flex-row md:items-center space-y-4 md:space-y-0 md:space-x-4 mt-4 md:mt-0">
