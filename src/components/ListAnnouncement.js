@@ -3,7 +3,6 @@ import { getAllAnnouncements, deleteAnnouncement, updateAnnouncement } from '../
 import Modal from './Modal';
 import CreateAnnouncement from './CreateAnnouncement';
 import EditAnnouncement from './EditAnnouncement';
-import moment from 'moment-timezone';
 import { FaEllipsisV } from 'react-icons/fa';
 
 const ListAnnouncement = ({ userRole }) => {
@@ -11,7 +10,6 @@ const ListAnnouncement = ({ userRole }) => {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [showAll, setShowAll] = useState(false);
     const [isEditModalOpen, setIsEditModalOpen] = useState(false);
-    const [isViewAllModalOpen, setIsViewAllModalOpen] = useState(false);
     const [currentAnnouncementId, setCurrentAnnouncementId] = useState(null);
     const [activeMenu, setActiveMenu] = useState(null);
 
@@ -32,6 +30,7 @@ const ListAnnouncement = ({ userRole }) => {
         try {
             await deleteAnnouncement(id);
             setAnnouncements(announcements.filter((announcement) => announcement.id !== id));
+            setActiveMenu(null); // Закрыть меню после удаления
         } catch (error) {
             console.error('Failed to delete announcement:', error);
         }
@@ -40,7 +39,7 @@ const ListAnnouncement = ({ userRole }) => {
     const handleEdit = (id) => {
         setCurrentAnnouncementId(id);
         setIsEditModalOpen(true);
-        setActiveMenu(null);
+        setActiveMenu(null); // Закрыть меню после начала редактирования
     };
 
     const toggleMenu = (id) => {
@@ -56,9 +55,11 @@ const ListAnnouncement = ({ userRole }) => {
         try {
             const updatedAnnouncement = await updateAnnouncement(announcement.id, {
                 ...announcement,
-                isResolved: !announcement.isResolved
+                isResolved: !announcement.isResolved,
             });
-            setAnnouncements(announcements.map(a => a.id === updatedAnnouncement.id ? updatedAnnouncement : a));
+            setAnnouncements((prev) =>
+                prev.map((a) => (a.id === updatedAnnouncement.id ? updatedAnnouncement : a))
+            );
         } catch (error) {
             console.error('Failed to update announcement:', error);
         }
@@ -85,7 +86,7 @@ const ListAnnouncement = ({ userRole }) => {
                 {visibleAnnouncements.map((announcement) => (
                     <div
                         key={announcement.id}
-                        className={`mb-6 pb-6 border-b ${announcement.isResolved ? 'border-green-500' : 'border-red-500'} relative`}
+                        className={`mb-6 pb-6 border-b ${announcement.isResolved ? 'border-green-500' : 'border-gray-200'} relative`}
                     >
                         <div className="text-gray-600 mb-2">Команда поддержки УАГ</div>
                         <h3 className="text-xl font-semibold text-gray-900 mb-4">
@@ -96,13 +97,32 @@ const ListAnnouncement = ({ userRole }) => {
                         </h3>
                         <p className="text-gray-700 mb-4 whitespace-pre-line">{announcement.description}</p>
                         <p className="text-gray-400 text-sm">
-                            {announcement.date.split('T')[0]}
-                            &nbsp;
-                            {announcement.date.slice('11', '19')}
+                            {announcement.date.split('T')[0]} &nbsp; {announcement.date.slice(11, 19)}
                         </p>
                         {isAdmin && (
-                            <div className="flex items-center mt-4">
-                                <label className="flex items-center space-x-2">
+                            <>
+                                <div className="absolute top-0 right-0">
+                                    <button onClick={() => toggleMenu(announcement.id)}>
+                                        <FaEllipsisV className="text-gray-600 hover:text-gray-800" />
+                                    </button>
+                                    {activeMenu === announcement.id && (
+                                        <div className="absolute right-0 mt-2 py-2 w-48 bg-white border rounded shadow-xl">
+                                            <button
+                                                onClick={() => handleEdit(announcement.id)}
+                                                className="block w-full text-left px-4 py-2 text-gray-800 hover:bg-gray-100"
+                                            >
+                                                Редактировать
+                                            </button>
+                                            <button
+                                                onClick={() => handleDelete(announcement.id)}
+                                                className="block w-full text-left px-4 py-2 text-red-700 hover:bg-red-100"
+                                            >
+                                                Удалить
+                                            </button>
+                                        </div>
+                                    )}
+                                </div>
+                                <label className="flex items-center mt-4 space-x-2">
                                     <input
                                         type="checkbox"
                                         checked={announcement.isResolved}
@@ -110,7 +130,7 @@ const ListAnnouncement = ({ userRole }) => {
                                     />
                                     <span className="text-gray-700">Работы завершены</span>
                                 </label>
-                            </div>
+                            </>
                         )}
                     </div>
                 ))}
