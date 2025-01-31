@@ -3,7 +3,8 @@ import { getAllAnnouncements, deleteAnnouncement, updateAnnouncement } from '../
 import Modal from './Modal';
 import CreateAnnouncement from './CreateAnnouncement';
 import EditAnnouncement from './EditAnnouncement';
-import { FaEllipsisV } from 'react-icons/fa';
+import { FaEllipsisV, FaCheckCircle, FaRegCircle } from 'react-icons/fa';
+import { motion } from 'framer-motion';
 
 const ListAnnouncement = ({ userRole }) => {
     const [announcements, setAnnouncements] = useState([]);
@@ -30,7 +31,7 @@ const ListAnnouncement = ({ userRole }) => {
         try {
             await deleteAnnouncement(id);
             setAnnouncements(announcements.filter((announcement) => announcement.id !== id));
-            setActiveMenu(null); // Закрыть меню после удаления
+            setActiveMenu(null);
         } catch (error) {
             console.error('Failed to delete announcement:', error);
         }
@@ -39,7 +40,7 @@ const ListAnnouncement = ({ userRole }) => {
     const handleEdit = (id) => {
         setCurrentAnnouncementId(id);
         setIsEditModalOpen(true);
-        setActiveMenu(null); // Закрыть меню после начала редактирования
+        setActiveMenu(null);
     };
 
     const toggleMenu = (id) => {
@@ -69,33 +70,36 @@ const ListAnnouncement = ({ userRole }) => {
     const isAdmin = userRole === 'ADMIN';
 
     return (
-        <div className="md:w-1/2 mx-auto mt-10 p-4">
-            <div className="flex justify-between flex-col md:flex-row items-start mb-6">
-                <h2 className="text-3xl font-bold text-gray-800">Объявления</h2>
+        <div className="md:w-1/2 flex flex-col mt-10">
+            <div className="flex justify-between gap-4 md:flex items-start mb-6">
+                <h2 className="md:text-3xl text-2xl font-bold text-[#02483A]">Объявления</h2>
                 {isAdmin && (
-                    <button
+                    <motion.button
+                        whileHover={{ scale: 1.05 }}
+                        whileTap={{ scale: 0.95 }}
                         onClick={() => setIsModalOpen(true)}
-                        className="text-gray-600 border self-start border-gray-300 px-4 py-2 mt-2 rounded-lg hover:bg-gray-100 transition duration-300"
+                        className="flex items-center bg-[#dffd8d] text-[#02483A] font-bold py-2 md:px-4 px-2 rounded-md shadow-md hover:bg-[#d0dec7] transition duration-300"
                     >
                         Создать объявление
-                    </button>
+                    </motion.button>
                 )}
             </div>
 
             <div className="bg-white w-full shadow-lg rounded-lg p-6 mb-6">
                 {visibleAnnouncements.map((announcement) => (
-                    <div
+                    <motion.div
                         key={announcement.id}
                         className={`mb-6 pb-6 border-b ${announcement.isResolved ? 'border-green-500' : 'border-gray-200'} relative`}
+                        
                     >
-                        <div className="text-gray-600 mb-2">Команда поддержки УАГ</div>
-                        <h3 className="text-xl font-semibold text-gray-900 mb-4">
+                        <div className="text-[#02483A] mb-2">Команда поддержки УАГ</div>
+                        <h3 className="text-xl font-semibold text-[#02483A] mb-4">
                             {announcement.title}
                             {announcement.updatedAt && announcement.updatedAt !== announcement.createdAt && (
                                 <span className="text-gray-500 text-xs ml-2">Изменено</span>
                             )}
                         </h3>
-                        <p className="text-gray-700 mb-4 whitespace-pre-line">{announcement.description}</p>
+                        <p className="text-[#02483A] mb-4 whitespace-pre-line">{announcement.description}</p>
                         <p className="text-gray-400 text-sm">
                             {announcement.date.split('T')[0]} &nbsp; {announcement.date.slice(11, 19)}
                         </p>
@@ -103,13 +107,13 @@ const ListAnnouncement = ({ userRole }) => {
                             <>
                                 <div className="absolute top-0 right-0">
                                     <button onClick={() => toggleMenu(announcement.id)}>
-                                        <FaEllipsisV className="text-gray-600 hover:text-gray-800" />
+                                        <FaEllipsisV className="text-[#02483A] hover:text-[#dffd8d]" />
                                     </button>
                                     {activeMenu === announcement.id && (
                                         <div className="absolute right-0 mt-2 py-2 w-48 bg-white border rounded shadow-xl">
                                             <button
                                                 onClick={() => handleEdit(announcement.id)}
-                                                className="block w-full text-left px-4 py-2 text-gray-800 hover:bg-gray-100"
+                                                className="block w-full text-left px-4 py-2 text-[#02483A] hover:bg-[#dffd8d]"
                                             >
                                                 Редактировать
                                             </button>
@@ -122,17 +126,22 @@ const ListAnnouncement = ({ userRole }) => {
                                         </div>
                                     )}
                                 </div>
-                                <label className="flex items-center mt-4 space-x-2">
-                                    <input
-                                        type="checkbox"
-                                        checked={announcement.isResolved}
-                                        onChange={() => handleCheckboxChange(announcement)}
-                                    />
-                                    <span className="text-gray-700">Работы завершены</span>
+                                <label className="flex items-center mt-4 space-x-2 cursor-pointer">
+                                    <div
+                                        onClick={() => handleCheckboxChange(announcement)}
+                                        className="relative w-6 h-6 flex items-center justify-center"
+                                    >
+                                        {announcement.isResolved ? (
+                                            <FaCheckCircle className="w-6 h-6 text-green-500" />
+                                        ) : (
+                                            <FaRegCircle className="w-6 h-6 text-[#02483A]" />
+                                        )}
+                                    </div>
+                                    <span className="text-[#02483A]">Работы завершены</span>
                                 </label>
                             </>
                         )}
-                    </div>
+                    </motion.div>
                 ))}
             </div>
 

@@ -90,18 +90,18 @@ const Auth = observer(({ setAuthState }) => {  // Передаем setAuthState 
     return (
         <div className='flex flex-col justify-between min-h-full'>
             <ToastContainer position="top-right" autoClose={3000} hideProgressBar={false} />
-            <div className="flex items-center justify-center h-full">
-                <div className="w-full max-w-md p-8 bg-white rounded shadow-lg">
+            <div className="flex items-center justify-center  h-full">
+                <div className="w-full max-w-md p-8 border rounded shadow-lg shadow-[#dde7d7]">
                     <h2 className="text-2xl font-bold text-center">Авторизация</h2>
                     <div className="flex justify-center space-x-4 mt-4">
                         <button
-                            className={`px-4 py-2 rounded ${authMethod === 'code' ? 'bg-green-500 text-white' : 'bg-gray-200'}`}
+                            className={`px-4 py-2 rounded ${authMethod === 'code' ? 'bg-[#dffd8d]' : 'bg-[#dde7d7]'}`}
                             onClick={() => setAuthMethod('code')}
                         >
                             Вход по коду
                         </button>
                         <button
-                            className={`px-4 py-2 rounded ${authMethod === 'password' ? 'bg-green-500 text-white' : 'bg-gray-200'}`}
+                            className={`px-4 py-2 rounded ${authMethod === 'password' ? 'bg-[#dffd8d]' : 'bg-[#dde7d7]'}`}
                             onClick={() => setAuthMethod('password')}
                         >
                             Вход по паролю
@@ -125,7 +125,7 @@ const Auth = observer(({ setAuthState }) => {  // Передаем setAuthState 
                                             onChange={e => setCode(e.target.value)}
                                         />
                                         <button
-                                            className="px-4 py-2 text-white bg-green-500 rounded hover:bg-green-600"
+                                            className="flex bg-[#dffd8d] text-[#02483A] font-bold py-2 px-4 rounded-md shadow-md hover:bg-[#d0dec7] transition duration-300"
                                             onClick={handleVerifyCode}
                                         >
                                             Проверить код
@@ -134,7 +134,7 @@ const Auth = observer(({ setAuthState }) => {  // Передаем setAuthState 
                                 )}
                                 {!isCodeSent && (
                                     <button
-                                        className="px-4 py-2 text-white bg-green-500 rounded hover:bg-green-600"
+                                        className="flex bg-[#dffd8d] text-[#02483A] font-bold py-2 px-4 rounded-md shadow-md hover:bg-[#d0dec7] transition duration-300"
                                         onClick={handleSendCode}
                                     >
                                         Отправить код
@@ -143,19 +143,19 @@ const Auth = observer(({ setAuthState }) => {  // Передаем setAuthState 
                                 {passwordRequired && isCodeVerified && (
                                     <>
                                         <input
-                                            className="w-full px-3 py-2 border rounded"
+                                            className="w-full px-3 py-2 border rounded border-[#dde7d7]"
                                             placeholder="Введите новый пароль..."
                                             value={newPassword}
                                             onChange={e => setNewPassword(e.target.value)}
                                         />
                                         <button
-                                            className="px-4 mr-4 py-2 text-white bg-green-500 rounded hover:bg-green-600"
+                                            className="bg-[#dffd8d] text-[#02483A] font-bold py-2 px-4 rounded-md shadow-md hover:bg-[#d0dec7] transition duration-300"
                                             onClick={handleChangePassword}
                                         >
                                             Установить пароль
                                         </button>
                                         <button
-                                            className="px-4 ml-4 py-2 text-white bg-gray-500 rounded hover:bg-gray-600"
+                                            className="px-4 ml-4 py-2 bg-[#dde7d7] rounded hover:bg-[#d0dec7] transition shadow-md duration-300"
                                             onClick={handleSkipPasswordStep} // Кнопка для пропуска
                                         >
                                             Пропустить
@@ -181,7 +181,7 @@ const Auth = observer(({ setAuthState }) => {  // Передаем setAuthState 
                                     onChange={e => setPassword(e.target.value)}
                                 />
                                 <button
-                                    className="px-4 py-2 text-white bg-green-500 rounded hover:bg-green-600"
+                                    className="flex bg-[#dffd8d] text-[#02483A] font-bold py-2 px-4 rounded-md shadow-md hover:bg-[#d0dec7] transition duration-300"
                                     onClick={handleLogin}
                                 >
                                     Войти

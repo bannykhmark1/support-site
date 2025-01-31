@@ -31,14 +31,14 @@ function App() {
     }, [user]);
 
     return (
-        <div className="bg-gray-100 min-h-screen p-4">
-            <div className="max-w-6xl mx-auto bg-white p-6 rounded-lg shadow-lg">
+        <div className="min-h-screen p-6">
+            <div className="max-w-6x container bg-[#d0dec7] mx-auto p-8 rounded-lg shadow-lg">
                 {!authState ? (
                     <Auth setAuthState={setAuthState} /> 
                 ) : (
                     <>
                         <Header isAuthenticated={authState} handleLogout={() => user.logout()} />
-                        <div className="md:flex">
+                        <div className="md:flex justify-between">
                             <ContactForm />
                             <ListAnnouncement userRole={userRole} /> {/* Передаем userRole как пропс */}
                         </div>
