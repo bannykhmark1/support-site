@@ -10,22 +10,39 @@ import './App.css';
 
 function App() {
     const { user } = useContext(Context);
-    const [authState, setAuthState] = useState(false); // Новая переменная состояния
-    const [userRole, setUserRole] = useState(''); // Переменная состояния для роли пользователя
+    const [authState, setAuthState] = useState(false);
+    const [userRole, setUserRole] = useState('');
+    const [isWhitelisted, setIsWhitelisted] = useState(false);
 
-    // Восстановление авторизации при загрузке страницы
+    const allowedIPs = ["85.116.120.50", "94.24.238.242"];
+
+    // Функция для получения IP
+    const fetchIP = async () => {
+        try {
+            const response = await fetch('https://api64.ipify.org?format=json');
+            const data = await response.json();
+            if (allowedIPs.includes(data.ip)) {
+                setIsWhitelisted(true);
+                setAuthState(true);
+                user.setIsAuth(true);
+            }
+        } catch (error) {
+            console.error("Ошибка при получении IP:", error);
+        }
+    };
+
     useEffect(() => {
+        fetchIP();
         const token = localStorage.getItem('token');
         if (token) {
             try {
                 const decodedToken = jwtDecode(token);
-                // Удаляем проверку на истечение срока действия токена
-                setAuthState(true); // Обновляем authState
+                setAuthState(true);
                 user.setIsAuth(true);
-                setUserRole(decodedToken.role); // Устанавливаем роль пользователя
+                setUserRole(decodedToken.role);
             } catch (e) {
                 console.error("Ошибка при декодировании токена:", e);
-                localStorage.removeItem('token'); // Удаляем токен только в случае ошибки
+                localStorage.removeItem('token');
             }
         }
     }, [user]);
@@ -33,14 +50,14 @@ function App() {
     return (
         <div className="min-h-screen p-6">
             <div className="max-w-6x container bg-[#d0dec7] mx-auto p-8 rounded-lg shadow-lg">
-                {!authState ? (
+                {!authState && !isWhitelisted ? (
                     <Auth setAuthState={setAuthState} /> 
                 ) : (
                     <>
                         <Header isAuthenticated={authState} handleLogout={() => user.logout()} />
                         <div className="md:flex justify-between">
                             <ContactForm />
-                            <ListAnnouncement userRole={userRole} /> {/* Передаем userRole как пропс */}
+                            <ListAnnouncement userRole={userRole} />
                         </div>
                         <Feedback />
                     </>
