@@ -14,7 +14,11 @@ function App() {
     const [userRole, setUserRole] = useState('');
     const [isWhitelisted, setIsWhitelisted] = useState(false);
 
+<<<<<<< HEAD
     const allowedIPs = ["85.116.120.50", "94.24.238.242", "194.60.134.75"];
+=======
+    const allowedIPs = ["85.116.120.50", "94.24.238.242"];
+>>>>>>> c12f3053a01a85d42c4ad265da5fe42c56da959f
 
     // Функция для получения IP
     const fetchIP = async () => {
